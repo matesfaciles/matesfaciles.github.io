@@ -1,202 +1,189 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <script src="/global-head.js"></script>
     <meta charset="UTF-8">
+    <script src="/global-head.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Política de Privacidad</title>
+    <title>Política de Privacidad - Matesfaciles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --bg-env: #08090c;
+            --bg-surface: #0f121a;
+            --text-primary: #ffffff;
+            --text-secondary: #00e6ff;
+            --text-muted: #626f84;
+            --border-line: #00e6ff0e;
+            --math-glow: #00e6ff;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
+            padding: 0;
         }
 
-        h1 {
-            color: #333;
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-env);
+            color: var(--text-primary);
+            line-height: 1.6;
         }
 
-        .contenido {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .workspace {
+            max-width: 900px; /* Reducido para que la lectura a una columna sea cómoda */
+            margin: 0 auto;
+            padding: 30px;
         }
 
-        p {
-            white-space: pre-line;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-line);
+            padding-bottom: 25px;
+            margin-bottom: 35px;
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-cluster i {
+            font-size: 2rem;
+            color: var(--math-glow);
+        }
+
+        .brand-meta h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-meta span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .back-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            color: var(--math-glow);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            border-color: var(--math-glow);
+            background: #131924;
+        }
+
+        .legal-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            border-radius: 10px;
+            padding: 40px;
+        }
+
+        .legal-card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--math-glow);
+            margin-bottom: 8px;
+        }
+
+        .legal-card .meta-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            display: block;
+            font-family: monospace;
+        }
+
+        /* Mantiene saltos de línea y espacios del código de manera nativa */
+        .legal-content-stream {
+            color: #9ba4b4;
+            font-size: 1rem;
+            line-height: 1.7;
+            white-space: pre-wrap; 
+            font-family: 'Space Grotesk', sans-serif;
         }
     </style>
 </head>
-
 <body>
-    <div class="contenido">
-        <h1>Política de Privacidad</h1>
-        <p>Política de Privacidad - Cocacolalandia
-En Cocacolalandia ("nosotros", "nuestro" o "el sitio") respetamos la privacidad de nuestros usuarios. Esta Política de Privacidad explica qué información recopilamos, cómo la utilizamos y cuáles son sus derechos al acceder a nuestro sitio web, jugar a nuestros contenidos y utilizar el Chat Oficial.
 
-Al utilizar Cocacolalandia, usted acepta esta Política de Privacidad. Si no está de acuerdo, le recomendamos no utilizar el sitio.
+    <div class="workspace">
+        <header>
+            <a href="/" class="brand-cluster">
+                <i class="fa-solid fa-calculator"></i>
+                <div class="brand-meta">
+                    <h1>Matesfaciles</h1>
+                    <span>Aprende Matemáticas sin Complicaciones</span>
+                </div>
+            </a>
+            <a href="/" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Inicio
+            </a>
+        </header>
 
-1. Información que recopilamos
-Recopilamos información de dos formas: automáticamente por el uso del sitio y mediante la interacción directa en el chat.
+        <main>
+            <article class="legal-card">
+                <h2>POLÍTICA DE PRIVACIDAD Y PROTECCIÓN DE DATOS DE CARÁCTER PERSONAL</h2>
+                <span class="meta-date">ÚLTIMA ACTUALIZACIÓN: MAYO 2026</span>
+                
+                <!-- PEGA TU TEXTO DIRECTAMENTE AQUÍ DENTRO -->
+                <div class="legal-content-stream" id="legal-text-root">
+La presente Política de Privacidad regula el tratamiento de los datos de carácter personal facilitados por los usuarios de la plataforma digital Matesfaciles (en adelante, "la Plataforma"). La dirección de este sitio web garantiza el cumplimiento estricto de la normativa vigente en materia de protección de datos, incluyendo el Reglamento (UE) 2016/679 General de Protección de Datos (RGPD) y la Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD). La navegación por el portal y el uso de sus herramientas no requiere un registro previo de filiación, asegurando un entorno de consulta de acceso libre y anónimo para las consultas pedagógicas generales.
 
-Datos del Chat Oficial:
+2. RESPONSABLE DEL TRATAMIENTO DE LOS DATOS
+El responsable del tratamiento de los datos técnicos o de navegación recabados de forma automatizada durante las sesiones de consulta es el titular de la Plataforma Matesfaciles. Los usuarios pueden ponerse en contacto con la administración del sitio para cualquier duda, aclaración o ejercicio de derechos ARCO a través de los canales de comunicación habilitados en el índice principal del portal o remitiendo su solicitud a la dirección técnica correspondiente de las páginas del dominio.
 
-Autenticación: Si inicia sesión con Google, recibimos su nombre, correo electrónico y foto de perfil.
+3. TIPOLOGÍA DE DATOS TRATADOS Y MÉTODOS DE CAPTACIÓN
+La Plataforma limita la recogida de información al mínimo técnico imprescindible para garantizar la estabilidad del servidor y la ejecución del software en el lado del cliente. Los datos objeto de tratamiento se dividen en las siguientes categorías:
 
-Identificadores: Si usa el modo invitado, almacenamos el nombre que usted elija.
+Datos de Navegación Técnicos: De forma automatizada, los servidores registran datos de telemetría técnica estándar tales como la dirección IP (anonimizada), el tipo de navegador web empleado, el sistema operativo del dispositivo de acceso, la fecha y hora de las peticiones analíticas y las cadenas de caracteres de las variables numéricas introducidas en los procesadores matriciales.
 
-Mensajes: Almacenamos el contenido de los mensajes enviados en el chat público.
+Datos de Almacenamiento Local (Local Storage / Session Storage): Determinados módulos interactivos, simuladores y aplicaciones de soporte integradas en los directorios internos de la web utilizan tecnologías de almacenamiento en el navegador del usuario para recordar estados temporales de la sesión, configuraciones personalizadas de la interfaz y registros internos de puntuaciones o progresos académicos logrados en sus herramientas. Estos datos se guardan exclusivamente en el dispositivo del usuario y no se transmiten de forma permanente a bases de datos externas de la Plataforma.
 
-Datos Técnicos y de Seguridad:
+4. FINALIDADES DEL TRATAMIENTO Y BASE JURÍDICA
+El tratamiento de los datos técnicos recopilados por la Plataforma tiene como bases legítimas el interés legítimo del responsable (Art. 6.1.f del RGPD) para mantener la seguridad informática del sitio y el consentimiento explícito del usuario (Art. 6.1.a del RGPD) otorgado al aceptar el banner de cookies. Las finalidades específicas son:
 
-Dirección IP: Se recopila automáticamente para fines de funcionamiento, estadísticas de tráfico y, fundamentalmente, para la prevención de abusos y aplicación de bloqueos (baneos) en el chat.
+Garantizar el correcto rendimiento técnico, renderizado y ejecución de las herramientas matemáticas y aplicaciones lógicas integradas.
 
-Navegación: Tipo de navegador, sistema operativo y páginas visitadas para asegurar la compatibilidad técnica.
+Prevenir e investigar usos fraudulentos, inyecciones de código malicioso o ataques informáticos dirigidos contra la infraestructura del servidor.
 
-Contenido de Terceros: Los juegos embebidos mediante iframes provienen de servicios externos que pueden recopilar datos técnicos o de uso de forma independiente.
+Optimizar la experiencia de navegación adaptando las funciones de la interfaz según las demandas del tráfico de red.
 
-2. Uso de cookies y almacenamiento local
-Cocacolalandia utiliza tecnologías para mejorar la experiencia del usuario:
+5. POLÍTICA DE CONSERVACIÓN Y PURGA AUTOMÁTICA DE REGISTROS
+Los datos de telemetría y registros de navegación técnica se conservarán únicamente durante el tiempo estrictamente necesario para cumplir con las obligaciones de seguridad informática o hasta que finalice la sesión del usuario.
+En lo que respecta a las puntuaciones, configuraciones, progresos recreativos o variables locales de las aplicaciones integradas en la web, la administración del sistema realiza tareas periódicas de mantenimiento. El sistema se reserva la facultad de purgar, resetear o borrar por completo de forma unilateral todos los registros del almacenamiento local del dispositivo para liberar recursos del servidor y optimizar el rendimiento global del portal, sin que el usuario tenga derecho a la recuperación de dichos estados o progresos.
 
-Cookies de Análisis: Google Analytics y Google Tag Manager (solo con su consentimiento) para entender el tráfico del sitio.
+6. COMUNICACIÓN DE DATOS Y ENTORNOS DE TERCEROS
+La Plataforma no vende, alquila ni cede datos de carácter personal a terceras entidades bajo ninguna circunstancia. No obstante, el sitio web utiliza herramientas estándar de análisis (como Google Analytics) y sistemas de gestión de consentimiento legal, los cuales operan bajo sus propias políticas de privacidad independientes.
+Asimismo, si el usuario utiliza las pasarelas técnicas de la Plataforma o ejecuta comandos específicos que abran módulos con código o scripts de terceros integrados, reconoce que los datos generados dentro de dicho entorno aislado se rigen por los términos de licencia y directrices de privacidad de sus respectivos desarrolladores y proveedores de software, quedando Matesfaciles totalmente exenta de responsabilidad sobre dicho tratamiento.
 
-Servicios de Chat (Firebase): Google Firebase utiliza cookies técnicas necesarias para mantener la conexión en tiempo real y gestionar la sesión del usuario.
+7. EJERCICIO DE LOS DERECHOS DEL USUARIO
+La normativa de protección de datos reconoce a los usuarios los derechos de acceso, rectificación, supresión ("derecho al olvido"), limitación del tratamiento, portabilidad y oposición sobre sus datos personales. Al no almacenar registros de filiación obligatorios, nombres o correos en bases de datos permanentes, el ejercicio de estos derechos se realiza principalmente mediante la limpieza manual del historial de navegación, la eliminación de la caché de almacenamiento local (Local Storage) y la reconfiguración de los permisos de seguimiento a través del Panel de Ajustes de Cookies de la Plataforma.
 
-Almacenamiento Local (Propio): Guardamos su confirmación de edad (+14 años) y sus datos de perfil del chat para que no tenga que configurarlos en cada visita.
-
-Cookies de Terceros: Proveedores de juegos y plataformas de imágenes (como Imgur) pueden instalar cookies propias al cargar sus contenidos.
-
-3. Uso de la información
-La información recopilada se utiliza únicamente para:
-
-Operatividad: Asegurar el correcto funcionamiento de los juegos y el envío de mensajes.
-
-Seguridad y Moderación: Identificar comportamientos abusivos y aplicar restricciones de acceso (baneos por IP o UID) cuando sea necesario.
-
-Análisis: Realizar estadísticas de rendimiento y tráfico.
-
-Cocacolalandia no vende, alquila ni comparte datos personales con terceros para fines comerciales.
-
-4. Menores de edad y acceso
-Restricción de Edad: El Chat Oficial está restringido a usuarios mayores de 14 años.
-
-Entornos Educativos: El uso del sitio en instituciones educativas es responsabilidad exclusiva del usuario o la entidad. Cocacolalandia no fomenta la evasión de políticas de red escolares.
-
-5. Enlaces y Servicios de Terceros
-Al acceder a juegos o enlaces externos, usted queda sujeto a las políticas de privacidad de dichos proveedores. Cocacolalandia no controla ni es responsable de las prácticas de privacidad de sitios externos.
-
-6. Derechos del usuario (GDPR/RGPD)
-Usted tiene derecho a:
-
-Solicitar la eliminación de sus datos de perfil o mensajes del chat.
-
-Rechazar o bloquear cookies mediante la configuración de su navegador o nuestro panel de preferencias.
-
-Derecho al Olvido: Dado que el chat borra automáticamente los mensajes antiguos, la mayoría de los datos se eliminan de forma definitiva periódicamente.
-
-7. Contacto
-Ud. Podrá ponerse en contacto con Cocacolalandia mediante el correo <b>itsgatomc@gmail.com</b>
-
-</p>
+8. ACTUALIZACIONES DE LA PRESENTE POLÍTICA
+La dirección de la Plataforma se reserva el derecho a modificar la presente Política de Privacidad de forma unilateral para adaptarla a futuras novedades legislativas, jurisprudenciales o a cambios técnicos en la estructura del software educativo de la web. Se recomienda a los usuarios consultar este texto periódicamente para verificar la versión aplicable.</div>
+            </article>
+        </main>
     </div>
-<div class="tabla-cookies-container" style="margin: 30px 0; overflow-x: auto;">
-    <h3 style="color: #333; border-bottom: 2px solid #00c6ff; padding-bottom: 10px;">Inventario Detallado de Cookies</h3>
-    <p>A continuación, detallamos las cookies detectadas en nuestro sitio según su función y proveedor:</p>
-    
-    <style>
-        .cookies-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 14px;
-            color: #444;
-            background: #fff;
-        }
-        .cookies-table th {
-            background-color: #f8f9fa;
-            color: #333;
-            font-weight: 600;
-            text-align: left;
-            padding: 12px;
-            border-bottom: 2px solid #dee2e6;
-        }
-        .cookies-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #eee;
-            line-height: 1.4;
-        }
-        .cookies-table tr:hover {
-            background-color: #f1faff;
-        }
-        .tag-necesaria { color: #28a745; font-weight: bold; }
-        .tag-analitica { color: #007bff; font-weight: bold; }
-        .tag-terceros { color: #6f42c1; font-weight: bold; }
-    </style>
 
-    <table class="cookies-table">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Proveedor</th>
-                <th>Finalidad</th>
-                <th>Duración</th>
-                <th>Tipo</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>cookie_consent_level</strong></td>
-                <td>TermsFeed</td>
-                <td>Almacena el nivel de consentimiento elegido por el usuario.</td>
-                <td>1 año</td>
-                <td class="tag-necesaria">Necesaria</td>
-            </tr>
-            <tr>
-                <td><strong>cookie_consent_user_accepted</strong></td>
-                <td>TermsFeed</td>
-                <td>Registra si el usuario ha aceptado o rechazado el banner.</td>
-                <td>1 año</td>
-                <td class="tag-necesaria">Necesaria</td>
-            </tr>
-            <tr>
-                <td><strong>_ga</strong></td>
-                <td>Google</td>
-                <td>ID anónimo para recopilar estadísticas de tráfico.</td>
-                <td>2 años</td>
-                <td class="tag-analitica">Analítica</td>
-            </tr>
-            <tr>
-                <td><strong>_ga_KFVQX643H7</strong></td>
-                <td>Google</td>
-                <td>Mantiene el estado de la sesión de usuario en Analytics.</td>
-                <td>2 años</td>
-                <td class="tag-analitica">Analítica</td>
-            </tr>
-            <tr>
-                <td><strong>mp_d7e83c...</strong></td>
-                <td>Imgur</td>
-                <td>Análisis de rendimiento y uso de imágenes externas.</td>
-                <td>1 año</td>
-                <td class="tag-terceros">Terceros</td>
-            </tr>
-            <tr>
-                <td><strong>postpagebeta</strong></td>
-                <td>Imgur</td>
-                <td>Cookie técnica para la carga de contenido visual.</td>
-                <td>Sesión</td>
-                <td class="tag-terceros">Terceros</td>
-            </tr>
-            
-        </tbody>
-    </table>
-    
-    <p style="font-size: 13px; color: #666; margin-top: 15px;">
-        *Nota: Los juegos embebidos desde plataformas externas pueden cargar cookies adicionales de sus propios proveedores. Usted puede rechazar el rastreo analítico mediante nuestro panel de preferencias.*
-    </p>
-</div>
 </body>
-
 </html>

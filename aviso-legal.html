@@ -1,73 +1,189 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <script src="/global-head.js"></script>
     <meta charset="UTF-8">
+    <script src="/global-head.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviso Legal</title>
+    <title>Aviso Legal - Matesfaciles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --bg-env: #08090c;
+            --bg-surface: #0f121a;
+            --text-primary: #ffffff;
+            --text-secondary: #00e6ff;
+            --text-muted: #626f84;
+            --border-line: #00e6ff0e;
+            --math-glow: #00e6ff;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
+            padding: 0;
         }
 
-        h1 {
-            color: #333;
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-env);
+            color: var(--text-primary);
+            line-height: 1.6;
         }
 
-        .contenido {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .workspace {
+            max-width: 900px; /* Reducido para que la lectura a una columna sea cómoda */
+            margin: 0 auto;
+            padding: 30px;
         }
 
-        p {
-            white-space: pre-line;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-line);
+            padding-bottom: 25px;
+            margin-bottom: 35px;
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-cluster i {
+            font-size: 2rem;
+            color: var(--math-glow);
+        }
+
+        .brand-meta h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-meta span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .back-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            color: var(--math-glow);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            border-color: var(--math-glow);
+            background: #131924;
+        }
+
+        .legal-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            border-radius: 10px;
+            padding: 40px;
+        }
+
+        .legal-card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--math-glow);
+            margin-bottom: 8px;
+        }
+
+        .legal-card .meta-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            display: block;
+            font-family: monospace;
+        }
+
+        /* Mantiene saltos de línea y espacios del código de manera nativa */
+        .legal-content-stream {
+            color: #9ba4b4;
+            font-size: 1rem;
+            line-height: 1.7;
+            white-space: pre-wrap; 
+            font-family: 'Space Grotesk', sans-serif;
         }
     </style>
 </head>
-
 <body>
-    <div class="contenido">
-        <h1>Aviso legal</h1>
-        <p>Última actualización: 25 de marzo del 2026
-1. Información Identificativa
-En cumplimiento con el deber de información recogido en el artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y del Comercio Electrónico (LSSI-CE), se detallan los siguientes datos:
 
-Sitio Web: Cocacolalandia (cocacolalandia.github.io)
+    <div class="workspace">
+        <header>
+            <a href="/" class="brand-cluster">
+                <i class="fa-solid fa-calculator"></i>
+                <div class="brand-meta">
+                    <h1>Matesfaciles</h1>
+                    <span>Aprende Matemáticas sin Complicaciones</span>
+                </div>
+            </a>
+            <a href="/" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Inicio
+            </a>
+        </header>
 
-Titular: Equipo de Desarrollo de Cocacolalandia
+        <main>
+            <article class="legal-card">
+                <h2>AVISO LEGAL Y CONDICIONES DE IDENTIFICACIÓN</h2>
+                <span class="meta-date">ÚLTIMA ACTUALIZACIÓN: MAYO 2026</span>
+                
+                <!-- PEGA TU TEXTO DIRECTAMENTE AQUÍ DENTRO -->
+                <div class="legal-content-stream" id="legal-text-root">1. DERECHO DE INFORMACIÓN Y DATOS IDENTIFICATIVOS
+En cumplimiento del deber de información recogido en el artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y del Comercio Electrónico (LSSI-CE), se facilitan a continuación los datos necesarios para la identificación del titular de este sitio web:
 
-Contacto: itsgatomc@gmail.com
+Denominación del Sitio Web: Matesfaciles
 
-2. Exención de Responsabilidad por Uso de Marca
-Cocacolalandia es un proyecto independiente con fines exclusivamente recreativos y de entretenimiento. Se informa a los usuarios que:
+Entorno Técnico Relacionado: Plataforma de Cálculo Científico, herramientas analíticas y recursos didácticos interactivos.
 
-Este sitio no tiene vinculación, afiliación, patrocinio ni autorización oficial por parte de The Coca-Cola Company.
+Actividad Principal: Divulgación de material educativo, pedagógico y herramientas de cálculo matemático en línea de libre acceso.
 
-El uso de términos, tipografías o elementos visuales inspirados en dicha marca se realiza bajo el concepto de uso legítimo (Fair Use) con fines de parodia o fan-art, sin intención de suplantar la identidad de la marca ni generar confusión comercial.
+Dirección de Contacto Electrónico: Los usuarios pueden dirigir cualquier consulta o incidencia técnica a través del canal habilitado en el menú principal o mediante el Panel de Configuración de la interfaz.
 
-3. Condiciones de Uso y Contenidos de Terceros
-El titular actúa únicamente como prestador de servicios de intermediación, facilitando el acceso a juegos y aplicaciones desarrollados por terceros:
+2. CONDICIONES GENERALES DE USO DEL PORTAL
+El acceso y/o uso de este portal de Matesfaciles atribuye la condición de USUARIO, que acepta, desde dicho acceso y/o uso, las Condiciones Generales de Uso aquí reflejadas. Las citadas Condiciones serán de aplicación independiente de las Condiciones Generales de Contratación que en su caso resulten de obligado cumplimiento. El usuario asume la responsabilidad del uso del portal, la visualización de sus scripts y la correcta introducción de variables en los entornos de procesamiento lógico de la web.
 
-Responsabilidad: El titular no se hace responsable de los contenidos, anuncios, ni del tratamiento de datos que realicen los desarrolladores de los juegos externos integrados.
+3. PROPIEDAD INTELECTUAL E INDUSTRIAL
+El titular de la Plataforma es propietario o licenciatario de todos los derechos de propiedad intelectual e industrial de su página web, así como de los elementos contenidos en la misma (a título enunciativo: código fuente, hojas de estilo CSS, scripts de validación, interfaces de usuario, textos, marcas o logotipos, combinaciones de colores, estructura y diseño). Todos los derechos reservados.
+En virtud de lo dispuesto en los artículos 8 y 32.1, párrafo segundo, de la Ley de Propiedad Intelectual, quedan expresamente prohibidas la reproducción, la distribución y la comunicación pública, incluida su modalidad de puesta a disposición, de la totalidad o parte de los contenidos de esta página web, con fines comerciales, en cualquier soporte y por cualquier medio técnico, sin la autorización expresa y por escrito de la administración del sitio.
 
-Uso del sitio: El acceso a la web es gratuito. El usuario se compromete a hacer un uso adecuado de los contenidos y a no emplearlos para actividades ilícitas.
+4. EXCLUSIÓN DE GARANTÍAS Y RESPONSABILIDAD
+La administración de la Plataforma no se hace responsable, en ningún caso, de los daños y perjuicios de cualquier naturaleza que pudieran ocasionar las visitas o ejecuciones técnicas en el portal, a pesar de haber adoptado todas las medidas tecnológicas necesarias para evitarlo. Esto incluye, de manera enunciativa y no limitativa:
 
-4. Propiedad Intelectual y Protocolo de Retirada (DMCA)
-Respetamos los derechos de propiedad intelectual. Si usted es el titular de los derechos de autor de cualquier juego o contenido alojado en este repositorio y desea solicitar su retirada, puede hacerlo a través de nuestro Formulario de Reclamación DMCA. Nos comprometemos a procesar la solicitud y retirar el contenido en un plazo máximo de 48-72 horas.
+Errores u omisiones en los contenidos o imprecisiones en los resultados de los algoritmos de cálculo.
 
-5. Exclusión de Garantías y Responsabilidad
-El titular no se hace responsable, en ningún caso, de los daños y perjuicios de cualquier naturaleza que pudieran ocasionar, a título enunciativo: errores u omisiones en los contenidos, falta de disponibilidad del portal o la transmisión de virus o programas maliciosos en los contenidos de terceros, a pesar de haber adoptado todas las medidas tecnológicas necesarias para evitarlo.
+Falta de disponibilidad, caídas del servidor o interrupciones del portal por labores de optimización y mantenimiento informático.
 
-6. Legislación Aplicable y Jurisdicción
-Para la resolución de todas las controversias o cuestiones relacionadas con el presente sitio web o de las actividades en él desarrolladas, será de aplicación la legislación española, a la que se someten expresamente las partes.
-        </p>
+Transmisión de virus o programas maliciosos o lesivos en los contenidos a través de scripts de terceros integrados localmente, cuya ejecución dependa del lado del cliente o de librerías externas ajenas al control directo del titular.
+
+5. MODIFICACIONES Y DERECHO DE EXCLUSIÓN
+La administración se reserva el derecho de efectuar sin previo aviso las modificaciones que considere oportunas en su portal, pudiendo cambiar, suprimir o añadir tanto los contenidos y servicios que se presten a través de la misma como la forma en la que estos aparezcan presentados o localizados en su portal. Asimismo, se reserva el derecho a denegar o retirar el acceso al portal y/o a los servicios ofrecidos sin necesidad de preaviso, a instancia propia o de un tercero, a aquellos usuarios que incumplan las presentes condiciones de uso o comprometan la seguridad perimetral de los servidores.
+
+6. ENLACES Y MARCO DE INTEGRACIÓN TÉCNICA
+En el caso de que en Matesfaciles se dispusiesen enlaces, hipervínculos o módulos interactivos inyectados en la estructura que redirigiesen a otros sitios de Internet, el titular de la web no ejercerá ningún tipo de control sobre dichos sitios y contenidos. En ningún caso asumirá responsabilidad alguna por los contenidos de algún enlace perteneciente a un sitio web ajeno, ni garantizará la disponibilidad técnica, calidad, fiabilidad, exactitud, amplitud, veracidad, validez y constitucionalidad de cualquier material o información contenida en ninguno de dichos hipervínculos u otros sitios de Internet. La activación de pasarelas específicas o subentornos integrados dentro de los directorios del sitio se rige bajo la total y exclusiva responsabilidad del usuario de la plataforma.
+
+7. LEGISLACIÓN APLICABLE Y JURISDICCIÓN
+La relación entre el titular de la Plataforma y el USUARIO se regirá por la normativa española vigente y cualquier controversia se someterá a los Juzgados y Tribunales competentes del domicilio aplicable fijado por la administración del sitio web.</div>
+            </article>
+        </main>
     </div>
-</body>
 
+</body>
 </html>

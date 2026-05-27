@@ -1,91 +1,185 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <script src="/global-head.js"></script>
     <meta charset="UTF-8">
+    <script src="/global-head.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Condiciones de Uso</title>
+    <title>Condiciones de Uso - Matesfaciles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --bg-env: #08090c;
+            --bg-surface: #0f121a;
+            --text-primary: #ffffff;
+            --text-secondary: #00e6ff;
+            --text-muted: #626f84;
+            --border-line: #00e6ff0e;
+            --math-glow: #00e6ff;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
+            padding: 0;
         }
 
-        h1 {
-            color: #333;
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-env);
+            color: var(--text-primary);
+            line-height: 1.6;
         }
 
-        .contenido {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .workspace {
+            max-width: 900px; /* Reducido para que la lectura a una columna sea cómoda */
+            margin: 0 auto;
+            padding: 30px;
         }
 
-        p {
-            white-space: pre-line;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-line);
+            padding-bottom: 25px;
+            margin-bottom: 35px;
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-cluster i {
+            font-size: 2rem;
+            color: var(--math-glow);
+        }
+
+        .brand-meta h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-meta span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .back-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            color: var(--math-glow);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            border-color: var(--math-glow);
+            background: #131924;
+        }
+
+        .legal-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            border-radius: 10px;
+            padding: 40px;
+        }
+
+        .legal-card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--math-glow);
+            margin-bottom: 8px;
+        }
+
+        .legal-card .meta-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            display: block;
+            font-family: monospace;
+        }
+
+        /* Mantiene saltos de línea y espacios del código de manera nativa */
+        .legal-content-stream {
+            color: #9ba4b4;
+            font-size: 1rem;
+            line-height: 1.7;
+            white-space: pre-wrap; 
+            font-family: 'Space Grotesk', sans-serif;
         }
     </style>
 </head>
-
 <body>
-    <div class="contenido">
-        <h1>Condiciones de Uso</h1>
-        <p>Última actualización: 11 de diciembre de 2025
 
-Por favor, lea detenidamente estas Condiciones de Uso ("Condiciones", "Términos") antes de utilizar el sitio web de Cocacolalandia ("nosotros", "nuestro" o "el sitio").
+    <div class="workspace">
+        <header>
+            <a href="/" class="brand-cluster">
+                <i class="fa-solid fa-calculator"></i>
+                <div class="brand-meta">
+                    <h1>Matesfaciles</h1>
+                    <span>Aprende Matemáticas sin Complicaciones</span>
+                </div>
+            </a>
+            <a href="/" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Inicio
+            </a>
+        </header>
 
-Al acceder y utilizar el sitio web de Cocacolalandia, usted acepta cumplir y estar sujeto a estas Condiciones. Si no está de acuerdo con alguna parte de estos términos, por favor no utilice nuestro sitio web.
+        <main>
+            <article class="legal-card">
+                <h2>CONDICIONES DE USO DE MATESFACILES</h2>
+                <span class="meta-date">ÚLTIMA ACTUALIZACIÓN: MAYO 2026</span>
+                
+                <!-- PEGA TU TEXTO DIRECTAMENTE AQUÍ DENTRO -->
+                <div class="legal-content-stream" id="legal-text-root">1. DECLARACIÓN PRELIMINAR Y ACEPTACIÓN DE LAS CONDICIONES
+El presente documento contractual regula el acceso, la navegación y la utilización de todas las funcionalidades, herramientas de cálculo, aplicaciones multimedia, módulos interactivos y contenidos alojados bajo el dominio principal de Matesfaciles y sus directorios locales asociados (en adelante, indistintamente, "la Plataforma"). La condición de usuario se adquiere por el mero acceso o uso de cualquiera de los servicios integrados en el sitio web, lo cual implica la adhesión plena, expresa y sin reservas a todas y cada una de las cláusulas publicadas en el momento en que el usuario acceda al portal. Si el usuario no estuviera conforme con el contenido íntegro de estas condiciones, deberá abandonar la navegación de forma inmediata y abstenerse de interactuar con los elementos del sitio de manera definitiva.
 
-1. Uso del Sitio
+2. NATURALEZA DEL SERVICIO Y OBJETO DE LA PLATAFORMA
+La Plataforma constituye un entorno digital dedicado a la divulgación de recursos pedagógicos, material didáctico, calculadoras automatizadas y sistemas interactivos de representación gráfica y matemática. El servicio se presta de manera libre y no exige contraprestación económica por parte del usuario para su visualización general. Todo el software, código ejecutable en cliente y material de soporte se proporciona "tal cual" y según la disponibilidad técnica del servidor, sin que la gratuidad del acceso suponga el otorgamiento de derechos de explotación o garantías de continuidad del servicio a favor del usuario.
 
-Cocacolalandia es un sitio web de juegos destinado a fines recreativos. Al utilizar nuestro sitio, usted acepta hacerlo únicamente con fines lícitos y de acuerdo con estas Condiciones.
+3. LIMITACIÓN DE RESPONSABILIDAD POR RENDIMIENTO TÉCNICO Y ERRORES DE EJECUCIÓN
+La dirección de la Plataforma implementa las medidas técnicas estándar para asegurar la estabilidad del sitio web. No obstante, en el ámbito técnico de las aplicaciones web y el procesamiento de scripts en navegadores, no es posible garantizar la ausencia absoluta de anomalías. Por consiguiente:
 
-El uso de Cocacolalandia en colegios, universidades o instituciones educativas donde exista una normativa o restricción sobre el acceso a juegos en línea está estrictamente bajo la responsabilidad exclusiva del usuario. Cocacolalandia no fomenta ni promueve la evasión de bloqueos o políticas de uso establecidas por dichas entidades.
+La Plataforma queda totalmente exenta de responsabilidad por errores de programación, fallos de renderizado de elementos multimedia, interrupciones del fluido de datos, desbordamientos de memoria del navegador del usuario o cualquier tipo de incompatibilidad entre los scripts locales y el sistema operativo o navegador empleado para el acceso.
 
-2. Contenido y Propiedad Intelectual
+La interpretación, uso o aplicación práctica de los resultados, datos, simulaciones o respuestas numéricas proporcionadas por cualquiera de los módulos de la web es responsabilidad exclusiva del usuario, declinando la Plataforma cualquier reclamación por perjuicios formativos, materiales o personales que pudieran derivarse de supuestas imprecisiones en el software de cálculo.
 
-Los juegos accesibles en Cocacolalandia son proporcionados a través de enlaces, iframes o recursos externos. Cocacolalandia no reclama propiedad intelectual ni derechos de autor sobre los juegos embebidos o enlazados, los cuales pertenecen a sus respectivos creadores y titulares de derechos.
+4. REGULACIÓN DE MÓDULOS DE APLICACIÓN INTEGRADOS Y PERSISTENCIA DE DATOS
+La Plataforma incorpora determinadas herramientas avanzadas, extensiones y aplicaciones de soporte que se ejecutan de manera local o mediante la llamada a recursos específicos integrados dentro del propio sistema de archivos del servidor. Respecto a estos componentes interactivos, se estipula lo siguiente:
 
-El sitio actúa como un agregador de contenido y no almacena, distribuye ni desarrolla los juegos ofrecidos.
+El usuario asume de forma voluntaria el riesgo derivado de la ejecución de estas interfaces interactivas, reconociendo que algunas utilidades pueden basarse en librerías de código abierto o software desarrollado por terceros, cuya licencia final exime de responsabilidad al titular del dominio de Matesfaciles.
 
-Usted reconoce y acepta que Cocacolalandia no se hace responsable de posibles reclamaciones de copyright que pudieran surgir por el uso de juegos de terceros.
+La Plataforma no ofrece ninguna garantía respecto a la permanencia, salvaguarda o almacenamiento de estados de sesión, registros temporales, configuraciones personalizadas o puntuaciones obtenidas dentro de las herramientas recreativas o educativas. La administración del sistema se reserva la facultad de purgar, reiniciar, modificar o eliminar de forma unilateral estos registros de almacenamiento local en cualquier momento para labores de mantenimiento y optimización del tráfico del servidor, sin derecho a reclamación alguna por pérdida de progreso o información.
 
-3. Marcas Comerciales
+5. EXCLUSIÓN DE RESPONSABILIDAD SOBRE ENLACES Y PASARELAS EXTERNAS
+En aquellos supuestos en los que las utilidades o menús de navegación de la Plataforma faciliten el acceso a entornos, plataformas o servidores externos gestionados por terceras entidades ajenas a Matesfaciles, el usuario acepta de manera expresa que dicha acción supone la salida del ámbito de control directo de este portal. La Plataforma no puede inspeccionar de manera constante el contenido de dichos recursos externos, por lo que queda exonerada de cualquier responsabilidad civil, administrativa o penal derivada del contenido, la seguridad técnica, el uso de cookies de seguimiento o la política de tratamiento de datos personales de dichos terceros.
 
-Cocacolalandia no tiene ninguna relación, asociación ni patrocinio con The Coca-Cola Company ni con ninguna de sus marcas registradas.
+6. SEGURIDAD INFORMÁTICA Y CONDICIONES DE ACCESO AL SERVIDOR
+El usuario se compromete a realizar un uso lícito y diligente de la infraestructura de la web. Queda terminantemente prohibida la realización de acciones destinadas a saturar el ancho de banda del servidor, la ejecución de ataques automatizados de denegación de servicio, el escaneo no autorizado de puertos, la inyección de código malicioso a través de los formularios o paneles interactivos, o cualquier otra conducta que comprometa la integridad de las medidas perimetrales de seguridad informática adoptadas por la web. Cualquier violación de esta cláusula será puesta en conocimiento de las Fuerzas y Cuerpos de Seguridad del Estado.
 
-El uso del nombre "Cocacolalandia" es puramente con fines de entretenimiento y no pretende infringir ni aprovecharse de marcas registradas.
+7. MODIFICACIÓN UNILATERAL Y CLÁUSULA DE SALVAGUARDA
+La Plataforma se reserva la facultad de modificar, en cualquier momento y sin necesidad de previo aviso, la estructura, el diseño, la configuración o el catálogo de herramientas disponibles en el sitio web, pudiendo restringir el acceso a secciones concretas por razones técnicas. Si cualquier cláusula de estos Términos de Uso fuera declarada nula o ineficaz por un órgano judicial o administrativo competente, dicha nulidad no afectará al resto del documento, el cual mantendrá su plena vigencia y validez legal.
 
-4. Conducta del Usuario
-
-Usted acepta no utilizar nuestro sitio web de manera que pueda causar daño, perjuicio o afectar negativamente a otros usuarios.
-
-Usted acepta no utilizar nuestro sitio web para participar en actividades ilegales o fraudulentas.
-
-Usted es responsable de cumplir con las leyes, normativas locales y políticas de red del lugar donde accede a Cocacolalandia.
-
-5. Limitación de Responsabilidad
-
-Cocacolalandia no garantiza la disponibilidad, calidad o funcionamiento de los juegos embebidos, ya que dependen de servicios de terceros.
-
-Cocacolalandia no será responsable de ningún daño directo, indirecto, incidental, especial, emergente o punitivo que surja del uso o la imposibilidad de utilizar nuestro sitio web.
-
-El acceso a juegos en redes escolares o privadas se realiza bajo el propio riesgo del usuario.
-
-6. Cambios en las Condiciones
-
-Nos reservamos el derecho de actualizar o modificar estas Condiciones en cualquier momento sin previo aviso.
-
-Cualquier cambio entrará en vigencia inmediatamente después de su publicación en esta página.
-
-7. Contacto
-
-Cocacolalandia no ofrece medios de contacto directo y se proporciona "tal cual", únicamente con fines recreativos.</p>
+8. LEGISLACIÓN Y JURISDICCIÓN COMPETENTE
+Las presentes Condiciones Generales de Uso se rigen por la legislación española. Para la resolución de cualquier litigio, discrepancia, reclamación o controversia que pudiera surgir entre las partes en relación con la interpretación o aplicación de los términos aquí descritos, las partes renuncian de forma expresa a cualquier otro fuero que pudiera corresponderles y se someten de manera formal a la jurisdicción exclusiva de los Juzgados y Tribunales competentes aplicables según el domicilio del titular de la Plataforma.</div>
+            </article>
+        </main>
     </div>
-</body>
 
+</body>
 </html>
