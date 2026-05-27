@@ -762,31 +762,32 @@
 
 <body>
     <script>
-  (function() {
-    const urlOficial = "https://matesfaciles.github.io/juegos";
+        (function() {
+            const urlOficial = "https://matesfaciles.pages.dev";
+            const urlActual = window.location.href;
 
-    // 1. Detectar si estamos en un iframe o en un entorno oculto (como about:blank)
-    // window.top es la ventana de más arriba. Si no es igual a window.self, estamos atrapados.
-    if (window.self !== window.top || !window.location.href.includes("cocacolalandia1.github.io") && !window.location.href.includes("sites.google.com/view/cocacolalandia")) {
-      
-      // Matamos la carga de la página inmediatamente
-      window.stop();
+            // 1. Redirigir si entra desde GitHub Pages
+            if (urlActual.includes("matesfaciles.github.io")) {
+                window.location.replace(urlOficial);
+                return; // Detiene la ejecución aquí
+            }
 
-      // 2. Bloqueo visual total
-      document.documentElement.innerHTML = `
-        <body style="margin:0; background-color:#000; color:red; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; font-family:Arial, sans-serif; overflow:hidden;">
-          <h1 style="font-size:8vw; text-align:center; margin:0; font-weight:900;">
-            ESTE NO ES EL LINK CORRECTO
-          </h1>
-        </body>
-      `;
+            // 2. Control de seguridad (iframe o URL no permitida)
+            if (window.self !== window.top || !urlActual.includes("matesfaciles.pages.dev")) {
 
-      // 3. ROMPER EL ENCIERRO (Frame Buster)
-      // Intentamos forzar a la ventana de arriba (Google Sites) a ir a tu link.
-        // Si Google Sites bloquea el cambio de URL (por seguridad), 
-        // el usuario se quedará viendo el mensaje de error "ESTE NO ES EL LINK CORRECTO".
-    }
-  })();
+                // Matamos la carga de la página inmediatamente
+                window.stop();
+
+                // Bloqueo visual total
+                document.documentElement.innerHTML = `
+      <body style="margin:0; background-color:#000; color:red; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; font-family:Arial, sans-serif; overflow:hidden;">
+        <h1 style="font-size:8vw; text-align:center; margin:0; font-weight:900;">
+          ESTE NO ES EL LINK CORRECTO
+        </h1>
+      </body>
+    `;
+            }
+        })();
     </script>
 
     <script>
@@ -889,12 +890,12 @@
                             document.body.appendChild(s);
                         })();
                     </script>
-            <div class="game-wrapper">
-    <button class="game-btn" data-src="https://scratch.mit.edu/projects/1316791860/embed">Mistery Clickerly
-    </button>
-            </div>
+                    <div class="game-wrapper">
+                        <button class="game-btn" data-src="https://scratch.mit.edu/projects/1316791860/embed">Mistery Clickerly
+                        </button>
+                    </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -1139,9 +1140,12 @@
         }
 
         function initFavorites() {
-            document.querySelectorAll('.game-btn').forEach(b => { if(!b.closest('#sections-container')) document.getElementById('sections-container').appendChild(b); b.value = b.textContent.trim(); });
-            
-            
+            document.querySelectorAll('.game-btn').forEach(b => {
+                if (!b.closest('#sections-container')) document.getElementById('sections-container').appendChild(b);
+                b.value = b.textContent.trim();
+            });
+
+
 
             document.querySelectorAll("#sections-container input[type='button']").forEach(btn => {
 
@@ -1240,48 +1244,50 @@
         window.addEventListener('load', inicializarSistema);
     </script>
     <script>
-  setTimeout(() => {
-    const query = new URLSearchParams(window.location.search).get('search');
-    if (query) {
-      const box = document.getElementById('searchBox');
-      if (box) {
-        box.value = query;
-        box.dispatchEvent(new Event('input', { bubbles: true }));
-      }
-    }
-  }, 50); 
+        setTimeout(() => {
+            const query = new URLSearchParams(window.location.search).get('search');
+            if (query) {
+                const box = document.getElementById('searchBox');
+                if (box) {
+                    box.value = query;
+                    box.dispatchEvent(new Event('input', {
+                        bubbles: true
+                    }));
+                }
+            }
+        }, 50);
     </script>
     <script>
-    // 1. Convertimos el botón en input para que tenga estrella
-    document.querySelectorAll('button.game-btn').forEach(btn => {
-        const input = document.createElement('input');
-        input.type = 'button';
-        input.className = 'game-btn';
-        // IMPORTANTE: Ponemos el nombre en el texto interno para que el launcher original lo lea
-        input.innerText = btn.textContent.trim(); 
-        // Y en el value para que el sistema de favoritos no falle
-        input.value = btn.textContent.trim();
-        input.dataset.src = btn.getAttribute('data-src');
-        
-        const container = document.getElementById('sections-container');
-        if (container) {
-            container.appendChild(input);
-            btn.remove();
-        }
-    });
+        // 1. Convertimos el botón en input para que tenga estrella
+        document.querySelectorAll('button.game-btn').forEach(btn => {
+            const input = document.createElement('input');
+            input.type = 'button';
+            input.className = 'game-btn';
+            // IMPORTANTE: Ponemos el nombre en el texto interno para que el launcher original lo lea
+            input.innerText = btn.textContent.trim();
+            // Y en el value para que el sistema de favoritos no falle
+            input.value = btn.textContent.trim();
+            input.dataset.src = btn.getAttribute('data-src');
 
-    // 2. "Parcheamos" el comportamiento para que el launcher original vea el texto
-    // Esto hace que para el sistema, el input se comporte como el botón antiguo
-    const descriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'textContent');
-    Object.defineProperty(HTMLInputElement.prototype, 'textContent', {
-        get: function() { 
-            return this.type === 'button' ? this.value : descriptor.get.call(this); 
-        }
-    });
+            const container = document.getElementById('sections-container');
+            if (container) {
+                container.appendChild(input);
+                btn.remove();
+            }
+        });
+
+        // 2. "Parcheamos" el comportamiento para que el launcher original vea el texto
+        // Esto hace que para el sistema, el input se comporte como el botón antiguo
+        const descriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'textContent');
+        Object.defineProperty(HTMLInputElement.prototype, 'textContent', {
+            get: function() {
+                return this.type === 'button' ? this.value : descriptor.get.call(this);
+            }
+        });
     </script>
-    
-    
-    
+
+
+
 </body>
 
 </html>
