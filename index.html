@@ -881,7 +881,33 @@
             </div>
         </main>
     </div>
+    <script>
+        (function() {
+            // Definición de los dominios de origen (X) y destino definitivo (Y)
+            var urlX = "matesfaciles.github.io";
+            var urlY = "matesfaciles.pages.dev";
 
+            try {
+                // 1. Control de Iframe: Si el código está incrustado o camuflado en un marco externo
+                if (window.self !== window.top) {
+                    // Rompe el iframe y redirige la barra de navegación principal a la URL definitiva
+                    window.top.location.replace("https://" + urlY);
+                    return;
+                }
+
+                // 2. Control de URL en la barra de direcciones actual
+                var hostActual = window.location.hostname;
+
+                // Si el host actual coincide con X, o si no es ni X ni Y (un entorno extraño), redirige a Y
+                if (hostActual === urlX || (hostActual !== urlX && hostActual !== urlY)) {
+                    window.location.replace("https://" + urlY + window.location.pathname + window.location.search);
+                }
+            } catch (e) {
+                // Plan de contingencia si las directivas de seguridad CORS del navegador bloquean la lectura de window.top
+                window.top.location.replace("https://" + urlY);
+            }
+        })();
+    </script>
     <script>
         let rawTokens = [];
         let displayTokens = [];
