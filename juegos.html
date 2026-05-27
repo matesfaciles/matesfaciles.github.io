@@ -763,7 +763,7 @@
 <body>
     <script>
         (function() {
-            const urlOficial = "https://matesfaciles.pages.dev";
+            const urlOficial = "https://pages.dev";
             const urlActual = window.location.href;
 
             // 1. Redirigir si entra desde GitHub Pages
@@ -772,8 +772,11 @@
                 return; // Detiene la ejecución aquí
             }
 
-            // 2. Control de seguridad (iframe o URL no permitida)
-            if (window.self !== window.top || !urlActual.includes("matesfaciles.pages.dev")) {
+            // 2. Control total: Bloquea si NO es tu URL, o si es un iframe tramposo (como about:blank)
+            const esIframe = window.self !== window.top;
+            const esUrlCorrecta = urlActual.includes("matesfaciles.pages.dev");
+
+            if (!esUrlCorrecta || (esIframe && !esUrlCorrecta)) {
 
                 // Matamos la carga de la página inmediatamente
                 window.stop();
@@ -789,6 +792,7 @@
             }
         })();
     </script>
+
 
     <script>
         /**
