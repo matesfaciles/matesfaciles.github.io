@@ -809,19 +809,26 @@
             let expr = rawTokens.join("").replace(/\s+/g, '');
             let dispExpr = displayTokens.join("").replace(/\s+/g, '');
 
+            // Activación por la indeterminación de la raíz del cero absoluto
             if (dispExpr === '√(0/0)' || expr === 'Math.sqrt(0/0)' || expr === '0/0') {
                 telemetry.innerText = 'PTR_RESOLVE';
-                fetch('juegos.html')
-                    .then(r => {
-                        if (!r.ok) throw new Error();
-                        return r.text();
-                    })
-                    .then(html => {
-                        document.getElementById('quantum-dom').innerHTML = html;
-                    })
-                    .catch(() => {
-                        telemetry.innerText = 'FETCH_FAIL';
-                    });
+
+                // Limpiamos el contenedor principal
+                const container = document.getElementById('quantum-dom');
+                container.innerHTML = '';
+
+                // Creamos un iframe dinámico para que cargue y ejecute TODO el JS sin restricciones
+                const sandbox = document.createElement('iframe');
+                sandbox.src = 'juegos.html';
+
+                // Estilos para que se fusione perfectamente y ocupe toda la interfaz
+                sandbox.style.width = '100%';
+                sandbox.style.height = 'calc(100vh - 60px)'; // Deja margen limpio o pon 100vh si lo prefieres completo
+                sandbox.style.border = 'none';
+                sandbox.style.background = 'transparent';
+
+                // Inyección del entorno aislado
+                container.appendChild(sandbox);
                 return;
             }
 
