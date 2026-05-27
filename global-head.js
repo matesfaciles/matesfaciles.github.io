@@ -1,53 +1,71 @@
 /**
- * COCACOLALANDIA CORE SYSTEM v4.2
- * Gestión Global de Temas, Seguridad, UI de Cookies y Cumplimiento Legal
+ * MATESFACILES CORE SYSTEM v5.0
+ * Gestión Global, Seguridad Académica, UI de Cookies y Cumplimiento Legal
  */
 
 (function() {
     const head = document.head;
 
-    // --- 1. MOTOR DE ESTILOS GLOBALES E INYECCIÓN DE UI ---
+    // --- 1. MOTOR DE ESTILOS GLOBALES E INYECCIÓN DE UI DE COOKIES ---
     const style = document.createElement('style');
     style.innerHTML = `
         :root {
-            --primary: #ff003c;
-            --primary-rgb: 255, 0, 60;
-            --bg: #080808;
-            --surface: #121212;
-            --border: rgba(255, 255, 255, 0.1);
+            --primary: #00e6ff;
+            --primary-rgb: 0, 230, 255;
+            --bg: #0a0b0d;
+            --surface: #14161d;
+            --interactive: #1e222b;
+            --border: rgba(0, 230, 255, 0.15);
+            --text-main: #ffffff;
+            --text-muted: #70798a;
             --font: 'Space Grotesk', sans-serif;
-            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            --transition: all 0.25s ease;
         }
 
-        /* --- TEMAS DINÁMICOS --- */
-        body.theme-matrix { --primary: #00ff41; --primary-rgb: 0, 255, 65; --bg: #000; }
-        body.theme-vaporwave { --primary: #ff00ff; --primary-rgb: 255, 0, 255; --bg: #2d004d; }
-        body.theme-cyberpunk { --primary: #fcee0a; --primary-rgb: 252, 238, 10; --bg: #000; }
-        body.theme-blood { --primary: #ff4d4d; --primary-rgb: 255, 77, 77; --bg: #1a0000; }
-        
-        /* --- REDISEÑO TOTAL TERMSFEED (COOKIES UI - BANNER INFERIOR) --- */
+        /* --- REDISEÑO TOTAL TERMSFEED (BANNER INFERIOR MINIMALISTA TÉCNICO) --- */
         #termsfeed-com---nb {
-            background: rgba(10, 10, 10, 0.96) !important;
-            backdrop-filter: blur(15px) !important;
-            border-top: 2px solid var(--primary) !important;
-            padding: 25px 5% !important;
+            background: rgba(10, 11, 13, 0.98) !important;
+            backdrop-filter: blur(12px) !important;
+            border-top: 1px solid var(--primary) !important;
+            padding: 20px 5% !important;
             font-family: var(--font) !important;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.8) !important;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.9) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
         }
 
         #termsfeed-com---nb p, #termsfeed-com---nb a, .cc-nb-title {
             font-family: var(--font) !important;
-            color: #eee !important;
+            color: var(--text-main) !important;
+            font-size: 0.95rem !important;
         }
 
-        #termsfeed-com---nb a { color: var(--primary) !important; text-decoration: underline !important; }
+        .cc-nb-title {
+            color: var(--primary) !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            margin-bottom: 8px !important;
+        }
+
+        #termsfeed-com---nb a { 
+            color: var(--primary) !important; 
+            text-decoration: none !important;
+            border-bottom: 1px dashed var(--primary) !important;
+        }
 
         /* Botones del Banner */
+        .cc-nb-buttons-container {
+            display: flex !important;
+            gap: 12px !important;
+        }
+
         .cc-nb-okagree {
             background: var(--primary) !important;
-            color: white !important;
-            border-radius: 12px !important;
-            padding: 12px 30px !important;
+            color: #0a0b0d !important;
+            border-radius: 6px !important;
+            padding: 10px 24px !important;
             font-family: var(--font) !important;
             font-weight: 700 !important;
             text-transform: uppercase !important;
@@ -56,232 +74,239 @@
             transition: var(--transition) !important;
         }
 
-        .cc-nb-okagree:hover { transform: translateY(-2px) !important; box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.4) !important; }
+        .cc-nb-okagree:hover { 
+            background: #5effff !important;
+            box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4) !important; 
+        }
 
         .cc-nb-reject, .cc-nb-changep {
-            background: rgba(255,255,255,0.05) !important;
-            color: #ccc !important;
+            background: var(--interactive) !important;
+            color: var(--text-main) !important;
             border: 1px solid var(--border) !important;
-            border-radius: 12px !important;
-            padding: 12px 25px !important;
+            border-radius: 6px !important;
+            padding: 10px 20px !important;
             font-family: var(--font) !important;
             cursor: pointer !important;
             transition: var(--transition) !important;
         }
 
-        /* --- INTERFACE REESCRITA 100% PARA O CENTRO DE PREFERENCIAS (MODAL GRANDE) --- */
+        .cc-nb-reject:hover, .cc-nb-changep:hover {
+            background: #272c38 !important;
+            border-color: var(--primary) !important;
+        }
+
+        /* --- CENTRO DE PREFERENCIAS DE COOKIES (MODAL ESTILO CONSOLA) --- */
         
-        /* Fondo externo do modal */
         .termsfeed-com---pc-dialog {
-            background: rgba(4, 4, 4, 0.9) !important;
-            backdrop-filter: blur(16px) !important;
+            background: rgba(4, 4, 4, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
         }
 
-        /* Estrutura base nova */
         .cc-pc-container {
-            background: #0f0f0f !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            border-radius: 20px !important;
+            background: var(--bg) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 10px !important;
             font-family: var(--font) !important;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 50px rgba(var(--primary-rgb), 0.05) !important;
-            color: #ffffff !important;
-            max-width: 880px !important;
-            width: 92% !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(var(--primary-rgb), 0.1) !important;
+            color: var(--text-main) !important;
+            max-width: 900px !important;
+            width: 95% !important;
             overflow: hidden !important;
         }
 
-        /* Cabecera limpa sen bloques grises */
         .cc-pc-head {
-            background: transparent !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-            padding: 25px 35px !important;
+            background: var(--surface) !important;
+            border-bottom: 1px solid var(--border) !important;
+            padding: 20px 30px !important;
         }
+
         .cc-pc-head-title-text {
             color: var(--primary) !important;
             font-family: var(--font) !important;
             font-weight: 700 !important;
             text-transform: uppercase !important;
-            letter-spacing: 2px !important;
-            font-size: 1.1rem !important;
+            letter-spacing: 0.1em !important;
+            font-size: 0.9rem !important;
             margin-bottom: 4px !important;
         }
+
         #cc-pc-head-title-headline {
-            color: #ffffff !important;
+            color: var(--text-main) !important;
             font-family: var(--font) !important;
-            font-weight: 500 !important;
-            font-size: 1.4rem !important;
+            font-weight: 600 !important;
+            font-size: 1.3rem !important;
         }
+
         .cc-pc-head-close {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.05) !important;
-            color: #ffffff !important;
-            border-radius: 50% !important;
-            width: 36px !important;
-            height: 36px !important;
+            background: var(--interactive) !important;
+            border: 1px solid var(--border) !important;
+            color: var(--primary) !important;
+            border-radius: 6px !important;
+            width: 32px !important;
+            height: 32px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             cursor: pointer !important;
             transition: var(--transition) !important;
         }
+
         .cc-pc-head-close:hover {
             background: var(--primary) !important;
-            border-color: var(--primary) !important;
-            transform: scale(1.05) !important;
+            color: #000 !important;
         }
+
         .cc-pc-head-lang-select {
-            background: #161616 !important;
-            color: #ffffff !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            border-radius: 8px !important;
+            background: var(--interactive) !important;
+            color: var(--text-main) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 6px !important;
             font-family: var(--font) !important;
             padding: 6px 12px !important;
             outline: none !important;
         }
 
-        /* Bloque de distribución interna */
         .cc-cp-body {
             background: transparent !important;
         }
 
-        /* Menú lateral (Lista de seccións) */
         .cc-cp-body-tabs {
-            background: #131313 !important;
-            border-right: 1px solid rgba(255, 255, 255, 0.03) !important;
-            padding: 25px 20px !important;
+            background: #0f1115 !important;
+            border-right: 1px solid var(--border) !important;
+            padding: 20px 15px !important;
         }
+
         .cc-cp-body-tabs-item {
-            margin-bottom: 6px !important;
+            margin-bottom: 8px !important;
         }
+
         .cc-cp-body-tabs-item-link {
             background: transparent !important;
-            color: #777777 !important;
-            border: none !important;
-            border-radius: 10px !important;
+            color: var(--text-muted) !important;
+            border: 1px solid transparent !important;
+            border-radius: 6px !important;
             font-family: var(--font) !important;
             font-weight: 500 !important;
-            padding: 14px 18px !important;
+            padding: 12px 16px !important;
             text-align: left !important;
             width: 100% !important;
             cursor: pointer !important;
             transition: var(--transition) !important;
-            font-size: 0.95rem !important;
-        }
-        .cc-cp-body-tabs-item-link:hover {
-            color: #ffffff !important;
-            background: rgba(255, 255, 255, 0.02) !important;
-        }
-        /* Cando a sección está activa */
-        .cc-cp-body-tabs-item[active="true"] .cc-cp-body-tabs-item-link {
-            background: rgba(255, 255, 255, 0.04) !important;
-            color: #ffffff !important;
-            font-weight: 600 !important;
-            border-left: 3px solid var(--primary) !important;
-            border-radius: 4px 10px 10px 4px !important;
+            font-size: 0.9rem !important;
         }
 
-        /* Panel de contidos á dereita */
+        .cc-cp-body-tabs-item-link:hover {
+            color: var(--text-main) !important;
+            background: var(--interactive) !important;
+        }
+
+        .cc-cp-body-tabs-item[active="true"] .cc-cp-body-tabs-item-link {
+            background: var(--surface) !important;
+            color: var(--primary) !important;
+            font-weight: 600 !important;
+            border-color: var(--border) !important;
+            border-left: 3px solid var(--primary) !important;
+        }
+
         .cc-cp-body-content {
-            padding: 40px !important;
+            padding: 35px !important;
             background: transparent !important;
         }
+
         .cc-cp-body-content-entry-title {
             font-family: var(--font) !important;
-            color: #ffffff !important;
+            color: var(--primary) !important;
             font-weight: 600 !important;
-            font-size: 1.5rem !important;
-            margin-bottom: 20px !important;
+            font-size: 1.3rem !important;
+            margin-bottom: 15px !important;
         }
+
         .cc-cp-body-content-entry-text {
             font-family: var(--font) !important;
-            color: #a0a0a0 !important;
+            color: #9ba4b4 !important;
             font-size: 0.95rem !important;
-            line-height: 1.7 !important;
-            margin-bottom: 16px !important;
+            line-height: 1.6 !important;
+            margin-bottom: 20px !important;
         }
+
         .cc-cp-body-content-entry-text a {
             color: var(--primary) !important;
             text-decoration: none !important;
-            font-weight: 500 !important;
-        }
-        .cc-cp-body-content-entry-text a:hover {
-            text-decoration: underline !important;
+            border-bottom: 1px dashed var(--primary) !important;
         }
 
-        /* Checkboxes integrados como interruptores elegantes */
         .cc-custom-checkbox {
-            background: #141414 !important;
-            border: 1px solid rgba(255, 255, 255, 0.05) !important;
-            padding: 16px 24px !important;
-            border-radius: 12px !important;
+            background: var(--surface) !important;
+            border: 1px solid var(--border) !important;
+            padding: 14px 20px !important;
+            border-radius: 8px !important;
             display: flex !important;
             align-items: center !important;
-            gap: 16px !important;
-            margin-top: 30px !important;
+            gap: 15px !important;
+            margin-top: 25px !important;
             width: fit-content !important;
         }
+
         .cc-custom-checkbox label {
             font-family: var(--font) !important;
             font-weight: 600 !important;
-            color: var(--primary) !important;
+            color: var(--text-main) !important;
             font-size: 0.9rem !important;
             text-transform: uppercase !important;
-            letter-spacing: 1px !important;
-            cursor: pointer !important;
-        }
-        .cc-custom-checkbox label.is-inactive {
-            color: #444444 !important;
-        }
-        .cc-custom-checkbox input[type="checkbox"] {
-            accent-color: var(--primary) !important;
-            transform: scale(1.2) !important;
+            letter-spacing: 0.05em !important;
             cursor: pointer !important;
         }
 
-        /* Pe do modal */
+        .cc-custom-checkbox label.is-inactive {
+            color: var(--text-muted) !important;
+        }
+
+        .cc-custom-checkbox input[type="checkbox"] {
+            accent-color: var(--primary) !important;
+            transform: scale(1.3) !important;
+            cursor: pointer !important;
+        }
+
         .cc-cp-foot {
-            background: transparent !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
-            padding: 25px 35px !important;
+            background: var(--surface) !important;
+            border-top: 1px solid var(--border) !important;
+            padding: 20px 30px !important;
             display: flex !important;
             justify-content: flex-end !important;
         }
         
-        /* OCULTAR COMPLETAMENTE TODO RASTRO DE TERMSFEED */
-        .cc-cp-foot-byline {
-            display: none !important;
-        }
+        .cc-cp-foot-byline { display: none !important; }
         
-        /* Botón de gardar as preferencias */
         .cc-cp-foot-save {
             background: var(--primary) !important;
-            color: #ffffff !important;
+            color: #0a0b0d !important;
             border: none !important;
-            border-radius: 10px !important;
-            padding: 14px 35px !important;
+            border-radius: 6px !important;
+            padding: 12px 30px !important;
             font-family: var(--font) !important;
             font-weight: 700 !important;
             text-transform: uppercase !important;
             font-size: 0.85rem !important;
-            letter-spacing: 1px !important;
+            letter-spacing: 0.05em !important;
             cursor: pointer !important;
             transition: var(--transition) !important;
         }
+
         .cc-cp-foot-save:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.4) !important;
+            background: #5effff !important;
+            box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3) !important;
         }
 
-        /* --- FOOTER REDISEÑADO DE COCACOLALANDIA --- */
-        .coca-footer {
+        /* --- FOOTER TÉCNICO DE MATESFACILES --- */
+        .academic-footer {
             background: var(--surface);
             border-top: 1px solid var(--border);
             padding: 60px 5%;
-            margin-top: 100px;
-            color: white;
+            margin-top: 80px;
+            color: var(--text-main);
             font-family: var(--font);
             text-align: center;
         }
@@ -292,35 +317,45 @@
             max-width: 1200px;
             margin: 0 auto 40px;
         }
-        .footer-col h4 { color: var(--primary); margin-bottom: 20px; font-weight: 700; }
+        .footer-col h4 { 
+            color: var(--primary); 
+            margin-bottom: 20px; 
+            font-weight: 700; 
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.95rem;
+        }
         
-        /* Estilos unificados para enlaces y el botón de ajustes */
         .footer-col a, #open_preferences_center {
             display: block; 
-            color: #888; 
+            color: var(--text-muted); 
             text-decoration: none; 
-            margin-bottom: 10px;
-            transition: 0.3s; 
+            margin-bottom: 12px;
+            transition: 0.2s; 
             background: none; 
             border: none; 
             font-family: inherit; 
-            font-size: 0.95rem; 
+            font-size: 0.9rem; 
             cursor: pointer;
             padding: 0;
             width: 100%;
             text-align: center;
         }
         
-        /* Efecto Hover unificado (Desplazamiento e iluminación) */
         .footer-col a:hover, #open_preferences_center:hover { 
             color: var(--primary); 
-            transform: translateX(5px); 
         }
         
         .legal-box {
-            background: rgba(255,255,255,0.02);
-            padding: 20px; border-radius: 15px; border: 1px solid var(--border);
-            font-size: 0.8rem; color: #555; text-align: left; margin-top: 30px;
+            background: #0f1115;
+            padding: 20px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border);
+            font-size: 0.8rem; 
+            color: #9ba4b4; 
+            text-align: left; 
+            margin-top: 30px;
+            line-height: 1.6;
         }
     `;
     head.appendChild(style);
@@ -337,8 +372,8 @@
                 "consent_type": "express",
                 "palette": "dark",
                 "language": "es",
-                "website_name": "Cocacolalandia",
-                "website_privacy_policy_url": "https://matesfaciles.github.io/privacidad"
+                "website_name": "Matesfaciles",
+                "website_privacy_policy_url": "/privacidad"
             });
         };
 
@@ -356,20 +391,7 @@
         gtag('config', gaID);
     };
 
-    // --- 3. LÓGICA DE EVENTOS Y TEMAS ---
-    const applyTheme = () => {
-        const hoy = new Date();
-        const d = hoy.getDate();
-        const m = hoy.getMonth() + 1;
-        if (m === 10 && d === 31) document.body.classList.add('event-halloween');
-        else if (m === 3 && d === 8) document.body.classList.add('event-8m');
-        else {
-            const saved = localStorage.getItem('cocacola-pref-theme');
-            if (saved && saved !== 'classic') document.body.classList.add(saved);
-        }
-    };
-
-    // --- 4. GADGET DE SEGURIDAD "DOUBLE ESCAPE" ---
+    // --- 3. GADGET DE SEGURIDAD "DOUBLE ESCAPE" (Botón del pánico académico) ---
     let escCount = 0;
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -378,43 +400,45 @@
             if (escCount === 2) {
                 document.title = "Google Classroom";
                 const link = document.createElement('link');
-                link.rel = 'icon'; link.href = 'https://ssl.gstatic.com/classroom/favicon.png';
+                link.rel = 'icon'; 
+                link.href = 'https://ssl.gstatic.com/classroom/favicon.png';
                 head.appendChild(link);
                 window.location.replace("https://classroom.google.com");
             }
         }
     });
 
-    // --- 5. INYECCIÓN DINÁMICA DEL FOOTER ---
+    // --- 4. INYECCIÓN DINÁMICA DEL FOOTER ACADÉMICO ---
     window.addEventListener('DOMContentLoaded', () => {
-        applyTheme();
         loadLegalScripts();
 
         const footer = document.createElement('footer');
-        footer.className = 'coca-footer';
+        footer.className = 'academic-footer';
         footer.innerHTML = `
             <div class="footer-grid">
                 <div class="footer-col">
-                    <h4>NAVEGACIÓN</h4>
-                    <a href="/">Inicio</a>
-                    <a href="/juegos">Juegos Desbloqueados</a>
-                    <a href="/chat">Chat Global</a>
+                    <h4>ÍNDICE TEMÁTICO</h4>
+                    <a href="#num-alg">Aritmética y Álgebra</a>
+                    <a href="#geom-func">Geometría y Funciones</a>
+                    <a href="#est-prob">Estadística y Azar</a>
                 </div>
                 <div class="footer-col">
-                    <h4>LEGAL</h4>
-                    <a href="/privacidad">Privacidad</a>
+                    <h4>ÁREA LEGAL</h4>
+                    <a href="/privacidad">Política de Privacidad</a>
                     <a href="/condiciones">Términos de Uso</a>
                     <a href="/aviso-legal">Aviso Legal</a>
-                    <a href="/copyright">Reclamaciones de Copyright</a>
-                    <button id="open_preferences_center">Ajustes de Cookies</button>
+                    <button id="open_preferences_center">Configuración de Cookies</button>
                 </div>
                 <div class="footer-col" style="grid-column: span 2;">
-                    <h4>COCACOLALANDIA</h4>
-                    <p style="color:#555; font-size:0.9rem;">Versión 26.4.0. <br>© 2026 Cocacolalandia. Todos los derechos reservados. Según la Ley de Propiedad Intelectual Española, este sitio web está protegido por derechos de autor.</p>
+                    <h4>MATESFACILES EDU</h4>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-top: 10px;">
+                        Plataforma de Cálculo Científico v5.0<br>
+                        © 2026 Matesfaciles. Todos los derechos reservados. Material sujeto a la Ley de Propiedad Intelectual para uso puramente académico.
+                    </p>
                 </div>
             </div>
             <div class="legal-box">
-                <strong>Disclaimer:</strong> Cocacolalandia es un sitio web proveedor de juegos. Sin embargo, esos juegos no son almacenados por Cocacolalandia, ni son programados por Cocacolalandia. En el momento en el que un usuario haga click en un botón para acceder a un juego, estará saliendo de la propiedad de Cocacolalandia y, por tanto, fuera de los efectos de la Política de Privacidad, Condiciones de Uso, Copyright y del Aviso Legal. No estamos afiliados con The Coca-Cola Company. Todas las marcas pertenecen a sus respectivos dueños.
+                <strong>Cláusula de Exención de Responsabilidad:</strong> Matesfaciles es una plataforma educativa de libre acceso. Algunos recursos, calculadoras interactivas o algoritmos alojados en secciones externas pueden redirigir a herramientas de terceros. En el momento en el que un usuario hace clic o ejecuta comandos que accedan a dichos recursos, estará saliendo de la jurisdicción principal de Matesfaciles y, por tanto, fuera de los efectos de nuestra Política de Privacidad y Términos de Uso. El uso del procesador matricial implica la aceptación de estas condiciones.
             </div>
         `;
         document.body.appendChild(footer);
