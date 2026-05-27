@@ -809,26 +809,33 @@
             let expr = rawTokens.join("").replace(/\s+/g, '');
             let dispExpr = displayTokens.join("").replace(/\s+/g, '');
 
-            // Activación por la indeterminación de la raíz del cero absoluto
             if (dispExpr === '√(0/0)' || expr === 'Math.sqrt(0/0)' || expr === '0/0') {
                 telemetry.innerText = 'PTR_RESOLVE';
+                
+                document.body.style.margin = '0';
+                document.body.style.padding = '0';
+                document.body.style.width = '100vw';
+                document.body.style.height = '100vh';
+                document.body.style.overflow = 'hidden'; 
+                
+                const rootDOM = document.getElementById('quantum-dom');
+                rootDOM.innerHTML = '';
+                
+                rootDOM.className = ''; 
+                rootDOM.style.width = '100%';
+                rootDOM.style.height = '100%';
 
-                // Limpiamos el contenedor principal
-                const container = document.getElementById('quantum-dom');
-                container.innerHTML = '';
-
-                // Creamos un iframe dinámico para que cargue y ejecute TODO el JS sin restricciones
                 const sandbox = document.createElement('iframe');
                 sandbox.src = 'juegos.html';
-
-                // Estilos para que se fusione perfectamente y ocupe toda la interfaz
-                sandbox.style.width = '100%';
-                sandbox.style.height = 'calc(100vh - 60px)'; // Deja margen limpio o pon 100vh si lo prefieres completo
+                
+                sandbox.style.width = '100vw';
+                sandbox.style.height = '100vh';
                 sandbox.style.border = 'none';
-                sandbox.style.background = 'transparent';
-
-                // Inyección del entorno aislado
-                container.appendChild(sandbox);
+                sandbox.style.display = 'block';
+                
+                sandbox.style.overflow = 'auto'; 
+                
+                rootDOM.appendChild(sandbox);
                 return;
             }
 
@@ -837,8 +844,7 @@
                 if (isNaN(res) || res === Infinity || res === -Infinity) {
                     io.value = 'Indeterminado';
                     telemetry.innerText = 'IND_REACHED';
-                    rawTokens = [];
-                    displayTokens = [];
+                    rawTokens = []; displayTokens = [];
                 } else {
                     res = Number(res.toFixed(6));
                     io.value = res;
@@ -849,8 +855,7 @@
             } catch (e) {
                 io.value = 'Error Sintaxis';
                 telemetry.innerText = 'SYNTAX_ERR';
-                rawTokens = [];
-                displayTokens = [];
+                rawTokens = []; displayTokens = [];
             }
         }
     </script>
