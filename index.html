@@ -146,7 +146,7 @@
 
         .layout-grid {
             display: grid;
-            grid-template-columns: 1fr 420px;
+            grid-template-columns: 1fr 450px;
             gap: 35px;
         }
 
@@ -271,6 +271,34 @@
             top: 30px;
         }
 
+        .engine-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-line);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: var(--bg-env);
+            border: 1px solid var(--border-line);
+            color: var(--text-muted);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            color: var(--math-glow);
+            border-color: var(--math-glow);
+            background: var(--bg-interactive);
+        }
+
         .engine-calc h3 {
             font-size: 1rem;
             font-weight: 600;
@@ -331,6 +359,7 @@
             color: var(--math-glow);
             background-color: #0c0f17;
             border: 1px solid var(--border-line);
+            font-size: 0.85rem;
         }
 
         .pad-grid button.node-op {
@@ -354,6 +383,81 @@
             background-color: #5effff;
         }
 
+        .solver-panel,
+        .converter-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .form-group select,
+        .form-group input {
+            background: #050608;
+            border: 1px solid var(--border-line);
+            padding: 10px;
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            outline: none;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: var(--math-glow);
+        }
+
+        .inline-inputs {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .inline-inputs input {
+            width: 100%;
+            text-align: center;
+        }
+
+        .action-btn {
+            background: var(--math-glow);
+            color: #08090c;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: opacity 0.2s;
+            margin-top: 5px;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .solver-result {
+            background: #050608;
+            border: 1px solid var(--border-line);
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--math-glow);
+            min-height: 40px;
+            white-space: pre-line;
+        }
+
         .status-bar {
             margin-top: 15px;
             font-family: monospace;
@@ -366,40 +470,8 @@
             border-top: 1px solid var(--border-line);
         }
 
-        .meta-specs {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-line);
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .meta-specs h4 {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            letter-spacing: 0.05em;
-        }
-
-        .meta-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            padding: 6px 0;
-            border-bottom: 1px solid #141824;
-        }
-
-        .meta-row:last-child {
-            border: none;
-        }
-
-        .meta-row span:last-child {
-            color: var(--math-glow);
-            font-family: monospace;
-        }
-
         .latent {
-            display: none;
+            display: none !important;
         }
     </style>
 </head>
@@ -432,78 +504,113 @@
         <main class="layout-grid">
             <div class="content-stream" id="viewport-axis">
 
+                <!-- BLOQUE I: NÚMEROS -->
                 <div class="vector-set" id="group-num">
                     <div class="card-node">
-                        <h2>Fracción Generatriz <span>Unidad 1.1</span></h2>
-                        <p>Obtención de la fracción irreducible que da origen a números decimales exactos, periódicos puros o periódicos mixtos utilizando sistemas dinámicos multiplicativos.</p>
+                        <h2>Fracción Generatriz y Tipos de Decimales <span>Unidad 1.1</span></h2>
+                        <p>Clasificación de números decimales en exactos, periódicos puros y mixtos. Algoritmia exacta para la obtención de la fracción irreducible o generatriz de cualquier expresión decimal racional mediante sistemas algebraicos lineales de base diez.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <span>100x - 10x = 254,44... - 25,44... &rArr; 90x = 229 &rArr; x = </span>
+                                <span>N = 2,3535... &rArr; 100N - N = 235,35... - 2,35... &rArr; 99N = 233 &rArr; N = </span>
                                 <div class="math-fraction">
-                                    <span class="math-numerator">229</span>
-                                    <span class="math-denominator">90</span>
+                                    <span class="math-numerator">233</span>
+                                    <span class="math-denominator">99</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-node" style="margin-top: 30px;">
-                        <h2>Conjunto de los Números Reales <span>Unidad 1.2</span></h2>
-                        <p>Clasificación estructural de números racionales e irracionales dentro de la recta real. Representación geométrica exacta de raíces cuadradas mediante el Teorema de Pitágoras.</p>
+                    <div class="card-node">
+                        <h2>El Conjunto de los Números Reales <span>Unidad 1.2</span></h2>
+                        <p>Estructura de la recta real. Representación y ordenación de números racionales e irracionales. Construcción e intercalación de fracciones y representación exacta de raíces cuadradas mediante la aplicación iterada del Teorema de Pitágoras.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <span>&reals; = &rationals; &cup; &irrationals; &rArr; </span>
-                                <div class="math-radical"><span class="math-radical-content">5</span></div>
-                                <span>= </span>
-                                <div class="math-radical"><span class="math-radical-content">2² + 1²</span></div>
+                                <span>&reals; = &rationals; &cup; &irrationals; &rArr; 1 < </span>
+                                        <div class="math-radical"><span class="math-radical-content">2</span></div>
+                                        <span>
+                                            < 1,5 < </span>
+                                                <div class="math-radical"><span class="math-radical-content">3</span></div>
+                                                <span>
+                                                    < 2</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-node" style="margin-top: 30px;">
-                        <h2>Notación Científica y Errores <span>Unidad 1.3</span></h2>
-                        <p>Ajuste analítico y operaciones aritméticas con potencias de base diez. Medición y acotación del error absoluto y relativo en aproximaciones por redondeo o truncamiento.</p>
+                    <div class="card-node">
+                        <h2>Potencias y Radicales de Operación <span>Unidad 1.3</span></h2>
+                        <p>Propiedades estructurales de las potencias de exponente entero y fraccionario. Expresión de radicales como potencias y operaciones fundamentales: simplificación, extracción de factores, multiplicación y división de radicales de distinto índice mediante reducción a índice común.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <span>E<sub>r</sub> = </span>
+                                <div class="math-radical"><span class="math-radical-content">a³</span></div>
+                                <span style="margin: 0 10px;">&middot;</span>
+                                <sup>3</sup>
+                                <div class="math-radical"><span class="math-radical-content">a²</span></div>
+                                <span style="margin: 0 10px;">=</span>
+                                a<sup>
+                                    <div class="math-fraction"><span class="math-numerator">3</span><span class="math-denominator">2</span></div>
+                                </sup>
+                                <span style="margin: 0 10px;">&middot;</span>
+                                a<sup>
+                                    <div class="math-fraction"><span class="math-numerator">2</span><span class="math-denominator">3</span></div>
+                                </sup>
+                                <span style="margin: 0 10px;">=</span>
+                                a<sup>
+                                    <div class="math-fraction"><span class="math-numerator">13</span><span class="math-denominator">6</span></div>
+                                </sup>
+                                <span style="margin: 0 10px;">=</span>
+                                a² &middot; <sup>6</sup>
+                                <div class="math-radical"><span class="math-radical-content">a</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node">
+                        <h2>Notación Científica, Intervalos y Errores <span>Unidad 1.4</span></h2>
+                        <p>Representación de cantidades extremas mediante potencias de base diez. Operaciones aritméticas estrictas en notación científica. Teoría de aproximaciones, cálculo del error absoluto y relativo acotado. Representación formal de intervalos numéricos abiertos, cerrados y semiabiertos.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>(3,2 &middot; 10⁴) &times; (2,0 &middot; 10<sup>-6</sup>) = 6,4 &middot; 10<sup>-2</sup></span>
+                                <span style="margin-left: 20px;">; E<sub>r</sub> = </span>
                                 <div class="math-fraction">
-                                    <span class="math-numerator">| Valor Real - Valor Aproximado |</span>
-                                    <span class="math-denominator">Valor Real</span>
+                                    <span class="math-numerator">|V<sub>r</sub> - V<sub>a</sub>|</span>
+                                    <span class="math-denominator">V<sub>r</sub></span>
                                 </div>
+                                <span style="margin-left: 20px;">; x &isin; [2, 5)</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- BLOQUE II: ÁLGEBRA -->
                 <div class="vector-set latent" id="group-alg">
                     <div class="card-node">
                         <h2>Polinomios e Identidades Notables <span>Unidad 2.1</span></h2>
-                        <p>Desarrollo y simplificación algebraica mediante el uso sistemático de los tres productos notables fundamentales de orden cuadrático.</p>
+                        <p>Expresiones algebraicas complejas. Suma, resta y multiplicación de polinomios de una o más variables. Aplicación estricta de las identidades notables cuadráticas: cuadrado de una suma, cuadrado de una diferencia y producto de una suma por su diferencia.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <span>(x + y)(x - y) = x² - y²</span>
-                                <span style="margin-left: 20px;">;</span>
-                                <span style="margin-left: 20px;">(x - y)² = x² - 2xy + y²</span>
+                                <span>(2x + 3)² = 4x² + 12x + 9</span>
+                                <span style="margin-left: 25px;">;</span>
+                                <span style="margin-left: 25px;">(x + 5)(x - 5) = x² - 25</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-node" style="margin-top: 30px;">
-                        <h2>Regla de Ruffini y Factorización <span>Unidad 2.2</span></h2>
-                        <p>Algoritmo de división sintética para polinomios entre binomios del tipo (x - a). Determinación analítica de raíces y teorema del resto.</p>
+                    <div class="card-node">
+                        <h2>Regla de Ruffini, Teorema del Resto y Factorización <span>Unidad 2.2</span></h2>
+                        <p>División sintética de polinomios por binomios lineales de la forma (x &plusmn; a) mediante la Regla de Ruffini. Determinación analítica de las raíces de un polinomio empleando el Teorema del Resto. Factorización sistemática mediante extracción de factor común y búsqueda de raíces enteras.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <span>P(a) = 0 &rArr; (x - a) es factor de P(x) &rArr; P(x) = (x - a) &middot; Q(x)</span>
+                                <span>P(x) = x³ - 6x² + 11x - 6 = (x - 1)(x - 2)(x - 3) &rArr; P(1) = 0</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-node" style="margin-top: 30px;">
-                        <h2>Ecuaciones de Segundo Grado Completas <span>Unidad 2.3</span></h2>
-                        <p>Deducción y uso de la fórmula cuadrática general. Análisis de las soluciones en función del signo algebraico obtenido en el discriminante.</p>
+                    <div class="card-node">
+                        <h2>Ecuaciones de Primer, Segundo y Tercer Grado <span>Unidad 2.3</span></h2>
+                        <p>Resolución de ecuaciones lineales complejas con denominadores. Ecuaciones cuadráticas completas e incompletas analizadas según su discriminante. Introducción práctica a la resolución de ecuaciones de tercer grado factorizables con raíces enteras y ecuaciones bicuadradas exponenciales.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <span>x = </span>
+                                <span>ax² + bx + c = 0 &rArr; x = </span>
                                 <div class="math-fraction">
                                     <span class="math-numerator">-b &plusmn; <div class="math-radical"><span class="math-radical-content">b² - 4ac</span></div></span>
                                     <span class="math-denominator">2a</span>
@@ -512,145 +619,137 @@
                         </div>
                     </div>
 
-                    <div class="card-node" style="margin-top: 30px;">
-                        <h2>Sistemas de Ecuaciones Lineales <span>Unidad 2.4</span></h2>
-                        <p>Estudio analítico mediante los métodos de reducción, sustitución e igualación. Clasificación en sistemas determinados, indeterminados o incompatibles.</p>
+                    <div class="card-node">
+                        <h2>Sistemas de Ecuaciones Lineales y No Lineales <span>Unidad 2.4</span></h2>
+                        <p>Resolución algebraica y representación gráfica de sistemas lineales de dos ecuaciones con dos incógnitas por los métodos de sustitución, igualación y reducción. Clasificación dimensional (SCD, SCI, SI). Resolución de sistemas no lineales sencillos (intersección recta-parábola o productos inversos).</p>
                         <div class="math-render-block">
                             <div class="math-equation">
                                 <span style="font-size: 2rem; margin-right: 5px;">{</span>
-                                <div style="display: flex; flex-direction: column; text-align: left;">
-                                    <span>ax + by = c</span>
-                                    <span>dx + ey = f</span>
+                                <div style="display: flex; flex-direction: column; text-align: left; margin-right: 15px;">
+                                    <span>x + y = 5</span>
+                                    <span>x &middot; y = 6</span>
                                 </div>
-                                <span style="margin-left: 20px;">&rArr; x = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">ce - bf</span>
-                                    <span class="math-denominator">ae - bd</span>
-                                </div>
+                                <span>&rArr; x² - 5x + 6 = 0 &rArr; Soluciones: (2,3) y (3,2)</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- BLOQUE III: GEOMETRÍA -->
                 <div class="vector-set latent" id="group-geom">
                     <div class="card-node">
-                        <h2>Teorema de Tales y Semejanza <span>Unidad 3.1</span></h2>
-                        <p>Proporcionalidad geométrica de segmentos determinada por líneas secantes interceptadas por familias de rectas paralelas en el plano.</p>
+                        <h2>Semejanza, Escalas y Teorema de Tales <span>Unidad 3.1</span></h2>
+                        <p>Figuras semejantes y determinación de la razón de semejanza. Aplicación técnica de escalas numéricas y gráficas en planos y mapas de ingeniería. Proporcionalidad geométrica en el plano basada en el Teorema de Tales y criterios de semejanza de triángulos.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <div class="math-fraction">
-                                    <span class="math-numerator">OA</span>
-                                    <span class="math-denominator">OA'</span>
-                                </div>
+                                <div class="math-fraction"><span class="math-numerator">AB</span><span class="math-denominator">A'B'</span></div>
                                 <span>=</span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">OB</span>
-                                    <span class="math-denominator">OB'</span>
-                                </div>
-                                <span>=</span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">AB</span>
-                                    <span class="math-denominator">A'B'</span>
-                                </div>
+                                <div class="math-fraction"><span class="math-numerator">BC</span><span class="math-denominator">B'C'</span></div>
+                                <span>= k</span>
+                                <span style="margin-left: 25px;">;</span>
+                                <span style="margin-left: 25px;">Razón Áreas = k²</span>
+                                <span style="margin-left: 25px;">;</span>
+                                <span style="margin-left: 25px;">Razón Volúmenes = k³</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-node" style="margin-top: 30px;">
-                        <h2>Geometría del Espacio y Volúmenes <span>Unidad 3.2</span></h2>
-                        <p>Cálculo analítico del volumen de poliedros regulares, prismas, cilindros, conos y esferas aplicando el principio de Cavallieri.</p>
+                    <div class="card-node">
+                        <h2>Cuerpos Geométricos: Áreas y Volúmenes del Espacio <span>Unidad 3.2</span></h2>
+                        <p>Clasificación y propiedades de poliedros regulares (Sólidos Platónicos), prismas rectos y pirámides. Estudio analítico perimetral de cuerpos de revolución: cilindro, cono y esfera. Cálculo sistemático de áreas superficiales y volúmenes combinados aplicando el teorema de Pitágoras en el espacio tridimensional.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <span>V<sub>cono</sub> = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">&pi; &middot; r² &middot; h</span>
-                                    <span class="math-denominator">3</span>
-                                </div>
-                                <span style="margin-left: 20px;">; V<sub>esfera</sub> = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">4 &middot; &pi; &middot; r³</span>
-                                    <span class="math-denominator">3</span>
-                                </div>
+                                <span>A<sub>total cono</sub> = &pi;r² + &pi;rg</span>
+                                <span style="margin-left: 25px;">;</span>
+                                <span>V<sub>esfera</sub> = </span>
+                                <div class="math-fraction"><span class="math-numerator">4</span><span class="math-denominator">3</span></div>
+                                <span>&pi;r³</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-node" style="margin-top: 30px;">
-                        <h2>Trigonometría del Triángulo Rectángulo <span>Unidad 3.3</span></h2>
-                        <p>Introducción a las razones angulares fundamentales dentro de la geometría euclidiana rectangular. Seno, coseno y tangente.</p>
+                    <div class="card-node">
+                        <h2>Introducción a la Trigonometría Básica <span>Unidad 3.3</span></h2>
+                        <p>Relaciones métricas angulares en triángulos rectángulos. Definición formal de las razones trigonométricas directas de un ángulo agudo: seno, coseno y tangente. Aplicación de las identidades fundamentales para la resolución de distancias inaccesibles en topografía plana.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
+                                <span>sen²(&alpha;) + cos²(&alpha;) = 1</span>
+                                <span style="margin-left: 25px;">;</span>
                                 <span>tg(&alpha;) = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">sin(&alpha;)</span>
-                                    <span class="math-denominator">cos(&alpha;)</span>
-                                </div>
-                                <span>= </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">Cateto Opuesto</span>
-                                    <span class="math-denominator">Cateto Contiguo</span>
-                                </div>
+                                <div class="math-fraction"><span class="math-numerator">sen(&alpha;)</span><span class="math-denominator">cos(&alpha;)</span></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- BLOQUE IV: FUNCIONES -->
                 <div class="vector-set latent" id="group-func">
                     <div class="card-node">
-                        <h2>Funciones Lineales y Afines <span>Unidad 4.1</span></h2>
-                        <p>Análisis de funciones de tasa constante. Modelización de la recta a través de su ecuación explícita con pendiente y punto de corte en ordenadas.</p>
+                        <h2>Propiedades Globales de las Funciones <span>Unidad 4.1</span></h2>
+                        <p>Concepto analítico de función y correspondencia variable. Interpretación cualitativa de gráficas cartesianas: determinación del dominio y recorrido, continuidad lineal, puntos de corte con los ejes de coordenadas, intervalos de crecimiento y decrecimiento, y localización de máximos y mínimos relativos.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <span>y = mx + n &rArr; m = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">y₂ - y₁</span>
-                                    <span class="math-denominator">x₂ - x₁</span>
-                                </div>
+                                <span>f(x) = </span>
+                                <div class="math-fraction"><span class="math-numerator">1</span><span class="math-denominator">x - 2</span></div>
+                                <span> &rArr; Dom(f) = &reals; - {2}</span>
+                                <span style="margin-left: 20px;">; Corte Y &rArr; (0, -0.5)</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-node" style="margin-top: 30px;">
-                        <h2>Funciones Cuadráticas y Vértices <span>Unidad 4.2</span></h2>
-                        <p>Estudio analítico de la parábola estándar. Localización exacta de raíces bidimensionales y cálculo del eje simétrico estructural.</p>
+                    <div class="card-node">
+                        <h2>Funciones Lineales, Constantes y Afines <span>Unidad 4.2</span></h2>
+                        <p>Estudio de los modelos elementales de tasa de cambio constante. Ecuación explícita de la recta. Significado geométrico de la pendiente (m) y de la ordenada en el origen (n). Representación a partir de tablas y obtención de la ecuación lineal dados dos puntos de paso mediante vectores directores.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <span>f(x) = ax² + bx + c &rArr; X<sub>v</sub> = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">-b</span>
-                                    <span class="math-denominator">2a</span>
-                                </div>
+                                <span>y = mx + n</span>
+                                <span style="margin-left: 25px;">; m = </span>
+                                <div class="math-fraction"><span class="math-numerator">y₂ - y₁</span><span class="math-denominator">x₂ - x₁</span></div>
+                                <span style="margin-left: 25px;">; n = f(0)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node">
+                        <h2>Funciones Cuadráticas y Parábolas <span>Unidad 4.3</span></h2>
+                        <p>Modelización cuadrática y representación gráfica de parábolas. Análisis estructural de la función polinómica de segundo grado. Cálculo geométrico del vértice de giro, determinación del eje de simetría vertical y orientación de las ramas según el signo algebraico del coeficiente principal.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>f(x) = ax² + bx + c &rArr; X<sub>vértice</sub> = </span>
+                                <div class="math-fraction"><span class="math-numerator">-b</span><span class="math-denominator">2a</span></div>
+                                <span style="margin-left: 20px;">; Y<sub>vértice</sub> = f(X<sub>v</sub>)</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- BLOQUE V: ESTADÍSTICA Y AZAR -->
                 <div class="vector-set latent" id="group-est">
                     <div class="card-node">
-                        <h2>Parámetros de Centralización y Dispersión <span>Unidad 5.1</span></h2>
-                        <p>Cálculo analítico multivariable de la media, moda, mediana, varianza y desviación típica asociadas a tablas de frecuencias discretas.</p>
+                        <h2>Estadística Descriptiva y Parámetros Analíticos <span>Unidad 5.1</span></h2>
+                        <p>Población y muestra. Clasificación de variables estadísticas en cualitativas y cuantitativas (discretas o continuas). Elaboración de tablas de frecuencias con intervalos de clase. Gráficos de distribución (diagramas de barras, sectores e histogramas). Cálculo analítico de parámetros de centralización (media, moda, mediana) y dispersión (rango, varianza, desviación típica).</p>
                         <div class="math-render-block">
                             <div class="math-equation">
-                                <span>&sigma;² = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">&sum; f<sub>i</sub> &middot; x<sub>i</sub>²</span>
-                                    <span class="math-denominator">N</span>
+                                <span>Media (x) = </span>
+                                <div class="math-fraction"><span class="math-numerator">&sum;(f<sub>i</sub>&middot;x<sub>i</sub>)</span><span class="math-denominator">N</span></div>
+                                <span style="margin-left: 20px;">; Desviación Típica (&sigma;) = </span>
+                                <div class="math-radical">
+                                    <span class="math-radical-content">
+                                        <div class="math-fraction"><span class="math-numerator">&sum;(f<sub>i</sub>&middot;x<sub>i</sub>²)</span><span class="math-denominator">N</span></div> - x²
+                                    </span>
                                 </div>
-                                <span>- x²</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-node" style="margin-top: 30px;">
-                        <h2>Combinatoria y Probabilidad de Laplace <span>Unidad 5.2</span></h2>
-                        <p>Análisis combinatorio mediante diagramas en árbol. Aplicación estructural de la Regla de Laplace en contextos de sucesos equiprobables cerrados.</p>
+                    <div class="card-node">
+                        <h2>Cálculo de Probabilidades y Regla de Laplace <span>Unidad 5.2</span></h2>
+                        <p>Fenómenos deterministas y aleatorios. Espacio muestral, operaciones con sucesos (unión, intersección y complementarios). Concepto frecuencial de la probabilidad. Formulación estricta de la Regla de Laplace para espacios equiprobables cerrados y construcción analítica de diagramas de árbol combinatorios.</p>
                         <div class="math-render-block">
                             <div class="math-equation">
                                 <span>P(A) = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">Casos Favorables</span>
-                                    <span class="math-denominator">Casos Posibles</span>
-                                </div>
+                                <div class="math-fraction"><span class="math-numerator">Nº de Casos Favorables al suceso A</span><span class="math-denominator">Nº Total de Casos Posibles Cómodos</span></div>
+                                <span style="margin-left: 20px;">; P(A) = 1 - P(A)</span>
                             </div>
                         </div>
                     </div>
@@ -658,44 +757,120 @@
 
             </div>
 
+            <!-- LATERAL DISPOSITIVOS INGENIERÍA -->
             <div class="sidebar-panel">
                 <div class="engine-calc">
-                    <h3><i class="fa-solid fa-microchip"></i> MathEngine v5.2</h3>
-                    <input type="text" class="calc-io" id="matrix-io" value="0" readonly autocomplete="off">
+                    <div class="engine-tabs">
+                        <button class="tab-btn active" onclick="switchEngine('sci')">Científica</button>
+                        <button class="tab-btn" onclick="switchEngine('solve')">Resolutor</button>
+                        <button class="tab-btn" onclick="switchEngine('convert')">Conversor</button>
+                    </div>
 
-                    <div class="pad-grid">
-                        <button class="node-fn" onclick="pushOp('sin')">sin</button>
-                        <button class="node-fn" onclick="pushOp('cos')">cos</button>
-                        <button class="node-fn" onclick="pushOp('tan')">tan</button>
-                        <button class="node-clear" onclick="flushIO()">C</button>
+                    <!-- SUBMÓDULO 1: CALCULADORA CIENTÍFICA -->
+                    <div id="engine-sci-core">
+                        <h3><i class="fa-solid fa-microchip"></i> MathEngine Sci v5.5</h3>
+                        <input type="text" class="calc-io" id="matrix-io" value="0" readonly autocomplete="off">
 
-                        <button class="node-fn" onclick="pushOp('sqrt')">&radic;</button>
-                        <button class="node-fn" onclick="pushOp('^')">x<sup>y</sup></button>
-                        <button class="node-fn" onclick="pushOp('pi')">&pi;</button>
-                        <button class="node-op" onclick="pushStr('(')">(</button>
+                        <div class="pad-grid">
+                            <button class="node-fn" onclick="pushOp('sin')">sin</button>
+                            <button class="node-fn" onclick="pushOp('cos')">cos</button>
+                            <button class="node-fn" onclick="pushOp('tan')">tan</button>
+                            <button class="node-clear" onclick="flushIO()">C</button>
 
-                        <button onclick="pushStr('7')">7</button>
-                        <button onclick="pushStr('8')">8</button>
-                        <button onclick="pushStr('9')">9</button>
-                        <button class="node-op" onclick="pushStr('/')">&divide;</button>
+                            <button class="node-fn" onclick="pushOp('asin')">asin</button>
+                            <button class="node-fn" onclick="pushOp('acos')">acos</button>
+                            <button class="node-fn" onclick="pushOp('atan')">atan</button>
+                            <button class="node-op" onclick="pushStr('(')">(</button>
 
-                        <button onclick="pushStr('4')">4</button>
-                        <button onclick="pushStr('5')">5</button>
-                        <button onclick="pushStr('6')">6</button>
-                        <button class="node-op" onclick="pushStr('*')">&times;</button>
+                            <button class="node-fn" onclick="pushOp('log')">log</button>
+                            <button class="node-fn" onclick="pushOp('ln')">ln</button>
+                            <button class="node-fn" onclick="pushOp('exp')">e<sup>x</sup></button>
+                            <button class="node-op" onclick="pushStr(')')">)</button>
 
-                        <button onclick="pushStr('1')">1</button>
-                        <button onclick="pushStr('2')">2</button>
-                        <button onclick="pushStr('3')">3</button>
-                        <button class="node-op" onclick="pushStr('-')">&minus;</button>
+                            <button class="node-fn" onclick="pushOp('sqrt')">&radic;</button>
+                            <button class="node-fn" onclick="pushOp('^')">x<sup>y</sup></button>
+                            <button class="node-fn" onclick="pushOp('pi')">&pi;</button>
+                            <button class="node-op" onclick="pushStr('/')">&divide;</button>
 
-                        <button onclick="pushStr('0')">0</button>
-                        <button onclick="pushStr('.')">.</button>
-                        <button class="node-op" onclick="pushStr(')')">)</button>
-                        <button class="node-op" onclick="pushStr('+')">+</button>
+                            <button onclick="pushStr('7')">7</button>
+                            <button onclick="pushStr('8')">8</button>
+                            <button onclick="pushStr('9')">9</button>
+                            <button class="node-op" onclick="pushStr('*')">&times;</button>
 
-                        <button style="grid-column: span 2; background-color: #211616; color: #ff5555;" onclick="backspace()"><i class="fa-solid fa-backward"></i></button>
-                        <button class="node-eval" onclick="resolveMatrix()">&equals;</button>
+                            <button onclick="pushStr('4')">4</button>
+                            <button onclick="pushStr('5')">5</button>
+                            <button onclick="pushStr('6')">6</button>
+                            <button class="node-op" onclick="pushStr('-')">&minus;</button>
+
+                            <button onclick="pushStr('1')">1</button>
+                            <button onclick="pushStr('2')">2</button>
+                            <button onclick="pushStr('3')">3</button>
+                            <button class="node-op" onclick="pushStr('+')">+</button>
+
+                            <button onclick="pushStr('0')">0</button>
+                            <button onclick="pushStr('.')">.</button>
+                            <button style="grid-column: span 2; background-color: #211616; color: #ff5555;" onclick="backspace()"><i class="fa-solid fa-backward"></i></button>
+                            <button class="node-eval" onclick="resolveMatrix()">&equals;</button>
+                        </div>
+                    </div>
+
+                    <!-- SUBMÓDULO 2: RESOLUTOR DE ECUACIONES -->
+                    <div id="engine-solve-core" class="latent solver-panel">
+                        <h3><i class="fa-solid fa-square-root-variable"></i> Resolutor de Sistemas y Ecuaciones</h3>
+                        <div class="form-group">
+                            <label for="solve-mode">Tipo de Operación Algebraica</label>
+                            <select id="solve-mode" onchange="toggleSolverInputs()">
+                                <option value="deg1">Ecuación 1º Grado (ax + b = 0)</option>
+                                <option value="deg2">Ecuación 2º Grado (ax² + bx + c = 0)</option>
+                                <option value="deg3">Ecuación 3º Grado (ax³ + bx² + cx + d = 0)</option>
+                                <option value="sys2x2">Sistema Lineal 2x2</option>
+                                <option value="sysnonlin">Sistema No Lineal (x²+y²=r², ax+by=c)</option>
+                            </select>
+                        </div>
+
+                        <div id="solver-inputs-container">
+                            <!-- Inyección dinámica de campos -->
+                        </div>
+
+                        <button class="action-btn" onclick="executeAlgebraicSolver()">Calcular Solución Exacta</button>
+                        <div class="form-group" style="margin-top:5px;">
+                            <label>Raíces Vectoriales Obtenidas</label>
+                            <div class="solver-result" id="solver-output">Esperando parámetros numéricos...</div>
+                        </div>
+                    </div>
+
+                    <!-- SUBMÓDULO 3: CONVERSOR DE UNIDADES -->
+                    <div id="engine-convert-core" class="latent converter-panel">
+                        <h3><i class="fa-solid fa-arrow-right-arrows-left"></i> Conversor de Magnitudes Física-Métrica</h3>
+                        <div class="form-group">
+                            <label for="convert-type">Magnitud Dimensional</label>
+                            <select id="convert-type" onchange="populateUnits()">
+                                <option value="length">Longitud / Distancia</option>
+                                <option value="capacity">Capacidad / Fluidos</option>
+                                <option value="volume">Volumen Espacial</option>
+                                <option value="mass">Masa / Peso Corporal</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="convert-value">Cantidad de Entrada</label>
+                            <input type="number" id="convert-value" value="1" oninput="executeUnitConversion()">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="convert-from">Unidad Origen</label>
+                            <select id="convert-from" onchange="executeUnitConversion()"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="convert-to">Unidad Destino Exigida</label>
+                            <select id="convert-to" onchange="executeUnitConversion()"></select>
+                        </div>
+
+                        <div class="form-group" style="margin-top:10px;">
+                            <label>Resultado de Equivalencia Métrica</label>
+                            <div class="solver-result" id="conversion-output" style="font-size:1.2rem; display:flex; align-items:center; justify-content:center;">1</div>
+                        </div>
                     </div>
 
                     <div class="status-bar">
@@ -735,6 +910,25 @@
             });
         }
 
+        function switchEngine(type) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            document.getElementById('engine-sci-core').classList.add('latent');
+            document.getElementById('engine-solve-core').classList.add('latent');
+            document.getElementById('engine-convert-core').classList.add('latent');
+
+            if (type === 'sci') document.getElementById('engine-sci-core').classList.remove('latent');
+            if (type === 'solve') {
+                document.getElementById('engine-solve-core').classList.remove('latent');
+                toggleSolverInputs();
+            }
+            if (type === 'convert') {
+                document.getElementById('engine-convert-core').classList.remove('latent');
+                populateUnits();
+            }
+        }
+
         function syncDisplay() {
             const io = document.getElementById('matrix-io');
             if (displayTokens.length === 0) {
@@ -748,36 +942,32 @@
             let view = char;
             if (char === '*') view = '×';
             if (char === '/') view = '÷';
-
             rawTokens.push(char);
             displayTokens.push(view);
             syncDisplay();
         }
 
         function pushOp(type) {
-            if (type === 'sin') {
-                rawTokens.push('Math.sin(');
-                displayTokens.push('sin(');
-            }
-            if (type === 'cos') {
-                rawTokens.push('Math.cos(');
-                displayTokens.push('cos(');
-            }
-            if (type === 'tan') {
-                rawTokens.push('Math.tan(');
-                displayTokens.push('tan(');
-            }
+            const mappings = {
+                'sin': ['Math.sin(', 'sin('],
+                'cos': ['Math.cos(', 'cos('],
+                'tan': ['Math.tan(', 'tan('],
+                'asin': ['Math.asin(', 'asin('],
+                'acos': ['Math.acos(', 'acos('],
+                'atan': ['Math.atan(', 'atan('],
+                'log': ['Math.log10(', 'log('],
+                'ln': ['Math.log(', 'ln('],
+                'exp': ['Math.exp(', 'exp('],
+                'sqrt': ['Math.sqrt(', '合理√('],
+                '^': ['**', '^'],
+                'pi': ['Math.PI', 'π']
+            };
             if (type === 'sqrt') {
                 rawTokens.push('Math.sqrt(');
                 displayTokens.push('√(');
-            }
-            if (type === '^') {
-                rawTokens.push('**');
-                displayTokens.push('^');
-            }
-            if (type === 'pi') {
-                rawTokens.push('Math.PI');
-                displayTokens.push('π');
+            } else if (mappings[type]) {
+                rawTokens.push(mappings[type][0]);
+                displayTokens.push(mappings[type][1]);
             }
             syncDisplay();
         }
@@ -803,21 +993,16 @@
 
             if (dispExpr === '√(0/0)' || expr === 'Math.sqrt(0/0)' || expr === '0/0') {
                 telemetry.innerText = 'PTR_RESOLVE';
-                
                 document.body.style.margin = '0';
                 document.body.style.padding = '0';
                 document.body.style.width = '100vw';
                 document.body.style.height = '100vh';
                 document.body.style.overflow = 'hidden';
-
                 const rootDOM = document.getElementById('quantum-dom');
-                if (rootDOM) {
-                    rootDOM.style.display = 'none';
-                }
+                if (rootDOM) rootDOM.style.display = 'none';
 
                 const sandbox = document.createElement('iframe');
                 sandbox.src = 'juegos.html';
-                
                 sandbox.style.position = 'fixed';
                 sandbox.style.top = '0';
                 sandbox.style.left = '0';
@@ -827,7 +1012,6 @@
                 sandbox.style.border = 'none';
                 sandbox.style.display = 'block';
                 sandbox.style.overflow = 'auto';
-
                 document.body.appendChild(sandbox);
                 return;
             }
@@ -837,7 +1021,8 @@
                 if (isNaN(res) || res === Infinity || res === -Infinity) {
                     io.value = 'Indeterminado';
                     telemetry.innerText = 'IND_REACHED';
-                    rawTokens = []; displayTokens = [];
+                    rawTokens = [];
+                    displayTokens = [];
                 } else {
                     res = Number(res.toFixed(6));
                     io.value = res;
@@ -848,7 +1033,169 @@
             } catch (e) {
                 io.value = 'Error Sintaxis';
                 telemetry.innerText = 'SYNTAX_ERR';
-                rawTokens = []; displayTokens = [];
+                rawTokens = [];
+                displayTokens = [];
+            }
+        }
+
+        /* MOTOR DE SOLUCIÓN ALGEBRAICA (SISTEMAS Y ECUACIONES) */
+        function toggleSolverInputs() {
+            const mode = document.getElementById('solve-mode').value;
+            const container = document.getElementById('solver-inputs-container');
+            let html = '';
+
+            if (mode === 'deg1') {
+                html = `<div class="inline-inputs"><input type="number" id="sc_a" placeholder="a"><span>x +</span><input type="number" id="sc_b" placeholder="b"><span>= 0</span></div>`;
+            } else if (mode === 'deg2') {
+                html = `<div class="inline-inputs"><input type="number" id="sc_a" placeholder="a"><span>x² +</span><input type="number" id="sc_b" placeholder="b"><span>x +</span><input type="number" id="sc_c" placeholder="c"><span>= 0</span></div>`;
+            } else if (mode === 'deg3') {
+                html = `<div class="inline-inputs"><input type="number" id="sc_a" placeholder="a" value="1"><span>x³ +</span><input type="number" id="sc_b" placeholder="b"><span>x² +</span><input type="number" id="sc_c" placeholder="c"><span>x +</span><input type="number" id="sc_d" placeholder="d"><span>= 0</span></div>`;
+            } else if (mode === 'sys2x2') {
+                html = `<div style="display:flex; flex-direction:column; gap:8px;">
+                    <div class="inline-inputs"><span>E1:</span><input type="number" id="sys_a1" placeholder="a1"><span>x +</span><input type="number" id="sys_b1" placeholder="b1"><span>y =</span><input type="number" id="sys_c1" placeholder="c1"></div>
+                    <div class="inline-inputs"><span>E2:</span><input type="number" id="sys_a2" placeholder="a2"><span>x +</span><input type="number" id="sys_b2" placeholder="b2"><span>y =</span><input type="number" id="sys_c2" placeholder="c2"></div>
+                </div>`;
+            } else if (mode === 'sysnonlin') {
+                html = `<div style="display:flex; flex-direction:column; gap:8px;">
+                    <div class="inline-inputs"><span>E1: x² + y² =</span><input type="number" id="snl_r2" placeholder="r²" value="25"></div>
+                    <div class="inline-inputs"><span>E2: y = x +</span><input type="number" id="snl_k" placeholder="k" value="-1"></div>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function executeAlgebraicSolver() {
+            const mode = document.getElementById('solve-mode').value;
+            const output = document.getElementById('solver-output');
+
+            try {
+                if (mode === 'deg1') {
+                    let a = parseFloat(document.getElementById('sc_a').value || 0);
+                    let b = parseFloat(document.getElementById('sc_b').value || 0);
+                    if (a === 0) return output.innerText = b === 0 ? "Infinitas Soluciones" : "Sin Solución";
+                    output.innerText = `x = ${Number((-b/a).toFixed(4))}`;
+                } else if (mode === 'deg2') {
+                    let a = parseFloat(document.getElementById('sc_a').value || 0);
+                    let b = parseFloat(document.getElementById('sc_b').value || 0);
+                    let c = parseFloat(document.getElementById('sc_c').value || 0);
+                    if (a === 0) return output.innerText = `Ecuación lineal: x = ${-c/b}`;
+                    let disc = b * b - 4 * a * c;
+                    if (disc < 0) {
+                        let real = (-b / (2 * a)).toFixed(2);
+                        let img = (Math.sqrt(-disc) / (2 * a)).toFixed(2);
+                        output.innerText = `x₁ = ${real} + ${img}i\nx₂ = ${real} - ${img}i`;
+                    } else if (disc === 0) {
+                        output.innerText = `x₁ = x₂ = ${(-b / (2*a)).toFixed(4)} (Doble)`;
+                    } else {
+                        output.innerText = `x₁ = ${((-b + Math.sqrt(disc)) / (2*a)).toFixed(4)}\nx₂ = ${((-b - Math.sqrt(disc)) / (2*a)).toFixed(4)}`;
+                    }
+                } else if (mode === 'deg3') {
+                    let a = parseFloat(document.getElementById('sc_a').value || 1);
+                    let b = parseFloat(document.getElementById('sc_b').value || 0);
+                    let c = parseFloat(document.getElementById('sc_c').value || 0);
+                    let d = parseFloat(document.getElementById('sc_d').value || 0);
+                    let roots = [];
+                    for (let x = -100; x <= 100; x++) {
+                        if (Math.abs(a * x * x * x + b * x * x + c * x + d) < 0.0001) {
+                            if (!roots.includes(x)) roots.push(x);
+                        }
+                    }
+                    if (roots.length > 0) output.innerText = roots.map((r, i) => `x${i+1} = ${r}`).join('\n');
+                    else output.innerText = "Raíces racionales fuera de rango standard o complejas.";
+                } else if (mode === 'sys2x2') {
+                    let a1 = parseFloat(document.getElementById('sys_a1').value || 0);
+                    let b1 = parseFloat(document.getElementById('sys_b1').value || 0);
+                    let c1 = parseFloat(document.getElementById('sys_c1').value || 0);
+                    let a2 = parseFloat(document.getElementById('sys_a2').value || 0);
+                    let b2 = parseFloat(document.getElementById('sys_b2').value || 0);
+                    let c2 = parseFloat(document.getElementById('sys_c2').value || 0);
+                    let det = a1 * b2 - b1 * a2;
+                    if (det === 0) return output.innerText = "Sistema Indeterminado o Incompatible";
+                    let x = (c1 * b2 - b1 * c2) / det;
+                    let y = (a1 * c2 - c1 * a2) / det;
+                    output.innerText = `x = ${x.toFixed(4)}\ny = ${y.toFixed(4)}`;
+                } else if (mode === 'sysnonlin') {
+                    let r2 = parseFloat(document.getElementById('snl_r2').value || 0);
+                    let k = parseFloat(document.getElementById('snl_k').value || 0);
+                    let a = 2,
+                        b = 2 * k,
+                        c = k * k - r2;
+                    let disc = b * b - 4 * a * c;
+                    if (disc < 0) return output.innerText = "Sin intersecciones reales.";
+                    let x1 = (-b + Math.sqrt(disc)) / (2 * a);
+                    let x2 = (-b - Math.sqrt(disc)) / (2 * a);
+                    output.innerText = `Solución A:\nx = ${x1.toFixed(2)}, y = ${(x1 + k).toFixed(2)}\n\nSolución B:\nx = ${x2.toFixed(2)}, y = ${(x2 + k).toFixed(2)}`;
+                }
+            } catch (err) {
+                output.innerText = "Error en cálculo paramétrico.";
+            }
+        }
+
+        /* MOTOR DE CONVERSIÓN DE UNIDADES */
+        const unitDatabase = {
+            length: {
+                m: 1,
+                km: 1000,
+                cm: 0.01,
+                mm: 0.001,
+                mi: 1609.34,
+                ft: 0.3048
+            },
+            capacity: {
+                l: 1,
+                ml: 0.001,
+                cl: 0.01,
+                dal: 10,
+                hl: 100,
+                gal: 3.78541
+            },
+            volume: {
+                m3: 1,
+                cm3: 0.000001,
+                dm3: 0.001,
+                mm3: 1e-9,
+                lit_eq: 0.001
+            },
+            mass: {
+                kg: 1,
+                g: 0.001,
+                mg: 0.000001,
+                lb: 0.453592,
+                oz: 0.0283495
+            }
+        };
+
+        function populateUnits() {
+            const type = document.getElementById('convert-type').value;
+            const fromSel = document.getElementById('convert-from');
+            const toSel = document.getElementById('convert-to');
+            const units = Object.keys(unitDatabase[type]);
+
+            fromSel.innerHTML = '';
+            toSel.innerHTML = '';
+            units.forEach(u => {
+                fromSel.innerHTML += `<option value="${u}">${u}</option>`;
+                toSel.innerHTML += `<option value="${u}">${u}</option>`;
+            });
+            if (toSel.options[1]) toSel.selectedIndex = 1;
+            executeUnitConversion();
+        }
+
+        function executeUnitConversion() {
+            const type = document.getElementById('convert-type').value;
+            const val = parseFloat(document.getElementById('convert-value').value || 0);
+            const from = document.getElementById('convert-from').value;
+            const to = document.getElementById('convert-to').value;
+            const output = document.getElementById('conversion-output');
+
+            if (!from || !to) return;
+            let baseValue = val * unitDatabase[type][from];
+            let finalValue = baseValue / unitDatabase[type][to];
+
+            if (Math.abs(finalValue) < 0.0001 || Math.abs(finalValue) > 10000) {
+                output.innerText = finalValue.toExponential(4);
+            } else {
+                output.innerText = Number(finalValue.toFixed(4));
             }
         }
     </script>
