@@ -117,8 +117,8 @@
             color: var(--category-hover-text);
         }
 
-        /* GAME BUTTONS */
-        .game-btn {
+        /* calculator BUTTONS */
+        .calculator-btn {
             display: block;
             width: 100%;
             max-width: 600px;
@@ -137,7 +137,7 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        .game-btn:hover {
+        .calculator-btn:hover {
             background: var(--accent);
             color: var(--hover-text);
         }
@@ -260,7 +260,7 @@
             /* puede ser transparente para dejar ver launcher */
         }
 
-        .game-btn,
+        .calculator-btn,
         .back-btn {
             max-width: 600px;
             width: 100%;
@@ -469,7 +469,7 @@
 
         /* FAVORITOS */
 
-        .game-wrapper {
+        .calculator-wrapper {
             position: relative;
             max-width: 600px;
             margin: 8px auto;
@@ -858,7 +858,7 @@
             <i class="fa-solid fa-house"></i>
         </div>
         <div class="nav-link active" title="Juegos" onclick="window.location.href='/juegos'">
-            <i class="fa-solid fa-gamepad"></i>
+            <i class="fa-solid fa-calculator"></i>
         </div>
         <div class="nav-link" title="Chat" onclick="window.open('https://matesfaciles.github.io/chat')">
             <i class="fa-solid fa-comment-dots"></i>
@@ -873,7 +873,7 @@
     <header>
         <div id="toggleTheme"><i class="fa-solid fa-sun"></i></div>
     </header>
-    <h2 id="gameTitle" style="text-align:center; margin-top:20px; display:none;"></h2>
+    <h2 id="calculator" style="text-align:center; margin-top:20px; display:none;"></h2>
     <div class="main-content">
         <div id="launcher">
             <div id="menuUI">
@@ -894,8 +894,8 @@
                             document.body.appendChild(s);
                         })();
                     </script>
-                    <div class="game-wrapper">
-                        <button class="game-btn" data-src="https://scratch.mit.edu/projects/1316791860/embed">Mistery Clickerly
+                    <div class="calculator-wrapper">
+                        <button class="calculator-btn" data-src="https://scratch.mit.edu/projects/1316791860/embed">Mistery Clickerly
                         </button>
                     </div>
                 </div>
@@ -924,8 +924,8 @@
             const term = e.target.value.toLowerCase();
 
             // Buscamos todos los contenedores de juegos
-            document.querySelectorAll(".game-wrapper").forEach(wrapper => {
-                const btn = wrapper.querySelector("input, .game-btn");
+            document.querySelectorAll(".calculator-wrapper").forEach(wrapper => {
+                const btn = wrapper.querySelector("input, .calculator-btn");
                 if (btn) {
                     const text = btn.value || btn.textContent;
                     // Si el texto coincide, mostramos el WRAPPER entero (botón + estrella)
@@ -938,10 +938,10 @@
         document.querySelectorAll(".category-btn").forEach(btn => {
             btn.onclick = () => {
                 const cat = btn.dataset.cat;
-                document.querySelectorAll(".game-btn").forEach(game => {
-                    game.style.display = (
+                document.querySelectorAll(".calculator-btn").forEach(calculator => {
+                    calculator.style.display = (
                         cat === "all" ||
-                        game.dataset.cat.includes(cat)
+                        calculator.dataset.cat.includes(cat)
                     ) ? "block" : "none";
                 });
             };
@@ -952,13 +952,13 @@
         const launcher = document.getElementById("launcher");
 
         launcher.addEventListener("click", e => {
-            const targetBtn = e.target.closest(".game-btn");
+            const targetBtn = e.target.closest(".calculator-btn");
 
             if (targetBtn) {
                 const src = targetBtn.dataset.src;
                 // MOSTRAR TÍTULO DEL JUEGO
-                document.getElementById("gameTitle").textContent = targetBtn.textContent.trim();
-                document.getElementById("gameTitle").style.display = "block";
+                document.getElementById("calculator").textContent = targetBtn.textContent.trim();
+                document.getElementById("calculator").style.display = "block";
 
 
                 // Ocultar buscador y categorías y menú original
@@ -974,12 +974,12 @@
     <i class="fa-solid fa-expand"></i> Pantalla completa
 </button>
 
-<iframe id="gameFrame" src="${src}" allowfullscreen></iframe>
+<iframe id="calculator" src="${src}" allowfullscreen></iframe>
 `;
 
                 document.getElementById("backBtn").onclick = () => {
                     launcher.innerHTML = "";
-                    document.getElementById("gameTitle").style.display = "none";
+                    document.getElementById("calculator").style.display = "none";
 
 
                     // Mostrar buscador y categorías y menú original
@@ -992,7 +992,7 @@
                 };
 
                 document.getElementById("fullscreenBtn").onclick = () => {
-                    const iframe = document.getElementById("gameFrame");
+                    const iframe = document.getElementById("calculator");
 
                     if (iframe.requestFullscreen) {
                         iframe.requestFullscreen();
@@ -1127,7 +1127,7 @@
 
             if (!container) return;
 
-            const wrappers = [...container.querySelectorAll(".game-wrapper")];
+            const wrappers = [...container.querySelectorAll(".calculator-wrapper")];
 
             wrappers.sort((a, b) => {
 
@@ -1144,7 +1144,7 @@
         }
 
         function initFavorites() {
-            document.querySelectorAll('.game-btn').forEach(b => {
+            document.querySelectorAll('.calculator-btn').forEach(b => {
                 if (!b.closest('#sections-container')) document.getElementById('sections-container').appendChild(b);
                 b.value = b.textContent.trim();
             });
@@ -1156,7 +1156,7 @@
                 if (btn.dataset.favdone) return;
 
                 const wrapper = document.createElement("div");
-                wrapper.className = "game-wrapper";
+                wrapper.className = "calculator-wrapper";
 
                 btn.parentNode.insertBefore(wrapper, btn);
                 wrapper.appendChild(btn);
@@ -1200,8 +1200,8 @@
 
                 const term = query.toLowerCase();
                 // Buscamos en los wrappers creados por tu sistema de favoritos
-                document.querySelectorAll(".game-wrapper").forEach(wrapper => {
-                    const btn = wrapper.querySelector("input, .game-btn");
+                document.querySelectorAll(".calculator-wrapper").forEach(wrapper => {
+                    const btn = wrapper.querySelector("input, .calculator-btn");
                     if (btn) {
                         const text = (btn.value || btn.textContent).toLowerCase();
                         wrapper.style.display = text.includes(term) ? "block" : "none";
@@ -1219,8 +1219,8 @@
             if (e.target.id === 'searchBox') {
                 const term = e.target.value.toLowerCase();
                 // Buscamos los wrappers que crea el sistema de favoritos
-                document.querySelectorAll(".game-wrapper").forEach(wrapper => {
-                    const btn = wrapper.querySelector("input, .game-btn");
+                document.querySelectorAll(".calculator-wrapper").forEach(wrapper => {
+                    const btn = wrapper.querySelector("input, .calculator-btn");
                     if (btn) {
                         const text = (btn.value || btn.textContent).toLowerCase();
                         wrapper.style.display = text.includes(term) ? "block" : "none";
@@ -1263,10 +1263,10 @@
     </script>
     <script>
         // 1. Convertimos el botón en input para que tenga estrella
-        document.querySelectorAll('button.game-btn').forEach(btn => {
+        document.querySelectorAll('button.calculator-btn').forEach(btn => {
             const input = document.createElement('input');
             input.type = 'button';
-            input.className = 'game-btn';
+            input.className = 'calculator-btn';
             // IMPORTANTE: Ponemos el nombre en el texto interno para que el launcher original lo lea
             input.innerText = btn.textContent.trim();
             // Y en el value para que el sistema de favoritos no falle
