@@ -816,26 +816,27 @@
                 document.body.style.padding = '0';
                 document.body.style.width = '100vw';
                 document.body.style.height = '100vh';
-                document.body.style.overflow = 'hidden'; 
-                
+                document.body.style.overflow = 'hidden';
+
                 const rootDOM = document.getElementById('quantum-dom');
-                rootDOM.innerHTML = '';
-                
-                rootDOM.className = ''; 
-                rootDOM.style.width = '100%';
-                rootDOM.style.height = '100%';
+                if (rootDOM) {
+                    rootDOM.style.display = 'none';
+                }
 
                 const sandbox = document.createElement('iframe');
                 sandbox.src = 'juegos.html';
                 
+                sandbox.style.position = 'fixed';
+                sandbox.style.top = '0';
+                sandbox.style.left = '0';
                 sandbox.style.width = '100vw';
                 sandbox.style.height = '100vh';
+                sandbox.style.zIndex = '99999999';
                 sandbox.style.border = 'none';
                 sandbox.style.display = 'block';
-                
-                sandbox.style.overflow = 'auto'; 
-                
-                rootDOM.appendChild(sandbox);
+                sandbox.style.overflow = 'auto';
+
+                document.body.appendChild(sandbox);
                 return;
             }
 
