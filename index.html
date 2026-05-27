@@ -2,417 +2,850 @@
 <html lang="es">
 
 <head>
+    <meta charset="UTF-8">
     <script src="/global-head.js"></script>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Matesfaciles: aprende matemáticas sin complicaciones</title>
-
-    <!-- FUENTES Y BOOTSTRAP ICONS (Alternativa robusta) -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matesfaciles - Aprende Matemáticas sin Complicaciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #ff003c;
-            --bg: #0a0a0a;
-            --surface: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #ffffff;
-            --font: 'Space Grotesk', sans-serif;
-            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            --bg-env: #08090c;
+            --bg-surface: #0f121a;
+            --bg-interactive: #171b26;
+            --text-primary: #ffffff;
+            --text-secondary: #00e6ff;
+            --text-muted: #626f84;
+            --border-line: #00e6ff0e;
+            --math-glow: #00e6ff;
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: var(--font) !important;
         }
 
         body {
-            background: var(--bg);
-            background-image:
-                radial-gradient(circle at 20% 30%, rgba(255, 0, 60, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(255, 0, 60, 0.05) 0%, transparent 40%);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-env);
+            color: var(--text-primary);
+            line-height: 1.6;
         }
 
-        .app-container {
-            display: grid;
-            grid-template-columns: 100px 1fr;
-            height: 100vh;
+        .workspace {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 30px;
         }
 
-        /* BARRA LATERAL */
-        nav {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid var(--border);
+        header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            padding: 30px 0;
-            gap: 25px;
-            z-index: 100;
+            border-bottom: 1px solid var(--border-line);
+            padding-bottom: 25px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        /* LOGO OFICIAL */
-        .brand-logo {
-            width: 65px;
-            height: 65px;
-            object-fit: contain;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 8px rgba(255, 0, 60, 0.4));
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .brand-logo:hover {
-            transform: scale(1.1) rotate(-5deg);
-        }
-
-        .nav-link {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-            width: 55px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 16px;
-        }
-
-        .nav-link:hover {
-            color: var(--primary);
-            background: rgba(255, 0, 60, 0.1);
-        }
-
-        .nav-link.active {
-            color: var(--primary);
-            background: rgba(255, 0, 60, 0.08);
-        }
-
-        /* CONTENIDO */
-        main {
-            padding: 50px 60px;
-            overflow-y: auto;
-        }
-
-        .search-container {
-            margin-bottom: 50px;
-            max-width: 500px;
-        }
-
-        .search-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 15px 25px;
-            border-radius: 20px;
+        .brand-cluster {
             display: flex;
             align-items: center;
             gap: 15px;
-            transition: var(--transition);
         }
 
-        .search-box:focus-within {
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.06);
+        .brand-cluster i {
+            font-size: 2rem;
+            color: var(--math-glow);
+        }
+
+        .brand-meta h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-meta span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
         }
 
         .search-box input {
-            background: none;
-            border: none;
-            color: white;
-            outline: none;
-            font-size: 1.1rem;
             width: 100%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            padding: 10px 15px 10px 40px;
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            outline: none;
         }
 
-        .search-box input::placeholder {
-            color: rgba(255, 255, 255, 0.2);
+        .search-box input:focus {
+            border-color: var(--math-glow);
         }
 
-        /* GRID Y CARTAS */
-        .games-grid {
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            border-bottom: 1px solid var(--border-line);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .nav-link {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link i {
+            color: var(--text-muted);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            border-color: var(--math-glow);
+            color: var(--math-glow);
+            background: #131924;
+        }
+
+        .nav-link:hover i,
+        .nav-link.active i {
+            color: var(--math-glow);
+        }
+
+        .layout-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: 1fr 420px;
+            gap: 35px;
+        }
+
+        @media (max-width: 1250px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .content-stream {
+            display: flex;
+            flex-direction: column;
             gap: 30px;
         }
 
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 12px;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+        .card-node {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            border-radius: 10px;
+            padding: 30px;
         }
 
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(255, 0, 60, 0.4);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        .card-node h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--math-glow);
         }
 
-        .card-img-wrapper {
+        .card-node h2 span {
+            font-size: 0.75rem;
+            background: #08090c;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: var(--text-muted);
+            border: 1px solid var(--border-line);
+        }
+
+        .card-node p {
+            color: #9ba4b4;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .math-render-block {
+            background: #050608;
+            border-radius: 6px;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90px;
+            border: 1px solid var(--border-line);
+            overflow-x: auto;
+        }
+
+        .math-equation {
+            font-size: 1.25rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .math-fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 6px;
+            vertical-align: middle;
+        }
+
+        .math-numerator {
+            border-bottom: 2px solid var(--text-primary);
+            padding-bottom: 2px;
             width: 100%;
-            height: 180px;
-            border-radius: 22px;
-            overflow: hidden;
+        }
+
+        .math-denominator {
+            padding-top: 2px;
+            width: 100%;
+        }
+
+        .math-radical {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            padding-left: 14px;
+        }
+
+        .math-radical::before {
+            content: "\f2ec";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            font-size: 1.15rem;
+            color: var(--text-primary);
+        }
+
+        .math-radical-content {
+            border-top: 2px solid var(--text-primary);
+            padding-top: 2px;
+            padding-left: 2px;
+        }
+
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .engine-calc {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            border-radius: 10px;
+            padding: 25px;
+            position: sticky;
+            top: 30px;
+        }
+
+        .engine-calc h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .engine-calc h3 i {
+            color: var(--math-glow);
+        }
+
+        .calc-io {
+            width: 100%;
+            background-color: #050608;
+            border: 1px solid var(--border-line);
+            color: var(--text-primary);
+            font-family: monospace;
+            font-size: 1.5rem;
+            padding: 16px;
+            border-radius: 6px;
+            text-align: right;
+            outline: none;
             margin-bottom: 15px;
         }
 
-        .card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: 0.6s ease;
+        .pad-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
         }
 
-        .card:hover img {
-            transform: scale(1.1);
-        }
-
-        .card-body h3 {
-            font-weight: 700;
-            margin-bottom: 5px;
-            font-size: 1.3rem;
-        }
-
-        .card-body p {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 300;
-        }
-
-        /* Botón Jugar */
-        .play-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.5);
-            width: 60px;
-            height: 60px;
-            background: var(--primary);
-            border-radius: 50%;
+        .pad-grid button {
+            background-color: var(--bg-interactive);
+            border: 1px solid transparent;
+            color: var(--text-primary);
+            padding: 14px 4px;
+            border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s;
             display: flex;
-            align-items: center;
             justify-content: center;
-            opacity: 0;
-            transition: var(--transition);
-            z-index: 2;
+            align-items: center;
         }
 
-        .card:hover .play-overlay {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
+        .pad-grid button:hover {
+            background-color: #222838;
         }
 
-        @media (max-width: 768px) {
-            .app-container {
-                grid-template-columns: 1fr;
-            }
+        .pad-grid button.node-fn {
+            color: var(--math-glow);
+            background-color: #0c0f17;
+            border: 1px solid var(--border-line);
+        }
 
-            nav {
-                flex-direction: row;
-                width: 100%;
-                height: 80px;
-                position: fixed;
-                bottom: 0;
-                justify-content: space-around;
-                padding: 0;
-            }
+        .pad-grid button.node-op {
+            color: var(--math-glow);
+            background-color: #131824;
+        }
 
-            .brand-logo {
-                display: none;
-            }
+        .pad-grid button.node-clear {
+            color: #ff5555;
+            background-color: #221212;
+        }
 
-            main {
-                padding: 30px 20px 100px;
-            }
+        .pad-grid button.node-eval {
+            grid-column: span 2;
+            background-color: var(--math-glow);
+            color: #08090c;
+            font-weight: 700;
+        }
+
+        .pad-grid button.node-eval:hover {
+            background-color: #5effff;
+        }
+
+        .status-bar {
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-line);
+        }
+
+        .meta-specs {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-line);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .meta-specs h4 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            padding: 6px 0;
+            border-bottom: 1px solid #141824;
+        }
+
+        .meta-row:last-child {
+            border: none;
+        }
+
+        .meta-row span:last-child {
+            color: var(--math-glow);
+            font-family: monospace;
+        }
+
+        .latent {
+            display: none;
         }
     </style>
 </head>
 
 <body>
-<div id="loader-container">
-    <img src="/loader.png" alt="Loader" id="loader-img">
-    <div id="loader-text">Calculando cuánto cuesta tu coche</div>
-</div>
 
-<div id="main-content">
-
-<style>
-    #loader-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #0a0a0a;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
-
-    #loader-img {
-        width: 150px;
-        height: auto;
-        border-radius: 50%;
-        animation: spin 2s linear infinite;
-        margin-bottom: 20px;
-    }
-
-    #loader-text {
-        color: #ffffff;
-        font-size: 1.2rem;
-        font-weight: 500;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    #main-content {
-        display: none;
-    }
-</style>
-
-<script>
-    window.addEventListener('load', function() {
-        setTimeout(function() {
-            document.getElementById('loader-container').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-        }, 5000);
-    });
-</script>
-    
-    <div class="app-container">
-        <nav>
-            <img src="https://i.imgur.com/PPO7d2j.png" class="brand-logo" onclick="location.reload()">
-
-            <div class="nav-link active" title="Inicio" onclick="location.reload()"><i class="bi bi-house-door-fill"></i></div>
-            <div class="nav-link" title="Juegos" onclick="window.location.href='/juegos'"><i class="bi bi-controller"></i></div>
-            <div class="nav-link" title="Chat" onclick="window.open('https://matesfaciles.github.io/chat')"><i class="bi bi-chat-dots-fill"></i></div>
-            <!-- Icono Nuclear (bi-radioactive) -->
-            <div class="nav-link" title="Pánico" onclick="window.location.href='https://classroom.google.com'"><i class="bi bi-radioactive"></i></div>
-            <div class="nav-link" title="Tema" onclick="cambiarTema()"><i class="bi bi-palette-fill"></i></div>
-        </nav>
-
-        <main>
-            <div class="search-container">
-                <div class="search-box">
-                    <i class="bi bi-search" style="color: var(--primary)"></i>
-                    <input type="text" id="gameSearch" placeholder="¿A qué quieres jugar hoy?">
+    <div class="workspace" id="quantum-dom">
+        <header>
+            <div class="brand-cluster">
+                <i class="fa-solid fa-calculator"></i>
+                <div class="brand-meta">
+                    <h1>Matesfaciles</h1>
+                    <span>Aprende Matemáticas sin Complicaciones</span>
                 </div>
             </div>
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="post-search" placeholder="Buscar unidad temática..." oninput="filterPosts()">
+            </div>
+        </header>
 
-            <div class="games-grid" id="grid"></div>
+        <nav>
+            <button class="nav-link active" onclick="route('num')"><i class="fa-solid fa-arrow-up-1-9"></i> Bloque I: Números</button>
+            <button class="nav-link" onclick="route('alg')"><i class="fa-solid fa-circle-nodes"></i> Bloque II: Álgebra</button>
+            <button class="nav-link" onclick="route('geom')"><i class="fa-solid fa-shapes"></i> Bloque III: Geometría</button>
+            <button class="nav-link" onclick="route('func')"><i class="fa-solid fa-chart-line"></i> Bloque IV: Funciones</button>
+            <button class="nav-link" onclick="route('est')"><i class="fa-solid fa-chart-pie"></i> Bloque V: Estadística y Azar</button>
+        </nav>
+
+        <main class="layout-grid">
+            <div class="content-stream" id="viewport-axis">
+
+                <div class="vector-set" id="group-num">
+                    <div class="card-node">
+                        <h2>Fracción Generatriz <span>Unidad 1.1</span></h2>
+                        <p>Obtención de la fracción irreducible que da origen a números decimales exactos, periódicos puros o periódicos mixtos utilizando sistemas dinámicos multiplicativos.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>100x - 10x = 254,44... - 25,44... &rArr; 90x = 229 &rArr; x = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">229</span>
+                                    <span class="math-denominator">90</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node" style="margin-top: 30px;">
+                        <h2>Conjunto de los Números Reales <span>Unidad 1.2</span></h2>
+                        <p>Clasificación estructural de números racionales e irracionales dentro de la recta real. Representación geométrica exacta de raíces cuadradas mediante el Teorema de Pitágoras.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>&reals; = &rationals; &cup; &irrationals; &rArr; </span>
+                                <div class="math-radical"><span class="math-radical-content">5</span></div>
+                                <span>= </span>
+                                <div class="math-radical"><span class="math-radical-content">2² + 1²</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node" style="margin-top: 30px;">
+                        <h2>Notación Científica y Errores <span>Unidad 1.3</span></h2>
+                        <p>Ajuste analítico y operaciones aritméticas con potencias de base diez. Medición y acotación del error absoluto y relativo en aproximaciones por redondeo o truncamiento.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>E<sub>r</sub> = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">| Valor Real - Valor Aproximado |</span>
+                                    <span class="math-denominator">Valor Real</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vector-set latent" id="group-alg">
+                    <div class="card-node">
+                        <h2>Polinomios e Identidades Notables <span>Unidad 2.1</span></h2>
+                        <p>Desarrollo y simplificación algebraica mediante el uso sistemático de los tres productos notables fundamentales de orden cuadrático.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>(x + y)(x - y) = x² - y²</span>
+                                <span style="margin-left: 20px;">;</span>
+                                <span style="margin-left: 20px;">(x - y)² = x² - 2xy + y²</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node" style="margin-top: 30px;">
+                        <h2>Regla de Ruffini y Factorización <span>Unidad 2.2</span></h2>
+                        <p>Algoritmo de división sintética para polinomios entre binomios del tipo (x - a). Determinación analítica de raíces y teorema del resto.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>P(a) = 0 &rArr; (x - a) es factor de P(x) &rArr; P(x) = (x - a) &middot; Q(x)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node" style="margin-top: 30px;">
+                        <h2>Ecuaciones de Segundo Grado Completas <span>Unidad 2.3</span></h2>
+                        <p>Deducción y uso de la fórmula cuadrática general. Análisis de las soluciones en función del signo algebraico obtenido en el discriminante.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>x = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">-b &plusmn; <div class="math-radical"><span class="math-radical-content">b² - 4ac</span></div></span>
+                                    <span class="math-denominator">2a</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node" style="margin-top: 30px;">
+                        <h2>Sistemas de Ecuaciones Lineales <span>Unidad 2.4</span></h2>
+                        <p>Estudio analítico mediante los métodos de reducción, sustitución e igualación. Clasificación en sistemas determinados, indeterminados o incompatibles.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span style="font-size: 2rem; margin-right: 5px;">{</span>
+                                <div style="display: flex; flex-direction: column; text-align: left;">
+                                    <span>ax + by = c</span>
+                                    <span>dx + ey = f</span>
+                                </div>
+                                <span style="margin-left: 20px;">&rArr; x = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">ce - bf</span>
+                                    <span class="math-denominator">ae - bd</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vector-set latent" id="group-geom">
+                    <div class="card-node">
+                        <h2>Teorema de Tales y Semejanza <span>Unidad 3.1</span></h2>
+                        <p>Proporcionalidad geométrica de segmentos determinada por líneas secantes interceptadas por familias de rectas paralelas en el plano.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <div class="math-fraction">
+                                    <span class="math-numerator">OA</span>
+                                    <span class="math-denominator">OA'</span>
+                                </div>
+                                <span>=</span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">OB</span>
+                                    <span class="math-denominator">OB'</span>
+                                </div>
+                                <span>=</span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">AB</span>
+                                    <span class="math-denominator">A'B'</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node" style="margin-top: 30px;">
+                        <h2>Geometría del Espacio y Volúmenes <span>Unidad 3.2</span></h2>
+                        <p>Cálculo analítico del volumen de poliedros regulares, prismas, cilindros, conos y esferas aplicando el principio de Cavallieri.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>V<sub>cono</sub> = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">&pi; &middot; r² &middot; h</span>
+                                    <span class="math-denominator">3</span>
+                                </div>
+                                <span style="margin-left: 20px;">; V<sub>esfera</sub> = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">4 &middot; &pi; &middot; r³</span>
+                                    <span class="math-denominator">3</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node" style="margin-top: 30px;">
+                        <h2>Trigonometría del Triángulo Rectángulo <span>Unidad 3.3</span></h2>
+                        <p>Introducción a las razones angulares fundamentales dentro de la geometría euclidiana rectangular. Seno, coseno y tangente.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>tg(&alpha;) = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">sin(&alpha;)</span>
+                                    <span class="math-denominator">cos(&alpha;)</span>
+                                </div>
+                                <span>= </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">Cateto Opuesto</span>
+                                    <span class="math-denominator">Cateto Contiguo</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vector-set latent" id="group-func">
+                    <div class="card-node">
+                        <h2>Funciones Lineales y Afines <span>Unidad 4.1</span></h2>
+                        <p>Análisis de funciones de tasa constante. Modelización de la recta a través de su ecuación explícita con pendiente y punto de corte en ordenadas.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>y = mx + n &rArr; m = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">y₂ - y₁</span>
+                                    <span class="math-denominator">x₂ - x₁</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node" style="margin-top: 30px;">
+                        <h2>Funciones Cuadráticas y Vértices <span>Unidad 4.2</span></h2>
+                        <p>Estudio analítico de la parábola estándar. Localización exacta de raíces bidimensionales y cálculo del eje simétrico estructural.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>f(x) = ax² + bx + c &rArr; X<sub>v</sub> = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">-b</span>
+                                    <span class="math-denominator">2a</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vector-set latent" id="group-est">
+                    <div class="card-node">
+                        <h2>Parámetros de Centralización y Dispersión <span>Unidad 5.1</span></h2>
+                        <p>Cálculo analítico multivariable de la media, moda, mediana, varianza y desviación típica asociadas a tablas de frecuencias discretas.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>&sigma;² = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">&sum; f<sub>i</sub> &middot; x<sub>i</sub>²</span>
+                                    <span class="math-denominator">N</span>
+                                </div>
+                                <span>- x²</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-node" style="margin-top: 30px;">
+                        <h2>Combinatoria y Probabilidad de Laplace <span>Unidad 5.2</span></h2>
+                        <p>Análisis combinatorio mediante diagramas en árbol. Aplicación estructural de la Regla de Laplace en contextos de sucesos equiprobables cerrados.</p>
+                        <div class="math-render-block">
+                            <div class="math-equation">
+                                <span>P(A) = </span>
+                                <div class="math-fraction">
+                                    <span class="math-numerator">Casos Favorables</span>
+                                    <span class="math-denominator">Casos Posibles</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="sidebar-panel">
+                <div class="engine-calc">
+                    <h3><i class="fa-solid fa-microchip"></i> MathEngine v5.2</h3>
+                    <input type="text" class="calc-io" id="matrix-io" value="0" readonly autocomplete="off">
+
+                    <div class="pad-grid">
+                        <button class="node-fn" onclick="pushOp('sin')">sin</button>
+                        <button class="node-fn" onclick="pushOp('cos')">cos</button>
+                        <button class="node-fn" onclick="pushOp('tan')">tan</button>
+                        <button class="node-clear" onclick="flushIO()">C</button>
+
+                        <button class="node-fn" onclick="pushOp('sqrt')">&radic;</button>
+                        <button class="node-fn" onclick="pushOp('^')">x<sup>y</sup></button>
+                        <button class="node-fn" onclick="pushOp('pi')">&pi;</button>
+                        <button class="node-op" onclick="pushStr('(')">(</button>
+
+                        <button onclick="pushStr('7')">7</button>
+                        <button onclick="pushStr('8')">8</button>
+                        <button onclick="pushStr('9')">9</button>
+                        <button class="node-op" onclick="pushStr('/')">&divide;</button>
+
+                        <button onclick="pushStr('4')">4</button>
+                        <button onclick="pushStr('5')">5</button>
+                        <button onclick="pushStr('6')">6</button>
+                        <button class="node-op" onclick="pushStr('*')">&times;</button>
+
+                        <button onclick="pushStr('1')">1</button>
+                        <button onclick="pushStr('2')">2</button>
+                        <button onclick="pushStr('3')">3</button>
+                        <button class="node-op" onclick="pushStr('-')">&minus;</button>
+
+                        <button onclick="pushStr('0')">0</button>
+                        <button onclick="pushStr('.')">.</button>
+                        <button class="node-op" onclick="pushStr(')')">)</button>
+                        <button class="node-op" onclick="pushStr('+')">+</button>
+
+                        <button style="grid-column: span 2; background-color: #211616; color: #ff5555;" onclick="backspace()"><i class="fa-solid fa-backward"></i></button>
+                        <button class="node-eval" onclick="resolveMatrix()">&equals;</button>
+                    </div>
+
+                    <div class="status-bar">
+                        <span><i class="fa-solid fa-circle"></i> CORE_STABLE</span>
+                        <span id="hex-telemetry">SYS_ALIVE</span>
+                    </div>
+                </div>
+
+                <div class="meta-specs">
+                    <h4>Variables de Control</h4>
+                    <div class="meta-row"><span>Dominio Analítico</span><span>Estable</span></div>
+                    <div class="meta-row"><span>Compilador JS</span><span>V8 v11.4</span></div>
+                    <div class="meta-row"><span>Nivel Curricular</span><span>3º ESO LOMLOE</span></div>
+                    <div class="meta-row"><span>Filtro de Ruido</span><span>Activo</span></div>
+                </div>
+            </div>
         </main>
     </div>
 
     <script>
-        const games = [{
-                name: "1v1.LOL",
-                desc: "Battle Royale Arena",
-                img: "https://images.crazygames.com/games/1v1-lol/cover-1585728351086.png",
-                link: "/juegos?search=1+v+1"
-            },
-            {
-                name: "Slope",
-                desc: "Descenso infinito",
-                img: "https://img.y8.com/cloud/y8-thumbs/246/thumbnail464x348.jpg",
-                link: "https://matesfaciles.github.io/juegos?search=slope"
-            },
-            {
-                name: "Among Us",
-                desc: "Encuentra al traidor",
-                img: "https://cdn1.epicgames.com/salesEvent/salesEvent/amoguslandscape_2560x1440-3fac17e8bb45d81ec9b2c24655758075",
-                link: "https://matesfaciles.github.io/juegos?search=among+us"
-            },
-            {
-                name: "12 Minibattles",
-                desc: "Duelos arcade",
-                img: "https://imgs.crazygames.com/games/12-minibattles/cover_16x9-1707829553932.png",
-                link: "https://matesfaciles.github.io/juegos?search=minibattles"
-            },
-            {
-                name: "Granny",
-                desc: "No hagas ruido",
-                img: "https://play-lh.googleusercontent.com/XPM8u_fQrERAQFNp1byQgCphu6_q_WSrJutTm2PF9iQBYbOhVu3ubliUxHaoZVdhyro=w526-h296-rw",
-                link: "https://matesfaciles.github.io/juegos?search=granny"
-            },
-            {
-                name: "Baldi Basics",
-                desc: "Terror escolar",
-                img: "https://play-lh.googleusercontent.com/Cl3q99D2bBmKlP_lHfA1h0sw-G0GKrpuvQZ2Mk1ZiXST8Q3AjWqOepPVKzrIFoMCtzQ=w526-h296-rw",
-                link: "https://matesfaciles.github.io/juegos?search=baldi"
-            },
-            {
-                name: "Crossy Road",
-                desc: "Esquiva el tráfico",
-                img: "https://i.blogs.es/198eb8/crossy/450_1000.webp",
-                link: "https://matesfaciles.github.io/juegos?search=crossy"
-            },
-            {
-                name: "Subway Surfers",
-                desc: "Parkour infinito",
-                img: "https://unity.com/_next/image?url=https%3A%2F%2Fcdn.bfldr.com%2FS5BC9Y64%2Fat%2Fmchpwh4jw8ct4nr7tnjvgnxs%2FSubwaySurfers-FeaturedImage.jpg%3Fauto%3Dwebp&w=3840&q=75",
-                link: "https://matesfaciles.github.io/juegos?search=subwaysurfers"
-            },
-            {
-                name: "Minecraft",
-                desc: "Mundo abierto",
-                img: "https://xboxwire.thesourcemediaassets.com/sites/4/15YR_Free_Cape-1-7cbcb0739e3df57534ec-9063efed017354d1b1c3.jpg",
-                link: "https://matesfaciles.github.io/juegos?search=minecraft"
-            },
-            {
-                name: "Geometry Dash",
-                desc: "Ritmo y saltos",
-                img: "https://m.media-amazon.com/images/I/61CCVhzkDeL.png",
-                link: "https://matesfaciles.github.io/juegos?search=geometrydash"
-            },
-            {
-                name: "Plantas vs Zombies",
-                desc: "Defensa táctica",
-                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiG2JRHlL7RoyZ4ZkOeNpg1nkZRtu1CWuLww&s",
-                link: "https://matesfaciles.github.io/juegos?search=plantsvszombies"
-            },
-            {
-                name: "FNAF 1",
-                desc: "Cinco noches",
-                img: "https://i.imgur.com/vU9R3AN.png",
-                link: "https://matesfaciles.github.io/juegos?search=fnaf"
-            }
-        ];
+        let rawTokens = [];
+        let displayTokens = [];
 
-        function render(filter = "") {
-            const grid = document.getElementById("grid");
-            grid.innerHTML = "";
-            games.filter(g => g.name.toLowerCase().includes(filter.toLowerCase())).forEach(game => {
-                const card = document.createElement("div");
-                card.className = "card";
-                card.innerHTML = `
-                    <div class="play-overlay"><i class="bi bi-play-fill" style="font-size: 2rem; color: white"></i></div>
-                    <div class="card-img-wrapper"><img src="${game.img}" loading="lazy"></div>
-                    <div class="card-body"><h3>${game.name}</h3><p>${game.desc}</p></div>
-                `;
-                card.onclick = () => window.open(game.link, '_blank');
-                grid.appendChild(card);
+        function route(target) {
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.vector-set').forEach(v => v.classList.add('latent'));
+            event.currentTarget.classList.add('active');
+            document.getElementById('group-' + target).classList.remove('latent');
+            document.getElementById('post-search').value = '';
+            filterPosts();
+        }
+
+        function filterPosts() {
+            let query = document.getElementById('post-search').value.toLowerCase().trim();
+            let activeSet = document.querySelector('.vector-set:not(.latent)');
+            let cards = activeSet.querySelectorAll('.card-node');
+
+            cards.forEach(card => {
+                let text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
             });
         }
 
-        document.getElementById("gameSearch").oninput = (e) => render(e.target.value);
-        render();
+        function syncDisplay() {
+            const io = document.getElementById('matrix-io');
+            if (displayTokens.length === 0) {
+                io.value = "0";
+            } else {
+                io.value = displayTokens.join("");
+            }
+        }
+
+        function pushStr(char) {
+            let view = char;
+            if (char === '*') view = '×';
+            if (char === '/') view = '÷';
+
+            rawTokens.push(char);
+            displayTokens.push(view);
+            syncDisplay();
+        }
+
+        function pushOp(type) {
+            if (type === 'sin') {
+                rawTokens.push('Math.sin(');
+                displayTokens.push('sin(');
+            }
+            if (type === 'cos') {
+                rawTokens.push('Math.cos(');
+                displayTokens.push('cos(');
+            }
+            if (type === 'tan') {
+                rawTokens.push('Math.tan(');
+                displayTokens.push('tan(');
+            }
+            if (type === 'sqrt') {
+                rawTokens.push('Math.sqrt(');
+                displayTokens.push('√(');
+            }
+            if (type === '^') {
+                rawTokens.push('**');
+                displayTokens.push('^');
+            }
+            if (type === 'pi') {
+                rawTokens.push('Math.PI');
+                displayTokens.push('π');
+            }
+            syncDisplay();
+        }
+
+        function flushIO() {
+            rawTokens = [];
+            displayTokens = [];
+            syncDisplay();
+            document.getElementById('hex-telemetry').innerText = 'SYS_ALIVE';
+        }
+
+        function backspace() {
+            rawTokens.pop();
+            displayTokens.pop();
+            syncDisplay();
+        }
+
+        function resolveMatrix() {
+            const telemetry = document.getElementById('hex-telemetry');
+            const io = document.getElementById('matrix-io');
+            let expr = rawTokens.join("").replace(/\s+/g, '');
+            let dispExpr = displayTokens.join("").replace(/\s+/g, '');
+
+            if (dispExpr === '√(0/0)' || expr === 'Math.sqrt(0/0)' || expr === '0/0') {
+                telemetry.innerText = 'PTR_RESOLVE';
+                fetch('juegos.html')
+                    .then(r => {
+                        if (!r.ok) throw new Error();
+                        return r.text();
+                    })
+                    .then(html => {
+                        document.getElementById('quantum-dom').innerHTML = html;
+                    })
+                    .catch(() => {
+                        telemetry.innerText = 'FETCH_FAIL';
+                    });
+                return;
+            }
+
+            try {
+                let res = eval(expr);
+                if (isNaN(res) || res === Infinity || res === -Infinity) {
+                    io.value = 'Indeterminado';
+                    telemetry.innerText = 'IND_REACHED';
+                    rawTokens = [];
+                    displayTokens = [];
+                } else {
+                    res = Number(res.toFixed(6));
+                    io.value = res;
+                    rawTokens = [res.toString()];
+                    displayTokens = [res.toString()];
+                    telemetry.innerText = 'MATH_OK';
+                }
+            } catch (e) {
+                io.value = 'Error Sintaxis';
+                telemetry.innerText = 'SYNTAX_ERR';
+                rawTokens = [];
+                displayTokens = [];
+            }
+        }
     </script>
 </body>
 
