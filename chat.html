@@ -151,6 +151,10 @@
             object-fit: cover;
         }
 
+        .msg-img.owner-border {
+            border: 2px solid #ff3333;
+        }
+
         .msg-body {
             background: rgba(255, 255, 255, 0.05);
             padding: 10px;
@@ -158,6 +162,7 @@
             border-bottom-left-radius: 2px;
             position: relative;
             min-width: 120px;
+            word-break: break-word;
         }
 
         .msg-user {
@@ -259,7 +264,7 @@
             display: none !important;
         }
 
-        /* ESTILOS TOAST */
+        /* TOAST */
         #toast-container {
             position: fixed;
             bottom: 30px;
@@ -304,23 +309,20 @@
             }
         }
 
-        /* Botón de enviar cuando está bloqueado */
         button.send-v:disabled {
             background: #222 !important;
             color: #555 !important;
             cursor: not-allowed !important;
-            /* Icono de prohibido */
             box-shadow: none !important;
             transform: none !important;
             filter: grayscale(1);
         }
 
-        /* Variante para el Toast permanente de baneo */
+        /* Toast permanente de baneo */
         .toast-ban {
             border-left: 4px solid #ff3333 !important;
             box-shadow: 0 0 20px #ff3333 !important;
             animation: slideUpToast 0.4s ease forwards !important;
-            /* Quitamos la animación de salida */
         }
     </style>
 </head>
@@ -340,7 +342,7 @@
         <div class="modal">
             <h3>¿CÓMO TE LLAMAS?</h3>
             <p>Elige un apodo para chatear como invitado:</p>
-            <input type="text" id="guest-input-name" placeholder="Escribe aquí..." style="width:80%; margin-bottom:10px;">
+            <input type="text" id="guest-input-name" placeholder="Escribe aquí..." maxlength="24" style="width:80%; margin-bottom:10px;">
             <p id="error-name" style="color: #ff4b4b; font-size: 0.8rem;" class="hidden">Ese nombre está reservado por el DUEÑO.</p>
             <button class="send-v" onclick="saveGuestName()">ENTRAR AL CHAT</button>
         </div>
@@ -350,7 +352,7 @@
         <div class="modal">
             <h3>PERFIL VERIFICADO</h3>
             <p>Ajusta tu nombre y foto:</p>
-            <input type="text" id="custom-name" placeholder="Tu nombre..." style="width:80%; margin-bottom:10px;">
+            <input type="text" id="custom-name" placeholder="Tu nombre..." maxlength="24" style="width:80%; margin-bottom:10px;">
             <input type="text" id="custom-img" placeholder="URL de tu foto..." style="width:80%; margin-bottom:10px;">
             <button class="send-v" onclick="saveProfile()">GUARDAR Y ENTRAR</button>
         </div>
@@ -370,7 +372,7 @@
     <div id="app">
         <header>
             <div class="user-info-bar">
-                <img id="my-pfp" src="https://i.imgur.com/PPO7d2j.png">
+                <img id="my-pfp" src="https://i.imgur.com/PPO7d2j.png" alt="">
                 <span id="my-name">Cargando...</span>
             </div>
             <div style="display: flex; gap: 10px;">
@@ -383,7 +385,7 @@
 
         <div class="input-wrap">
             <input type="text" id="msg-input" placeholder="Escribe un mensaje..." maxlength="150">
-            <button class="send-v" onclick="trySend()"><i class="fa-solid fa-paper-plane"></i></button>
+            <button class="send-v" id="send-btn" onclick="trySend()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -392,21 +394,20 @@
             initializeApp
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import {
-            getFirestore,
-            collection,
-            addDoc,
+            getDatabase,
+            ref,
+            push,
+            set,
+            onValue,
             query,
-            orderBy,
-            limit,
-            onSnapshot,
-            serverTimestamp,
-            getDocs,
-            getDoc,
-            deleteDoc,
-            doc,
-            setDoc,
-            where
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+            limitToLast,
+            orderByChild,
+            equalTo,
+            limitToFirst,
+            remove,
+            get,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import {
             getAuth,
             signInWithPopup,
@@ -420,6 +421,10 @@
         const firebaseConfig = {
             apiKey: "AIzaSyDLaicFQIw-h7FLXXVi93jLQD4HggwejzI",
             authDomain: "cocacolalandia123.firebaseapp.com",
+            // IMPORTANTE: copia aquí la URL exacta de tu Realtime Database
+            // (Consola Firebase > Realtime Database). Si tu base está en Europa,
+            // será del tipo https://cocacolalandia123-default-rtdb.europe-west1.firebasedatabase.app
+            databaseURL: "https://cocacolalandia123-default-rtdb.firebaseio.com",
             projectId: "cocacolalandia123",
             storageBucket: "cocacolalandia123.firebasestorage.app",
             messagingSenderId: "196667615632",
@@ -427,77 +432,80 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const db = getDatabase(app);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
-        let myIp = "0.0.0.0";
-        fetch('https://api.ipify.org?format=json')
-            .then(r => r.json())
-            .then(d => {
-                myIp = d.ip;
-                checkBanStatus();
-            })
-            .catch(err => {
-                console.warn("ipify bloqueado por AdBlock. Usando 'oculta' como IP.");
-                myIp = "oculta"; // Valor seguro que no sea 0.0.0.0
-                checkBanStatus();
-            });
-        // --- FUNCIÓN DE BLOQUEO POR BANEO ---
-        async function checkBanStatus() {
-            if (myIp === "0.0.0.0") return;
-            const uid = auth.currentUser ? auth.currentUser.uid : "guest";
-            const ipId = myIp.replace(/\./g, '_');
-            let isBanned = false;
 
-            try {
-                // Comprobar UID
-                if (uid !== "guest") {
-                    const banSnap = await getDoc(doc(db, "banned", uid));
-                    if (banSnap.exists()) isBanned = true;
+        const DEFAULT_PFP = "https://i.imgur.com/PPO7d2j.png";
+        const MAX_VISIBLE = 20;
+        const MAX_STORED = 50;
+
+        /* =====================================================
+           ID DE DISPOSITIVO (128 caracteres) - localStorage + cookie
+           ===================================================== */
+        const DEVICE_KEY = 'cc_device_id';
+        const DEVICE_RE = /^[A-Za-z0-9_-]{128}$/;
+        const FIVE_YEARS = 5 * 365 * 24 * 60 * 60; // segundos
+
+        function generateDeviceId() {
+            // Alfabeto de 64 caracteres: (byte & 63) no introduce sesgo.
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+            const bytes = new Uint8Array(128);
+            window.crypto.getRandomValues(bytes);
+            let id = '';
+            for (let i = 0; i < 128; i++) id += alphabet[bytes[i] & 63];
+            return id;
+        }
+
+        function readCookie(name) {
+            const parts = document.cookie ? document.cookie.split('; ') : [];
+            for (const p of parts) {
+                const idx = p.indexOf('=');
+                if (idx > -1 && p.slice(0, idx) === name) {
+                    try {
+                        return decodeURIComponent(p.slice(idx + 1));
+                    } catch (e) {
+                        return null;
+                    }
                 }
-                // Comprobar IP
-                const ipSnap = await getDoc(doc(db, "banned", ipId));
-                if (ipSnap.exists()) isBanned = true;
-
-                if (isBanned) {
-                    // 1. Bloquear el input y el botón
-                    const input = document.getElementById('msg-input');
-                    const btn = document.querySelector('button.send-v');
-
-                    input.disabled = true;
-                    input.placeholder = "ACCESO RESTRINGIDO";
-                    btn.disabled = true;
-
-                    // 2. Lanzar Toast Permanente (sin el setTimeout de borrado)
-                    showPermanentBanToast("🚫 ESTÁS BANEADO. No puedes enviar mensajes.");
-                }
-            } catch (e) {
-                console.error("Error verificando baneo:", e);
             }
+            return null;
         }
 
-        // Función especial para el aviso de baneo que no se quita
-        function showPermanentBanToast(message) {
-            const container = document.getElementById('toast-container') || createToastContainer();
-            // Evitar duplicados
-            if (document.querySelector('.toast-ban')) return;
-
-            const toast = document.createElement('div');
-            toast.className = 'toast-msg toast-ban';
-            toast.innerText = message;
-            container.appendChild(toast);
-            // NOTA: No hay setTimeout, por lo que se queda ahí para siempre
+        function writeCookie(name, value) {
+            const secure = location.protocol === 'https:' ? '; Secure' : '';
+            document.cookie = `${name}=${encodeURIComponent(value)}; max-age=${FIVE_YEARS}; path=/; SameSite=Lax${secure}`;
         }
-        // --- OVERRIDE DE ALERT A TOAST ---
-        window.alert = function(message) {
-            const container = document.getElementById('toast-container') || createToastContainer();
-            const toast = document.createElement('div');
-            toast.className = 'toast-msg';
-            toast.innerText = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        };
 
+        function persistDeviceId(id) {
+            try {
+                localStorage.setItem(DEVICE_KEY, id);
+            } catch (e) {
+                /* storage bloqueado */ }
+            writeCookie(DEVICE_KEY, id); // también renueva la caducidad de 5 años
+        }
+
+        function getOrCreateDeviceId() {
+            let fromLS = null;
+            try {
+                fromLS = localStorage.getItem(DEVICE_KEY);
+            } catch (e) {}
+            const fromCookie = readCookie(DEVICE_KEY);
+
+            let id;
+            if (DEVICE_RE.test(fromLS || '')) id = fromLS; // prioridad: localStorage
+            else if (DEVICE_RE.test(fromCookie || '')) id = fromCookie; // autocuración desde cookie
+            else id = generateDeviceId(); // solo si faltan ambos
+
+            persistDeviceId(id); // restaura el que falte
+            return id;
+        }
+
+        const myDeviceId = getOrCreateDeviceId();
+
+        /* =====================================================
+           UTILIDADES
+           ===================================================== */
         function createToastContainer() {
             const c = document.createElement('div');
             c.id = 'toast-container';
@@ -505,49 +513,200 @@
             return c;
         }
 
-        // --- LÓGICA CONFIRMACIÓN ---
+        // alert -> toast
+        window.alert = function(message) {
+            const container = document.getElementById('toast-container') || createToastContainer();
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        };
+
+        function showPermanentBanToast(message) {
+            const container = document.getElementById('toast-container') || createToastContainer();
+            if (document.querySelector('.toast-ban')) return;
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg toast-ban';
+            toast.textContent = message;
+            container.appendChild(toast);
+        }
+
+        function safeImageUrl(url) {
+            try {
+                const u = new URL(url, location.href);
+                if (u.protocol === 'https:' || u.protocol === 'http:') return u.href;
+            } catch (e) {}
+            return DEFAULT_PFP;
+        }
+
+        /* =====================================================
+           MODAL DE CONFIRMACIÓN (#admin-confirm)
+           ===================================================== */
         let confirmAction = null;
         window.openConfirm = (title, msg, action) => {
-            document.getElementById('confirm-title').innerText = title;
-            document.getElementById('confirm-msg').innerText = msg;
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-msg').textContent = msg;
             document.getElementById('admin-confirm').style.display = 'flex';
             confirmAction = action;
         };
         window.closeConfirm = () => {
             document.getElementById('admin-confirm').style.display = 'none';
+            confirmAction = null;
         };
         document.getElementById('confirm-yes').onclick = () => {
-            if (confirmAction) confirmAction();
+            const action = confirmAction;
             closeConfirm();
+            if (action) action();
         };
 
-
+        /* =====================================================
+           ESTADO DE USUARIO
+           ===================================================== */
         let userData = {
             name: "Invitado",
-            pfp: "https://i.imgur.com/PPO7d2j.png",
+            pfp: DEFAULT_PFP,
             isGoogle: false,
             isAdmin: false
         };
 
-        // --- SISTEMA DE SESIÓN Y ADMIN ---
+        function updateUI() {
+            document.getElementById('my-name').textContent = userData.name;
+            document.getElementById('my-pfp').src = safeImageUrl(userData.pfp);
+        }
+
+        /* =====================================================
+           COMPROBACIÓN DE BANEO (get directo al deviceId)
+           ===================================================== */
+        let banLocked = false;
+
+        function applyBanLock() {
+            banLocked = true;
+            const input = document.getElementById('msg-input');
+            const btn = document.getElementById('send-btn');
+            input.disabled = true;
+            input.placeholder = "ACCESO RESTRINGIDO";
+            btn.disabled = true;
+            showPermanentBanToast("🚫 ESTÁS BANEADO. No puedes enviar mensajes.");
+        }
+
+        async function checkBanStatus() {
+            if (banLocked) return true;
+            try {
+                const checks = [get(ref(db, 'banned_devices/' + myDeviceId))];
+                if (auth.currentUser) checks.push(get(ref(db, 'banned_users/' + auth.currentUser.uid)));
+                const results = await Promise.all(checks);
+                if (results.some(s => s.exists())) {
+                    applyBanLock();
+                    return true;
+                }
+            } catch (e) {
+                console.error("Error verificando baneo:", e);
+            }
+            return false;
+        }
+
+        /* =====================================================
+           RENDER DEL CHAT (sin innerHTML -> sin XSS)
+           ===================================================== */
+        let cachedMsgs = []; // [{id, m}]
+
+        function buildMessage(id, m) {
+            const isOwner = m.isAdmin === true;
+
+            const wrap = document.createElement('div');
+            wrap.className = 'msg';
+
+            const img = document.createElement('img');
+            img.className = 'msg-img' + (isOwner ? ' owner-border' : '');
+            img.src = safeImageUrl(m.pfp);
+            img.alt = '';
+            img.referrerPolicy = 'no-referrer';
+            wrap.appendChild(img);
+
+            const body = document.createElement('div');
+            body.className = 'msg-body';
+
+            const userSpan = document.createElement('span');
+            userSpan.className = 'msg-user' + (isOwner ? ' is-owner-text' : '');
+            userSpan.appendChild(document.createTextNode(String(m.user || 'Anónimo').slice(0, 30) + ' '));
+
+            if (isOwner) {
+                const crown = document.createElement('i');
+                crown.className = 'fas fa-crown owner-icon';
+                userSpan.appendChild(crown);
+                userSpan.appendChild(document.createTextNode(' '));
+                const badge = document.createElement('span');
+                badge.className = 'badge-owner';
+                badge.textContent = 'DUEÑO';
+                userSpan.appendChild(badge);
+            } else if (m.isGoogle) {
+                const check = document.createElement('i');
+                check.className = 'fas fa-check-circle verified-icon';
+                userSpan.appendChild(check);
+            }
+            body.appendChild(userSpan);
+
+            const textSpan = document.createElement('span');
+            textSpan.textContent = String(m.text ?? '').slice(0, 150);
+            body.appendChild(textSpan);
+            wrap.appendChild(body);
+
+            if (userData.isAdmin) {
+                const tools = document.createElement('div');
+                tools.className = 'admin-tools';
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'btn-admin';
+                delBtn.textContent = 'Borrar';
+                delBtn.addEventListener('click', () => delMsg(id));
+                tools.appendChild(delBtn);
+
+                if (!isOwner) {
+                    const banBtn = document.createElement('button');
+                    banBtn.className = 'btn-admin';
+                    banBtn.textContent = 'Banear';
+                    banBtn.addEventListener('click', () => banUser(m.deviceId, m.uid, m.user));
+                    tools.appendChild(banBtn);
+                }
+                wrap.appendChild(tools);
+            }
+
+            return wrap;
+        }
+
+        function renderChat() {
+            const box = document.getElementById('chat-box');
+            const frag = document.createDocumentFragment();
+            cachedMsgs.forEach(({
+                id,
+                m
+            }) => frag.appendChild(buildMessage(id, m)));
+            box.replaceChildren(frag);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        /* =====================================================
+           SESIÓN / ADMIN
+           ===================================================== */
         onAuthStateChanged(auth, async (user) => {
+            const wasAdmin = userData.isAdmin;
+
             if (user) {
                 try {
-                    const adminSnap = await getDoc(doc(db, "admins", user.email));
-                    if (adminSnap.exists()) {
-                        userData.isAdmin = true;
-                        console.log("✅ ¡ERES ADMIN!");
-                        alert("💻 MODO DUEÑO ACTIVADO");
-                    } else {
-                        userData.isAdmin = false;
-                    }
+                    // Los administradores se registran por UID: /admins/<UID> = true
+                    const adminSnap = await get(ref(db, 'admins/' + user.uid));
+                    userData.isAdmin = adminSnap.exists();
                 } catch (e) {
                     userData.isAdmin = false;
                 }
 
-                const saved = JSON.parse(localStorage.getItem('cc_profile_v3'));
-                userData.name = saved?.name || user.displayName;
-                userData.pfp = saved?.pfp || user.photoURL;
+                let saved = null;
+                try {
+                    saved = JSON.parse(localStorage.getItem('cc_profile_v3'));
+                } catch (e) {}
+                userData.name = (saved?.name || user.displayName || 'Usuario').slice(0, 24);
+                userData.pfp = saved?.pfp || user.photoURL || DEFAULT_PFP;
                 userData.isGoogle = true;
 
                 document.getElementById('login-btn').classList.add('hidden');
@@ -555,43 +714,61 @@
             } else {
                 userData.isAdmin = false;
             }
-            checkBanStatus();
+
+            if (userData.isAdmin && !wasAdmin) alert("💻 MODO DUEÑO ACTIVADO");
+
             updateUI();
+            // Redibujado inmediato al cambiar de rol (muestra/oculta Borrar y Banear)
+            if (userData.isAdmin !== wasAdmin) renderChat();
+
+            checkBanStatus();
         });
 
-        function updateUI() {
-            document.getElementById('my-name').innerText = userData.name;
-            document.getElementById('my-pfp').src = userData.pfp;
-        }
-
         window.startGoogle = async () => {
-            await setPersistence(auth, browserLocalPersistence);
-            const res = await signInWithPopup(auth, provider);
-            document.getElementById('custom-name').value = res.user.displayName;
-            document.getElementById('custom-img').value = res.user.photoURL;
-            document.getElementById('step-profile').classList.remove('hidden');
+            try {
+                await setPersistence(auth, browserLocalPersistence);
+                const res = await signInWithPopup(auth, provider);
+                document.getElementById('custom-name').value = res.user.displayName || '';
+                document.getElementById('custom-img').value = res.user.photoURL || '';
+                document.getElementById('step-profile').classList.remove('hidden');
+            } catch (e) {
+                if (e.code !== 'auth/popup-closed-by-user') alert("⚠️ No se pudo iniciar sesión.");
+            }
         };
 
         window.saveProfile = () => {
-            userData.name = document.getElementById('custom-name').value.trim();
-            userData.pfp = document.getElementById('custom-img').value.trim();
-            localStorage.setItem('cc_profile_v3', JSON.stringify({
-                name: userData.name,
-                pfp: userData.pfp
-            }));
+            const name = document.getElementById('custom-name').value.trim().slice(0, 24);
+            const pfp = document.getElementById('custom-img').value.trim();
+            if (name) userData.name = name;
+            userData.pfp = pfp ? safeImageUrl(pfp) : DEFAULT_PFP;
+            try {
+                localStorage.setItem('cc_profile_v3', JSON.stringify({
+                    name: userData.name,
+                    pfp: userData.pfp
+                }));
+            } catch (e) {}
             updateUI();
             document.getElementById('step-profile').classList.add('hidden');
         };
 
-        window.closeSession = () => {
-            signOut(auth);
-            localStorage.removeItem('cc_profile_v3');
+        window.closeSession = async () => {
+            try {
+                await signOut(auth);
+            } catch (e) {}
+            try {
+                localStorage.removeItem('cc_profile_v3');
+            } catch (e) {}
             location.reload();
         };
 
-        window.trySend = () => {
+        /* =====================================================
+           ENVÍO DE MENSAJES
+           ===================================================== */
+        window.trySend = async () => {
+            if (banLocked) return;
             const val = document.getElementById('msg-input').value.trim();
             if (!val) return;
+
             if (!userData.isGoogle && userData.name === "Invitado") {
                 document.getElementById('step-guest-name').classList.remove('hidden');
             } else {
@@ -600,129 +777,183 @@
         };
 
         window.saveGuestName = async () => {
-            const n = document.getElementById('guest-input-name').value.trim();
+            const n = document.getElementById('guest-input-name').value.trim().slice(0, 24);
             if (!n) return;
-            const q = query(collection(db, "messages"), where("user", "==", n), where("isAdmin", "==", true), limit(1));
-            const snap = await getDocs(q);
-            if (!snap.empty) {
-                document.getElementById('error-name').classList.remove('hidden');
-            } else {
-                userData.name = n;
-                updateUI();
-                document.getElementById('step-guest-name').classList.add('hidden');
-                executeSend(document.getElementById('msg-input').value);
+
+            try {
+                // Nombre reservado si ya lo usa algún mensaje de administrador
+                const snap = await get(query(ref(db, 'messages'), orderByChild('user'), equalTo(n), limitToFirst(25)));
+                let reserved = false;
+                snap.forEach(child => {
+                    if (child.val().isAdmin === true) reserved = true;
+                });
+                // Además, comprobar los mensajes ya cargados en pantalla
+                if (cachedMsgs.some(({
+                        m
+                    }) => m.isAdmin === true && String(m.user).toLowerCase() === n.toLowerCase())) reserved = true;
+
+                if (reserved) {
+                    document.getElementById('error-name').classList.remove('hidden');
+                    return;
+                }
+            } catch (e) {
+                console.warn("No se pudo comprobar el nombre reservado:", e);
             }
+
+            userData.name = n;
+            updateUI();
+            document.getElementById('error-name').classList.add('hidden');
+            document.getElementById('step-guest-name').classList.add('hidden');
+            const val = document.getElementById('msg-input').value.trim();
+            if (val) executeSend(val);
         };
 
         async function executeSend(text) {
-            try {
-                if (myIp === "0.0.0.0") {
-                    const r = await fetch('https://api.ipify.org?format=json');
-                    const d = await r.json();
-                    myIp = d.ip;
-                }
+            // Comprobación de baneo al vuelo antes de cada envío
+            if (await checkBanStatus()) return;
 
-                await addDoc(collection(db, "messages"), {
-                    text: text,
+            try {
+                const msgRef = push(ref(db, 'messages'));
+                await set(msgRef, {
+                    text: text.slice(0, 150),
                     user: userData.name,
                     pfp: userData.pfp,
                     isGoogle: userData.isGoogle,
                     isAdmin: userData.isAdmin,
                     uid: auth.currentUser ? auth.currentUser.uid : "guest",
-                    ip: myIp,
+                    deviceId: myDeviceId,
                     time: serverTimestamp()
                 });
 
                 document.getElementById('msg-input').value = "";
-                // Si el envío es exitoso, nos aseguramos de limpiar cualquier error previo
-                cleanUp();
+
+                // Solo el administrador ejecuta la limpieza
+                if (userData.isAdmin) cleanUp();
 
             } catch (e) {
                 console.error("Error al enviar:", e);
-
-                // Solo muestra el Toast de baneo si el error es de falta de permisos (Firebase lo bloquea)
-                if (e.code === 'permission-denied') {
-                    showPermanentBanToast("🚫 Acceso denegado: Estás baneado del chat.");
+                if (e.code === 'PERMISSION_DENIED' || String(e.message).includes('PERMISSION_DENIED')) {
+                    applyBanLock();
                 } else {
-                    // Si es otro error (como falta de internet), usa un alert normal que desaparece
                     alert("⚠️ Error al enviar el mensaje. Revisa tu conexión.");
                 }
             }
         }
 
-        // --- HERRAMIENTAS ADMIN ---
-        window.delMsg = (id) => {
-            openConfirm("BORRAR", "¿Quieres eliminar este mensaje?", async () => {
-                await deleteDoc(doc(db, "messages", id));
-                alert("Mensaje eliminado");
-            });
-        };
-        window.banUser = async (uid, ip) => {
-            if (confirm("¿Seguro que quieres banear a este usuario?")) {
-                // SI LA IP DEL MENSAJE ES 0.0.0.0, USA LA TUYA (myIp) QUE YA CARGÓ AL INICIO
-                let targetIp = (ip === "0.0.0.0" || !ip) ? myIp : ip;
-
-                // Baneo por UID
-                if (uid && uid !== "guest") {
-                    await setDoc(doc(db, "banned", uid), {
-                        banned: true
-                    });
-                }
-
-                // Baneo por IP (Cambiando puntos por guiones para Firebase)
-                const ipId = targetIp.replace(/\./g, '_');
-                await setDoc(doc(db, "banned", ipId), {
-                    banned: true,
-                    ip: targetIp
-                });
-
-                alert("Usuario e IP (" + targetIp + ") baneados correctamente.");
-            }
-        };
-
-        // --- ESCUCHA TIEMPO REAL ---
-        const qC = query(collection(db, "messages"), orderBy("time", "desc"), limit(20));
-        onSnapshot(qC, (snap) => {
-            const box = document.getElementById('chat-box');
-            box.innerHTML = "";
-            snap.docs.reverse().forEach(d => {
-                const m = d.data();
-                const isOwner = m.isAdmin === true;
-                box.innerHTML += `
-                    <div class="msg">
-                        <img src="${m.pfp}" class="msg-img" style="${isOwner ? 'border: 2px solid #ff3333' : ''}">
-                        <div class="msg-body">
-                            <span class="msg-user ${isOwner ? 'is-owner-text' : ''}">
-                                ${m.user} ${isOwner ? '<i class="fas fa-crown owner-icon"></i> <span class="badge-owner">DUEÑO</span>' : ''}
-                                ${m.isGoogle && !isOwner ? '<i class="fas fa-check-circle verified-icon"></i>' : ''}
-                            </span>
-                            <span>${m.text}</span>
-                        </div>
-                        ${userData.isAdmin ? `
-                            <div class="admin-tools">
-                                <button class="btn-admin" onclick="delMsg('${d.id}')">Borrar</button>
-                                <button class="btn-admin" onclick="banUser('${m.uid}', '${m.ip}')">Banear</button>
-                            </div>
-                        ` : ''}
-                    </div>`;
-            });
-            box.scrollTop = box.scrollHeight;
-        });
-
-        window.confirmAge = () => {
-            document.getElementById('step-age').classList.add('hidden');
-            localStorage.setItem('age_ok_cc', '1');
-        };
-        if (localStorage.getItem('age_ok_cc')) document.getElementById('step-age').classList.add('hidden');
-
+        /* =====================================================
+           LIMPIEZA (solo admin, secuencial)
+           ===================================================== */
+        let cleaning = false;
         async function cleanUp() {
-            const s = await getDocs(query(collection(db, "messages"), orderBy("time", "desc")));
-            if (s.size > 50) s.docs.slice(20).forEach(async d => await deleteDoc(doc(db, "messages", d.id)));
+            if (!userData.isAdmin || cleaning) return;
+            cleaning = true;
+            try {
+                const snap = await get(ref(db, 'messages'));
+                if (!snap.exists()) return;
+
+                const keys = [];
+                snap.forEach(child => {
+                    keys.push(child.key);
+                }); // claves push = orden cronológico
+
+                if (keys.length > MAX_STORED) {
+                    const toDelete = keys.slice(0, keys.length - MAX_VISIBLE);
+                    for (const key of toDelete) {
+                        await remove(ref(db, 'messages/' + key)); // uno a uno, sin saturar
+                    }
+                }
+            } catch (e) {
+                console.error("Error en cleanUp:", e);
+            } finally {
+                cleaning = false;
+            }
         }
 
-        document.getElementById('msg-input').onkeypress = (e) => {
-            if (e.key === 'Enter') trySend();
+        /* =====================================================
+           HERRAMIENTAS ADMIN
+           ===================================================== */
+        function delMsg(id) {
+            openConfirm("BORRAR", "¿Quieres eliminar este mensaje?", async () => {
+                try {
+                    await remove(ref(db, 'messages/' + id));
+                    alert("Mensaje eliminado");
+                } catch (e) {
+                    alert("⚠️ No se pudo eliminar el mensaje.");
+                }
+            });
+        }
+
+        function banUser(deviceId, uid, name) {
+            if (!userData.isAdmin) return;
+
+            if (!DEVICE_RE.test(deviceId || '')) {
+                alert("Este mensaje no tiene un ID de dispositivo válido.");
+                return;
+            }
+            if (deviceId === myDeviceId) {
+                alert("No puedes banear tu propio dispositivo.");
+                return;
+            }
+
+            openConfirm("BANEAR", `¿Seguro que quieres banear a "${String(name || 'este usuario').slice(0, 30)}"?`, async () => {
+                try {
+                    await set(ref(db, 'banned_devices/' + deviceId), {
+                        banned: true,
+                        time: serverTimestamp()
+                    });
+
+                    if (uid && uid !== "guest") {
+                        await set(ref(db, 'banned_users/' + uid), {
+                            banned: true,
+                            time: serverTimestamp()
+                        });
+                    }
+                    alert("Dispositivo baneado correctamente.");
+                } catch (e) {
+                    console.error(e);
+                    alert("⚠️ No se pudo completar el baneo.");
+                }
+            });
+        }
+
+        /* =====================================================
+           ESCUCHA EN TIEMPO REAL (últimos 20 mensajes)
+           ===================================================== */
+        const messagesQuery = query(ref(db, 'messages'), limitToLast(MAX_VISIBLE));
+        onValue(messagesQuery, (snap) => {
+            const arr = [];
+            snap.forEach(child => {
+                const m = child.val();
+                if (m && typeof m === 'object') arr.push({
+                    id: child.key,
+                    m
+                });
+            });
+            cachedMsgs = arr;
+            renderChat();
+        }, (err) => {
+            console.error("Error en la escucha:", err);
+        });
+
+        /* =====================================================
+           EDAD / ENTER / ARRANQUE
+           ===================================================== */
+        window.confirmAge = () => {
+            document.getElementById('step-age').classList.add('hidden');
+            try {
+                localStorage.setItem('age_ok_cc', '1');
+            } catch (e) {}
         };
+        try {
+            if (localStorage.getItem('age_ok_cc')) document.getElementById('step-age').classList.add('hidden');
+        } catch (e) {}
+
+        document.getElementById('msg-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') window.trySend();
+        });
+
+        updateUI();
+        checkBanStatus();
     </script>
 </body>
 
