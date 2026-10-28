@@ -1,5 +1,5 @@
 /* =====================================================================
-   comandos.js — Sistema de comandos para el Chat Oficial de Cocacolalandia 26
+   comandos.js — Sistema de comandos para el Chat Oficial de Matesfaciles 27
    ---------------------------------------------------------------------
    Módulo independiente (ES module). NO toca el HTML principal: todo el
    DOM, CSS y listeners se inyectan desde aquí.
@@ -17,29 +17,46 @@
    ===================================================================== */
 
 import {
-    ref, push, get, update, remove, onValue, runTransaction,
+    ref, set, push, get, update, remove, onValue, off, runTransaction,
     serverTimestamp, query, orderByChild, equalTo
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 /* =====================================================================
-   CONSTANTES Y METADATOS
+   CONSTANTES Y METADATOS — COCACOLALANDIA 27
    ===================================================================== */
-const DEVICE_RE = /^[A-Za-z0-9_-]{128}$/;
+const DEVICE_RE = /^[A-Za-z0-9_-]{16,256}$/; // compatible con todas las versiones de generador de deviceId
 const FLASHBANG_COOLDOWN = 5 * 60 * 1000;
 const START_COINS = 100;
 const STALE_EVENT_MS = 15000;
 
 export const COMMAND_LIST = [
+    { name: 'help', desc: 'Lista de todos los comandos' },
+    { name: 'comandos', desc: 'Alias de /help' },
     { name: 'flashbang', desc: 'Ciega la pantalla de TODOS 3s · cooldown 5 min' },
     { name: 'sismo', desc: 'Terremoto en todas las pantallas (2s)' },
     { name: 'confeti', desc: 'Lluvia de confeti neón para todos' },
     { name: 'ciberpanik', desc: 'Alerta roja de hackeo para todos' },
+    { name: 'glitch', desc: 'Distorsión RGB gamer en todas las pantallas (2.5s)' },
+    { name: 'aplaudir', desc: '👏 lluvia de palmas para todos' },
+    { name: 'matemathica', desc: 'Ecuaciones flotando por la pantalla (3s)' },
     { name: 'matrix', desc: 'Lluvia de código verde (solo tú, 4s)' },
     { name: 'invertir', desc: 'Invierte los colores de tu UI (alterna)' },
     { name: 'ruleta', desc: 'Ruleta rusa: 1/6 de quedar muteado 1 min' },
     { name: '8ball', args: '[pregunta]', desc: 'La bola mágica responde' },
     { name: 'suerte', desc: 'Tu fortuna de hoy (1-100)' },
     { name: 'bateria', desc: 'Tu ciber-energía actual' },
+    { name: 'moneda', desc: 'Cara o cruz a cara descubierta' },
+    { name: 'dado', args: '[n]', desc: 'Tira uno o varios dados (ej: /dado 3)' },
+    { name: 'rand', args: '[min] [max]', desc: 'Número aleatorio entre dos valores' },
+    { name: 'polla', args: '[longitud]', desc: 'La clásica polla, versión cyber-neón' },
+    { name: 'nave', desc: 'Tu nave espacial generada proceduralmente 🚀' },
+    { name: 'baraja', args: '[n]', desc: 'Cartas de la baraja francesa (ej: /baraja 3)' },
+    { name: 'flip', args: '[texto]', desc: 'Texto invertido y espejado Ɐ' },
+    { name: 'repetir', args: '[n] [texto]', desc: 'Repite un texto n veces (máx. 10)' },
+    { name: 'eco', args: '[texto]', desc: 'Repite tu mensaje como un bot' },
+    { name: 'clap', args: '[texto]', desc: 'Separa cada palabra 👏 con 👏 palmas 👏' },
+    { name: 'calcula', args: '[expresión]', desc: 'Calcula en el chat: /calcula sqrt(144)+2^3' },
+    { name: 'derivada', args: '[número]', desc: '¿Divertido? Deriva un número en público 😏' },
     { name: 'ship', args: '[nombre1] [nombre2]', desc: 'Compatibilidad entre dos personas' },
     { name: 'hackear', args: '[nombre]', desc: 'Hackea el mainframe de un amigo' },
     { name: 'amor', args: '[nombre]', desc: 'Tu compatibilidad romántica con alguien' },
@@ -47,19 +64,28 @@ export const COMMAND_LIST = [
     { name: 'coca', desc: 'Abre una Coca-Cola bien fría' },
     { name: 'refresco', desc: 'Abre un refresco bien fresquito' },
     { name: 'cartera', desc: 'Tu saldo de CocaCoins' },
-    { name: 'robos', args: '[usuario]', desc: '50% robas CocaCoins · 50% ciber-cárcel 30s' },
+    { name: 'robar', args: '[usuario]', desc: '50% robas CocaCoins · 50% ciber-cárcel 30s' },
+    { name: 'robos', args: '[usuario]', desc: 'Alias de /robar' },
+    { name: 'transferir', args: '[usuario] [cantidad]', desc: 'Regala CocaCoins a un amigo' },
+    { name: 'tragarmonedas', args: '[cantidad]', desc: 'Apuesta tus CocaCoins a la ruleta cyber' },
     { name: 'ppt', args: 'retar [nombre]', desc: 'Piedra, Papel o Tijera contra alguien' },
     { name: 'tresenraya', args: 'retar [nombre]', desc: 'Tres en Raya contra alguien' },
+    { name: 'reto', args: '[ppt|tresenraya] [nombre]', desc: 'Retos con nombre largo (ej: /reto tres en raya Ana)' },
     { name: 'anuncio', args: '[texto]', desc: 'Anuncio destacado para todos', admin: true },
+    { name: 'ban', args: '[usuario]', desc: 'Banear dispositivo de un usuario', admin: true },
+    { name: 'unban', args: '[deviceId]', desc: 'Levantar un baneo', admin: true },
+    { name: 'limpiar', desc: 'Vacía el chat completo', admin: true },
     { name: 'nuke', desc: 'Explosión nuclear y limpia tu chat visual', admin: true }
 ];
 
-const LOCAL_COOLDOWNS = { sismo: 15000, confeti: 10000, ciberpanik: 30000 };
+const LOCAL_COOLDOWNS = { sismo: 15000, confeti: 10000, ciberpanik: 30000, glitch: 12000, aplaudir: 10000, matemathica: 15000 };
 
 const GAME_NAMES = { ppt: 'Piedra, Papel o Tijera', tresenraya: 'Tres en Raya' };
 const MOVES = { piedra: '✊', papel: '✋', tijera: '✌️' };
 const BEATS = { piedra: 'tijera', papel: 'piedra', tijera: 'papel' };
 const LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+const SUITS = ['♠', '♥', '♦', '♣'];
+const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
 const BALL_ANSWERS = [
     'Sí, rotundamente. ✅', 'Los circuitos dicen que sí. 🔮', 'Todo apunta a que sí. 👍', 'Sin duda alguna. 💯',
@@ -94,6 +120,63 @@ const randInt = (a, b) => a + rand(b - a + 1);
 const pickOne = (arr) => arr[rand(arr.length)];
 const trunc = (s, n) => String(s).length > n ? String(s).slice(0, n - 1) + '…' : String(s);
 const bar = (p) => { const f = Math.round(p / 10); return '█'.repeat(f) + '░'.repeat(10 - f); };
+
+/* Evaluador aritmético seguro para /calcula (sin eval, sin acceso a DOM ni globals) */
+function chatEval(src) {
+    try {
+        let s = String(src).toLowerCase()
+            .replace(/,/g, '.')
+            .replace(/√/g, 'sqrt')
+            .replace(/\^/g, '^')
+            .replace(/π/g, 'pi').replace(/e\b/g, 'E');
+        // valida caracteres permitidos
+        if (!/^[0-9+\-*/^%().,\s a-zA-Z]*$/.test(s)) return null;
+        // funciones y constantes soportadas
+        const FN = { sqrt: Math.sqrt, abs: Math.abs, sin: Math.sin, cos: Math.cos, tan: Math.tan, ln: Math.log, log: Math.log10, log2: Math.log2, exp: Math.exp, floor: Math.floor, ceil: Math.ceil, round: Math.round, pow: Math.pow, min: Math.min, max: Math.max };
+        s = s.replace(/\bpi\b/g, 'PI').replace(/\bE\b/g, 'EUL');
+        // tokenizar y parser recursivo descendente
+        let toks = [];
+        const re = /(\d+\.?\d*(?:[eE][+-]?\d+)?)|([+\-*/^%(),])|([A-Za-z_]+)/g;
+        let m;
+        while ((m = re.exec(s))) toks.push(m[1] !== undefined ? { t: 'n', v: parseFloat(m[1]) } : (m[2] ? { t: 'o', v: m[2] } : { t: 'f', v: m[3] }));
+        let i = 0;
+        const peek = () => toks[i];
+        const eat = (v) => toks[i] && ((toks[i].t === 'o' && toks[i].v === v) || (toks[i].t === 'f' && toks[i].v === v)) ? toks[i++] : null;
+        function expr() { let v = term(); while (peek() && peek().t === 'o' && (peek().v === '+' || peek().v === '-')) { const op = toks[i++].v; const r = term(); v = op === '+' ? v + r : v - r; } return v; }
+        function term() { let v = unary(); while (peek() && peek().t === 'o' && (peek().v === '*' || peek().v === '/' || peek().v === '%')) { const op = toks[i++].v; const r = unary(); if (op === '*') v *= r; else if (op === '/') v /= r; else v %= r; } return v; }
+        function unary() { if (peek() && peek().t === 'o' && peek().v === '-') { i++; return -unary(); } if (peek() && peek().t === 'o' && peek().v === '+') { i++; } return power(); }
+        function power() { let b = atom(); if (peek() && peek().t === 'o' && peek().v === '^') { i++; const e = unary(); return Math.pow(b, e); } return b; }
+        function atom() {
+            const tk = peek();
+            if (!tk) throw new Error('fin');
+            if (tk.t === 'n') { i++; return tk.v; }
+            if (tk.t === 'f') {
+                const name = tk.v.toLowerCase();
+                if (name === 'pi') { i++; return Math.PI; }
+                if (name === 'eul') { i++; return Math.E; }
+                const fn = FN[name];
+                if (!fn) throw new Error('func ' + name);
+                i++;
+                if (!eat('(')) throw new Error('parentesis');
+                const args = [expr()];
+                while (peek() && peek().t === 'o' && peek().v === ',') { i++; args.push(expr()); }
+                if (!eat(')')) throw new Error('parentesis cierre');
+                return fn(...args);
+            }
+            if (tk.t === 'o' && tk.v === '(') { i++; const v = expr(); if (!eat(')')) throw new Error('cierre'); return v; }
+            throw new Error('token');
+        }
+        const val = expr();
+        if (i !== toks.length) throw new Error('resto');
+        return typeof val === 'number' ? val : null;
+    } catch (e) { return null; }
+}
+
+function chatFmt(n) {
+    if (!isFinite(n)) return String(n);
+    if (Number.isInteger(n) && Math.abs(n) < 1e15) return n.toLocaleString('es-ES');
+    return parseFloat(n.toPrecision(10)).toString();
+}
 
 function tokenize(s) {
     const out = [];
@@ -159,6 +242,16 @@ const CSS = `
 
 .cmd-flash{position:fixed;inset:0;background:#fff;z-index:99998;pointer-events:none;animation:cmdFlash 3s ease-out forwards}
 @keyframes cmdFlash{0%,12%{opacity:1}100%{opacity:0}}
+
+.cmd-glitchfx{position:fixed;inset:0;z-index:99994;pointer-events:none;overflow:hidden;mix-blend-mode:screen}
+.cmd-glitchfx::before,.cmd-glitchfx::after{content:"";position:absolute;inset:-15%;background:repeating-linear-gradient(0deg,rgba(0,230,255,.16) 0 2px,transparent 2px 7px);animation:cmdGl 2.5s steps(18) forwards}
+.cmd-glitchfx::after{background:repeating-linear-gradient(90deg,rgba(0,255,195,.13) 0 3px,transparent 3px 9px);animation-duration:1.7s}
+@keyframes cmdGl{0%{transform:translateX(-3%)}20%{transform:translateX(4%) skewX(4deg)}40%{transform:translateX(-6%)}60%{transform:translateX(3%) skewX(-3deg)}80%{transform:translateX(-2%)}100%{transform:translateX(0);opacity:0}}
+.cmd-aplaus{position:fixed;inset:0;z-index:99993;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:clamp(3rem,14vw,8rem);animation:cmdAp .9s ease-out forwards;filter:drop-shadow(0 0 24px rgba(0,230,255,.7))}
+@keyframes cmdAp{0%{opacity:0;transform:scale(.4)}25%{opacity:1;transform:scale(1.25)}60%{transform:scale(1)}100%{opacity:0;transform:scale(1.5)}}
+.cmd-matematica{position:fixed;inset:0;z-index:99993;pointer-events:none;overflow:hidden}
+.cmd-matematica span{position:absolute;top:100%;color:#00e6ff;font-family:'Space Grotesk',sans-serif;font-weight:700;text-shadow:0 0 10px rgba(0,230,255,.8);animation:cmdAsc linear forwards}
+@keyframes cmdAsc{to{transform:translateY(-115vh) rotate(12deg);opacity:0}}
 
 .cmd-quake #app{animation:cmdQuake .1s linear infinite}
 @keyframes cmdQuake{0%{transform:translate(0,0) rotate(0)}20%{transform:translate(-9px,5px) rotate(-.6deg)}
@@ -393,6 +486,33 @@ function fxInvertir() {
     toast(on ? '🌗 Colores invertidos' : '🌓 Colores normales');
 }
 
+function fxGlitch() {
+    const d = el('div', 'cmd-glitchfx');
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 2600);
+}
+
+function fxAplaudir() {
+    const d = el('div', 'cmd-aplaus', '👏');
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 1000);
+}
+
+const MATH_FLOATIES = ['∫eˣdx', '√(0/0)', 'π²', 'Σn²', 'lim x→∞', 'dy/dx', 'eiπ+1=0', '∞', 'Δ', 'θ', '∛8', 'x²+y²=r²'];
+function fxMatematathica() {
+    const d = el('div', 'cmd-matematica');
+    for (let i = 0; i < 14; i++) {
+        const s = el('span', null, pickOne(MATH_FLOATIES));
+        s.style.left = rand(95) + 'vw';
+        s.style.fontSize = (14 + rand(22)) + 'px';
+        s.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+        s.style.animationDelay = (Math.random() * 1.2) + 's';
+        d.appendChild(s);
+    }
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 4500);
+}
+
 function fxAnuncio(text) {
     const d = el('div', 'cmd-announce');
     d.appendChild(el('b', null, '📢 ANUNCIO DEL DUEÑO'));
@@ -519,6 +639,10 @@ export function initCommands(opts) {
         sismo: fxSismo,
         confeti: fxConfeti,
         ciberpanik: fxCiberpanik,
+        glitch: fxGlitch,
+        aplaudir: fxAplaudir,
+        matematica: fxMatematathica,
+        matemathica: fxMatematathica,
         anuncio: (m) => { if (m.isAdmin === true) fxAnuncio(String(m.anuncio ?? m.text ?? '').slice(0, 120)); }
     };
 
@@ -559,9 +683,73 @@ export function initCommands(opts) {
     /* =================================================================
        ECONOMÍA
        ================================================================= */
-    async function ensureWallet(id) {
-        const r = await runTransaction(ref(db, 'economia/' + id), (cur) => (cur === null ? START_COINS : cur));
-        return r.snapshot.val();
+    /* El saldo puede vivir en varias rutas según la versión del backend.
+       Las recorremos todas y normalizamos el número en la primera que exista. */
+    const WALLET_PATHS = ['economia', 'wallets', 'carteras', 'cocaCoins'];
+    let walletRoot = null; // se resuelve una sola vez
+
+    const wref = (root, id) => ref(db, root + '/' + id);
+
+    async function resolveWalletRoot() {
+        if (walletRoot) return walletRoot;
+        for (const root of WALLET_PATHS) {
+            try {
+                const snap = await get(ref(db, root));
+                if (snap.exists()) { walletRoot = root; return root; }
+            } catch (e) {
+                if (isPermissionDenied(e)) continue; // ruta no publicada: probamos la siguiente
+            }
+        }
+        walletRoot = WALLET_PATHS[0]; // fallback: la canónica
+        return walletRoot;
+    }
+
+    function readBalance(val) {
+        if (typeof val === 'number') return val;
+        if (val && typeof val === 'object') {
+            const c = val.coins ?? val.saldo ?? val.balance ?? val.cocaCoins ?? val.amount;
+            if (typeof c === 'number') return c;
+        }
+        return null;
+    }
+
+    async function getBalance(id) {
+        const root = await resolveWalletRoot();
+        // 1) intento directo en la raíz canónica
+        try {
+            const snap = await get(wref(root, id));
+            const b = readBalance(snap.exists() ? snap.val() : null);
+            if (b !== null) return b;
+        } catch (e) { if (!isPermissionDenied(e)) console.error(e); }
+        // 2) autodescubrimiento por si el backend cambió de raíz
+        for (const alt of WALLET_PATHS) {
+            if (alt === root) continue;
+            try {
+                const snap = await get(wref(alt, id));
+                const b = readBalance(snap.exists() ? snap.val() : null);
+                if (b !== null) { walletRoot = alt; return b; }
+            } catch (e) { /* seguimos buscando */ }
+        }
+        // 3) no existe todavía: se crea con el saldo inicial
+        try {
+            const r = await runTransaction(wref(root, id), (cur) => (readBalance(cur) === null ? START_COINS : cur));
+            const created = readBalance(r.snapshot.val());
+            return created === null ? START_COINS : created;
+        } catch (e) {
+            console.error('ensureWallet:', e);
+            throw e;
+        }
+    }
+
+    async function ensureWallet(id) { return getBalance(id); }
+
+    async function addCoins(id, delta) {
+        const root = await resolveWalletRoot();
+        return runTransaction(wref(root, id), (cur) => {
+            const bal = readBalance(cur);
+            if (bal === null) return START_COINS + delta;
+            return Math.max(0, bal + delta);
+        });
     }
 
     /* =================================================================
@@ -853,8 +1041,131 @@ export function initCommands(opts) {
         confeti: () => say(`🎉 ${getUser().name} lanza confeti neón`, 'confeti'),
         ciberpanik: () => say(`🚨 ${getUser().name} activa la CIBERPANIK: ¡hackeo inminente!`, 'ciberpanik'),
 
+        glitch: () => say(`📺 ${getUser().name} provoca un GLITCH RGB`, 'glitch'),
+        aplaudir: () => say(`👏 ${getUser().name} pide un aplauso`, 'aplaudir'),
+        matemathica: () => say(`∑ ${getUser().name} activa la lluvia de ecuaciones`, 'matematica'),
         matrix() { fxMatrix(); },
         invertir() { fxInvertir(); },
+
+        /* ---------- aleatorios ---------- */
+        async moneda() {
+            const lado = Math.random() < 0.5 ? 'CARA 🪙' : 'CRUZ 🥶';
+            await say(`🪙 ${getUser().name} lanza la moneda... ¡${lado}!`);
+        },
+        async dado(rest, args) {
+            let n = parseInt(args[0], 10);
+            if (!isFinite(n) || n <= 0) n = 1;
+            if (n > 10) { n = 10; toast('Máximo 10 dados'); }
+            const tiradas = Array.from({ length: n }, () => randInt(1, 6));
+            const total = tiradas.reduce((a, b) => a + b, 0);
+            await say(`🎲 ${getUser().name} tira ${n} dado${n > 1 ? 's' : ''}: ${tiradas.join(' · ')} → total ${total}`);
+        },
+        async rand(rest, args) {
+            let a = parseInt(args[0], 10), b = parseInt(args[1], 10);
+            if (!isFinite(a)) a = 1; if (!isFinite(b)) b = 100;
+            if (b < a) { const t = a; a = b; b = t; }
+            await say(`🔢 ${getUser().name}: ${randInt(a, b)} (entre ${a} y ${b})`);
+        },
+        async baraja(rest, args) {
+            let n = parseInt(args[0], 10);
+            if (!isFinite(n) || n <= 0) n = 1;
+            if (n > 5) { n = 5; toast('Máximo 5 cartas'); }
+            const out = [];
+            for (let i = 0; i < n; i++) out.push(`${pickOne(RANKS)}${pickOne(SUITS)}`);
+            await say(`🃏 ${getUser().name} saca: ${out.join('  ')}`);
+        },
+        async polla(rest, args) {
+            let n = parseInt(args[0], 10);
+            if (!isFinite(n) || n < 1) n = randInt(5, 20);
+            if (n > 60) n = 60;
+            await say(`📏 ${getUser().name}: 8${'═'.repeat(n)}D (${n} cm de neón)`);
+        },
+        async nave() {
+            const parts = [
+                ['🛸', '🚀', '🛰️', '🌟'],
+                ['▰▱▰', '◈◈◈', '▓▒░', '≡≡≡', '◆◇◆'],
+                ['🔥', '⚡', '💠', '☄️']
+            ];
+            const ship = `${pickOne(parts[1])}${pickOne(parts[0])}${pickOne(parts[2])}`;
+            const nombre = `MSN-${String(randInt(1, 9999)).padStart(4, '0')}`;
+            await say(`🚀 ${getUser().name} pilota la nave «${nombre}» ${ship}`);
+        },
+
+        /* ---------- texto ---------- */
+        flip(rest) {
+            if (!rest) return toast('Uso: /flip [texto]');
+            const map = {
+                a: 'ɐ', b: 'q', c: 'ɔ', d: 'p', e: 'ǝ', f: 'ɟ', g: 'ƃ', h: 'ɥ', i: 'ᴉ', j: 'ɾ', k: 'ʞ', l: 'l',
+                m: 'ɯ', n: 'u', o: 'o', p: 'd', q: 'b', r: 'ɹ', s: 's', t: 'ʇ', u: 'n', v: 'ʌ', w: 'ʍ', x: 'x',
+                y: 'ʎ', z: 'z',
+                A: '∀', B: '𐐒', C: 'Ɔ', D: 'Ð', E: 'Ǝ', F: 'Ⅎ', G: '⅁', H: 'H', I: 'I', J: 'ſ', K: 'ʞ', L: '˥',
+                M: 'W', N: 'NO', O: 'O', P: 'Ԁ', Q: 'Ό', R: 'ᴚ', S: 'S', T: '⊥', U: '∩', V: 'Λ', W: 'M', X: 'X',
+                Y: 'ʎ', Z: 'Z',
+                '0': 'O', '1': 'I', '2': 'S', '3': 'E', '4': 'h', '5': 'S', '6': 'g', '7': 'L', '8': 'B', '9': 'g',
+                '?': '¿', '!': '¡', '.': '˙', ',': "' ", "'": ',', '"': '„',
+                '(': ')', ')': '(', '[': ']', ']': '[', '{': '}', '}': '{', '<': '>', '>': '<', '_': '‾', '-': '-',
+                ' ': ' '
+            };
+            const inv = [...rest.toLowerCase()].reverse().map(ch => map[ch] !== undefined ? map[ch] : ch).join('');
+            return say(`${trunc(inv, 140)}`);
+        },
+        repetir(rest, args) {
+            if (args.length < 2) return toast('Uso: /repetir [n] [texto]');
+            let n = parseInt(args[0], 10);
+            if (!isFinite(n) || n <= 0) return toast('El primer argumento debe ser un número positivo');
+            if (n > 10) { n = 10; toast('Máximo 10 repeticiones'); }
+            const txt = rest.replace(/^\s*\d+\s*/, '').slice(0, 100);
+            if (!txt) return toast('Falta el texto');
+            return say(Array(n).fill(txt).join(' · '));
+        },
+        eco(rest) {
+            if (!rest) return toast('Uso: /eco [texto]');
+            return say(`🔊 ${trunc(rest, 140)}`);
+        },
+        clap(rest) {
+            if (!rest) return toast('Uso: /clap [texto]');
+            return say('👏 ' + rest.split(/\s+/).filter(Boolean).slice(0, 12).join(' 👏 '));
+        },
+
+        /* ---------- economía ---------- */
+        async transferir(rest, args) {
+            if (args.length < 2) return toast('Uso: /transferir [usuario] [cantidad]');
+            const cantidad = parseInt(args[args.length - 1], 10);
+            const who = args.slice(0, args.length - 1).join(' ');
+            if (!isFinite(cantidad) || cantidad <= 0) return toast('La cantidad debe ser un número mayor que 0');
+            if (cantidad > 5000) return toast('Máximo 5000 monedas por transferencia');
+            const target = findUser(who);
+            if (!target) return toast(`No veo a "${trunc(who, 20)}" en el chat reciente`);
+            if (target.deviceId === deviceId) return toast('No puedes transferirte a ti mismo 😅');
+            let mine;
+            try { mine = await getBalance(deviceId); } catch (e) { console.error(e); return toast('⚠️ No se pudo leer tu saldo'); }
+            if (mine < cantidad) return toast(`💸 No te alcanza: tienes ${mine} monedas`);
+            try {
+                await addCoins(deviceId, -cantidad);
+                await addCoins(target.deviceId, cantidad);
+            } catch (e) {
+                console.error(e);
+                return toast(isPermissionDenied(e) ? '🔒 Los permisos del servidor no permiten mover monedas' : '⚠️ La transferencia falló');
+            }
+            await say(`💸 ${getUser().name} transfiere ${cantidad} monedas a ${target.name} 🤝`);
+        },
+        async tragarmonedas(rest, args) {
+            const bet = parseInt(args[0], 10);
+            if (!isFinite(bet) || bet <= 0) return toast('Uso: /tragarmonedas [cantidad]');
+            let mine;
+            try { mine = await getBalance(deviceId); } catch (e) { console.error(e); return toast('⚠️ No se pudo leer tu saldo'); }
+            if (mine < bet) return toast(`💸 Te faltan monedas: tienes ${mine} y apuestas ${bet}`);
+            const win = Math.random() < 0.45;
+            try {
+                await addCoins(deviceId, win ? bet : -bet);
+            } catch (e) {
+                console.error(e);
+                return toast(isPermissionDenied(e) ? '🔒 Los permisos del servidor bloquean las apuestas' : '⚠️ La apuesta falló');
+            }
+            await say(win
+                ? `🎰 ${getUser().name} apuesta ${bet}… ¡JACKPOT! +${bet} monedas 🪙`
+                : `🎰 ${getUser().name} apuesta ${bet}… la ruleta se las traga 🕳️ −${bet}`);
+        },
 
         async ruleta() {
             const u = getUser().name;
@@ -912,47 +1223,73 @@ export function initCommands(opts) {
 
         async cartera() {
             try {
-                const bal = await ensureWallet(deviceId);
-                toast(`💰 Tu cartera: ${bal} CocaCoins`);
-            } catch (e) { console.error(e); toast('⚠️ No se pudo leer tu cartera'); }
+                const bal = await getBalance(deviceId);
+                toast(`💰 Cartera · ${bar(Math.min(100, bal / 2))} ${bal} monedas`);
+            } catch (e) {
+                console.error(e);
+                toast(isPermissionDenied(e)
+                    ? '🔒 Las carteras están bloqueadas por los permisos del servidor (Realtime Database Rules)'
+                    : '⚠️ No se pudo leer tu cartera');
+            }
         },
+        wallet() { return H.cartera(); },
+        monedas() { return H.cartera(); },
 
-        async robos(rest) {
-            if (!rest) return toast('Uso: /robos [usuario]');
+        async robar(rest) {
+            if (!rest) return toast('Uso: /robar [usuario]');
             const target = findUser(rest);
-            if (!target) return toast(`No veo a "${trunc(rest, 20)}" en el chat reciente`);
+            if (!target) return toast(`No veo a "${trunc(rest, 20)}" en el chat reciente (tiene que haber escrito algo)`);
+            if (!target.deviceId) return toast('Ese usuario no tiene dispositivo identificable');
             if (target.deviceId === deviceId) return toast('No puedes robarte a ti mismo 😅');
             const u = getUser().name;
 
+            let mine, theirs;
             try {
-                await ensureWallet(deviceId);
-                await ensureWallet(target.deviceId);
+                mine = await getBalance(deviceId);
+                theirs = await getBalance(target.deviceId);
             } catch (e) { console.error(e); return toast('⚠️ No se pudo acceder a las carteras'); }
 
+            if (theirs <= 0) return say(`🦹 ${u} intentó robar a ${target.name}, pero no tiene ni una moneda 🕸️`);
+
             if (Math.random() < 0.5) {
+                const root = await resolveWalletRoot();
                 let stolen = 0;
                 let res;
                 try {
-                    res = await runTransaction(ref(db, 'economia/' + target.deviceId), (cur) => {
-                        stolen = 0;
-                        if (typeof cur !== 'number') return cur;
-                        stolen = Math.min(randInt(10, 40), cur);
-                        if (stolen <= 0) return; // sin monedas: abortar
-                        return cur - stolen;
+                    res = await runTransaction(wref(root, target.deviceId), (cur) => {
+                        const bal = readBalance(cur);
+                        if (bal === null || bal <= 0) return;              // aborta
+                        stolen = Math.min(randInt(10, 40), bal);
+                        if (stolen <= 0) return;
+                        return typeof cur === 'number' ? cur - stolen : { coins: bal - stolen };
                     });
                 } catch (e) { console.error(e); return toast('⚠️ El robo ha fallado por la conexión'); }
 
-                if (!res.committed || stolen <= 0) {
-                    return say(`🦹 ${u} intentó robar a ${target.name}, pero no tiene ni una moneda 🕸️`);
+                if (!res || !res.committed || stolen <= 0) {
+                    return say(`🦹 ${u} intentó robar a ${target.name}, pero no tenía nada 🕸️`);
                 }
-                try {
-                    await runTransaction(ref(db, 'economia/' + deviceId), (cur) => (typeof cur === 'number' ? cur + stolen : cur));
-                } catch (e) { console.error(e); }
-                await say(`🦹 ${u} le robó ${stolen} CocaCoins a ${target.name} 💰`);
+                try { await addCoins(deviceId, stolen); } catch (e) { console.error(e); }
+                await say(`🦹 ${u} le robó ${stolen} monedas a ${target.name} 💰`);
             } else {
                 applyMute(30000, 'Ciber-cárcel');
                 await say(`🚔 ${u} intentó robar a ${target.name} y acabó en la ciber-cárcel 30s ⛓️`);
             }
+        },
+        robos(rest) { return H.robar(rest); },
+
+        /* ---------- matemáticas ---------- */
+        async calcula(rest) {
+            if (!rest) return toast('Uso: /calcula [expresión]  ·  ej: /calcula sqrt(144)+2^3');
+            const r = chatEval(rest);
+            if (r === null || !isFinite(r)) return toast('❌ Expresión no válida o indeterminada');
+            const txt = chatFmt(r);
+            return say(`🧮 ${getUser().name}: ${trunc(rest, 60)} = ${txt}`);
+        },
+        async derivada(rest, args) {
+            const n = parseFloat((args[0] || '').replace(',', '.'));
+            if (!isFinite(n)) return toast('Uso: /derivada [número]');
+            const d = randInt(0, 9);
+            return say(`😏 ${getUser().name} deriva ${n}… y la integral de ${n}x sale ${d}. Nadie entendió nada.`);
         },
 
         ppt: (rest) => challenge('ppt', rest),
@@ -962,6 +1299,49 @@ export function initCommands(opts) {
             if (!rest) return toast('Uso: /anuncio [texto]');
             const txt = rest.slice(0, 120);
             await say('📢 ' + txt, 'anuncio', { anuncio: txt });
+        },
+
+        async limpiar() {
+            const snap = await get(ref(db, 'messages')).catch((e) => { console.error(e); return null; });
+            if (!snap || !snap.exists()) return toast('El chat ya está vacío');
+            const keys = [];
+            snap.forEach(c => keys.push(c.key));
+            let borrados = 0;
+            for (const k of keys) {
+                try { await remove(ref(db, 'messages/' + k)); borrados++; }
+                catch (e) { console.error(e); break; }
+            }
+            toast(`🧹 ${borrados} mensajes eliminados`);
+            await say(`🧹 ${getUser().name} ha vaciado el chat`, 'limpiar');
+        },
+
+        async ban(rest) {
+            if (!rest) return toast('Uso: /ban [usuario]');
+            const target = findUser(rest);
+            if (!target) return toast(`No veo a "${trunc(rest, 20)}" en el chat reciente`);
+            if (target.deviceId === deviceId) return toast('No puedes banearte a ti mismo');
+            try {
+                await set(ref(db, 'banned_devices/' + target.deviceId), { banned: true, time: serverTimestamp(), por: getUser().name });
+                await say(`🔒 ${getUser().name} ha baneado a ${target.name}`, 'ban');
+                toast(`🔒 ${target.name} baneado`);
+            } catch (e) {
+                console.error(e);
+                toast(isPermissionDenied(e) ? '🔒 Sin permisos para banear' : '⚠️ No se pudo completar el baneo');
+            }
+        },
+
+        async unban(rest) {
+            if (!rest) return toast('Uso: /unban [deviceId]');
+            const id = rest.trim().split(/\s+/)[0];
+            if (!DEVICE_RE.test(id)) return toast('Ese ID de dispositivo no es válido');
+            try {
+                await remove(ref(db, 'banned_devices/' + id));
+                await say(`✅ ${getUser().name} ha levantado el baneo de un dispositivo`, 'unban');
+                toast('✅ Baneo levantado');
+            } catch (e) {
+                console.error(e);
+                toast(isPermissionDenied(e) ? '🔒 Sin permisos para desbanear' : '⚠️ No se pudo levantar el baneo');
+            }
         },
 
         nuke() {
