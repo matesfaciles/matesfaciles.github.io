@@ -5,9 +5,9 @@
     <script src="/global-head.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Classroom</title>
+    <title>Panel de juegos · Matesfaciles 27</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet">
 
     <style>
@@ -15,7 +15,7 @@
         /* EL NUEVO ROOT COMPATIBLE */
         :root {
             /* Tus colores nuevos */
-            --primary: #ff003c;
+            --primary: #00e6ff;
             --bg: #0a0a0a;
             --surface: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.08);
@@ -28,7 +28,7 @@
             --card-color: var(--surface);
             --text-color: var(--text);
             --accent: var(--primary);
-            --accent2: #bc13fe;
+            --accent2: #00ffc3;
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             --header-bg: rgba(10, 10, 10, 0.8);
             --footer-color: rgba(255, 255, 255, 0.5);
@@ -49,7 +49,7 @@
         body.light-mode {
             --bg: #f4f6fa;
             --surface: #ffffff;
-            --primary: #ff003c;
+            --primary: #00e6ff;
             --text: #0c0e1b;
         }
 
@@ -492,7 +492,7 @@
         /* VARIABLES ADICIONALES PARA LA BARRA */
         :root {
             /* ... tus otras variables ... */
-            --primary: #ff003c;
+            --primary: #00e6ff;
             --transition: all 0.3s ease;
             --border: rgba(255, 255, 255, 0.1);
         }
@@ -539,7 +539,7 @@
             height: 55px;
             object-fit: contain;
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 8px rgba(255, 0, 60, 0.4));
+            filter: drop-shadow(0 0 8px rgba(0, 230, 255, 0.45));
             cursor: pointer;
             transition: var(--transition);
         }
@@ -563,12 +563,12 @@
 
         .nav-link:hover {
             color: var(--primary);
-            background: rgba(255, 0, 60, 0.1);
+            background: rgba(0, 230, 255, 0.12);
         }
 
         .nav-link.active {
             color: var(--primary);
-            background: rgba(255, 0, 60, 0.08);
+            background: rgba(0, 230, 255, 0.1);
         }
 
         /* Ajuste para iconos de FontAwesome si usas bi- (Bootstrap) o fa- (FontAwesome) */
@@ -586,7 +586,7 @@
         :root {
             --surface: #14172b;
             /* O el color de --card-color del original */
-            --primary: #ff003c;
+            --primary: #00e6ff;
             --border: rgba(255, 255, 255, 0.1);
             --transition: all 0.3s ease;
         }
@@ -624,7 +624,7 @@
         #searchBox:focus {
             border-color: var(--primary);
             background-color: rgba(255, 255, 255, 0.06);
-            box-shadow: 0 0 15px rgba(255, 0, 60, 0.2);
+            box-shadow: 0 0 15px rgba(0, 230, 255, 0.22);
             outline: none;
         }
 
@@ -756,6 +756,33 @@
             bottom: 0;
             width: 80px;
             z-index: 9999;
+        }
+    </style>
+    <style>
+        /* ====== GLASS GAMER 27 · capa visual global ====== */
+        :root { --font-body: 'Inter', 'Space Grotesk', sans-serif; }
+        body { background: radial-gradient(1100px 600px at 15% -10%, rgba(0,230,255,.1), transparent 60%),
+               radial-gradient(900px 500px at 100% 110%, rgba(0,255,195,.08), transparent 60%), #07080d; }
+        nav { background: rgba(6,9,15,.82); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+              border-right: 1px solid rgba(0,230,255,.18); box-shadow: 4px 0 30px rgba(0,0,0,.5); }
+        .nav-link:hover, .nav-link.active { color: #00e6ff; text-shadow: 0 0 12px rgba(0,230,255,.6); }
+        #searchBox { background: rgba(10,14,22,.75); border: 1px solid rgba(0,230,255,.28); backdrop-filter: blur(14px);
+                     -webkit-backdrop-filter: blur(14px); font-family: var(--font-body); border-radius: 18px; }
+        #searchBox:focus { border-color: #00e6ff; box-shadow: 0 0 0 3px rgba(0,230,255,.14), 0 0 22px rgba(0,230,255,.25); }
+        .game-card, .card, [class*="game"] { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        button, .calculator-btn { font-family: 'Space Grotesk', sans-serif; letter-spacing: -.01em; }
+        p, .desc, span.desc { font-family: var(--font-body); }
+        ::selection { background: rgba(0,230,255,.3); }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,230,255,.3); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        @media (max-width: 768px) {
+            nav { position: fixed; bottom: 0; top: auto; left: 0; right: 0; width: 100%; height: 64px;
+                  flex-direction: row; justify-content: space-around; padding: 0 8px; gap: 0;
+                  border-right: none; border-top: 1px solid rgba(0,230,255,.25); }
+            .brand-logo { display: none; }
+            .main-content { margin-left: 0 !important; width: 100% !important; padding-bottom: 90px !important; }
+            body > footer { margin-left: 0 !important; width: 100% !important; }
         }
     </style>
 </head>
@@ -1022,7 +1049,7 @@
             const popup = document.getElementById('welcomePopup');
             const closeX = document.getElementById('closePopupX');
             const dontShowBtn = document.getElementById('dontShowAgainBtn');
-            const storageKey = 'cocacolalandia_popup_v1'; // Clave para el localStorage
+            const storageKey = 'mf27_popup_v1'; // Clave para el localStorage
 
             // Función para cerrar el popup
             function closePopup() {
@@ -1075,7 +1102,7 @@
         }
         /* SISTEMA DE FAVORITOS ESTABLE */
 
-        const favKey = "cocacolalandia_favorites";
+        const favKey = "mf27_favorites";
 
         function getFavs() {
             return JSON.parse(localStorage.getItem(favKey) || "[]");

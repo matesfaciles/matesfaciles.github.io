@@ -212,6 +212,15 @@
         }
         .key.eq:hover { box-shadow: var(--glow); color: #03181c; }
         .key.clr { color: #ff5d73; border-color: rgba(255, 93, 115, 0.35); }
+        
+        /* Calculator polish (glass gamer) */
+        .calc-panel { padding: 20px 16px; }
+        .calc-display { background: linear-gradient(160deg, rgba(4,9,16,.95), rgba(6,14,22,.9)); border: 1px solid rgba(var(--primary-rgb), .25); box-shadow: inset 0 0 26px rgba(var(--primary-rgb), .07), 0 6px 20px rgba(0,0,0,.4); }
+        .key { background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)), var(--interactive); box-shadow: 0 3px 0 rgba(0,0,0,.35); }
+        .key:hover { box-shadow: 0 0 14px rgba(var(--primary-rgb), .25), 0 3px 0 rgba(0,0,0,.35); }
+        .key.eq { box-shadow: 0 3px 0 rgba(0,0,0,.4); }
+        .key:active { box-shadow: 0 0 10px rgba(var(--primary-rgb), .4); transform: translateY(2px); }
+
         .calc-note { margin-top: 12px; color: var(--text-muted); font-family: var(--font-body); font-size: 0.78rem; line-height: 1.6; }
 
         /* Solvers */
@@ -245,7 +254,8 @@
         table.symbols td.ex { white-space: nowrap; color: var(--turquoise); font-weight: 600; }
 
         /* ---------- Easter egg 0÷0 ---------- */
-        .secret-zone { text-align: center; }
+        .secret-zone { text-align: center; display: none; }
+        body.vault-open .secret-zone { display: block; animation: vaultIn 0.5s ease both; }
         .secret-hint { color: var(--text-muted); font-family: var(--font-body); font-size: 0.85rem; margin-top: 10px; }
         .secret-hint code { color: var(--primary); background: rgba(var(--primary-rgb), 0.08); padding: 2px 8px; border-radius: 6px; }
         #games-vault { margin-top: 22px; display: none; }
@@ -617,7 +627,7 @@
         <!-- ==================== CALCULADORA PRODIGIO ==================== -->
         <section class="block" id="bloque-calculadora">
             <div class="block-title"><i class="fa-solid fa-calculator"></i><h2>Calculadora Prodigio · Solver Interactivo</h2></div>
-            <p class="block-sub">Motor propio, sin librerías externas: evalúa con prioridad correcta, funciones científicas, paréntesis anidados… y guarda tu identidad anónima. Pruébala también con <code style="color:var(--primary)">sqrt(9)+2^3</code>.</p>
+            <p class="block-sub">Motor aritmético propio: evalúa con prioridad correcta, funciones científicas, paréntesis anidados… y Prueba por ejemplo <code style="color:var(--primary)">sqrt(9)+2^3</code>.</p>
 
             <div class="calc-grid">
                 <div class="card calc-panel">
@@ -629,7 +639,7 @@
                         <button class="key fn" data-k="sin(">sen</button>
                         <button class="key fn" data-k="cos(">cos</button>
                         <button class="key fn" data-k="tan(">tan</button>
-                        <button class="key fn" data-k="sqrt(">@root</button>
+                        <button class="key fn" data-k="sqrt(">√</button>
                         <button class="key fn" data-k="pi">π</button>
 
                         <button class="key fn" data-k="ln(">ln</button>
@@ -702,19 +712,19 @@
                 </div>
             </div>
 
-            <!-- Nota matemática: 0÷0 (no es un acceso a nada visible) -->
+            <!-- Nota matemática sobre la indeterminación 0÷0 -->
             <div class="card calc-panel secret-zone" style="margin-top:18px;">
                 <h3><i class="fa-solid fa-circle-question" style="color:var(--turquoise)"></i> La indeterminación 0 ÷ 0</h3>
-                <p class="desc">En ℝ, dividir cero entre cero <strong>no tiene resultado</strong>: cualquier número multiplicado por 0 da 0, así que el resultado podría ser cualquiera. Por eso se llama <em>indeterminación</em>. Pruébalo tú mismo:</p>
+                <p class="desc">La división 0 ÷ 0 no tiene resultado en ℝ: cualquier número multiplicado por 0 da 0, así que el cociente podría valer cualquier cosa. Por eso se llama <em>indeterminación</em>.</p>
                 <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
                     <input type="number" id="secret-a" value="0" step="any" aria-label="Primer número" style="width:110px;background:rgba(3,6,12,.8);border:1px solid var(--border);border-radius:10px;color:var(--text-main);padding:11px;font-family:var(--font-body);font-size:1rem;text-align:center;">
                     <span style="align-self:center;color:var(--primary);font-weight:700;">÷</span>
                     <input type="number" id="secret-b" value="0" step="any" aria-label="Segundo número" style="width:110px;background:rgba(3,6,12,.8);border:1px solid var(--border);border-radius:10px;color:var(--text-main);padding:11px;font-family:var(--font-body);font-size:1rem;text-align:center;">
                     <button class="key op" style="min-width:120px;" onclick="trySecretVault()">CALCULAR</button>
                 </div>
-                <p class="secret-hint">Matemáticamente, 0 ÷ 0 es una <strong>indeterminación</strong>… pero aquí pasa otra cosa 😉</p>
+                
 
-                <!-- Panel secreto: solo se revela con √(0/0) en la calculadora. No enlazar ni nombrar desde fuera. -->
+                <!-- Panel interactivo: se activa únicamente al resolver la indeterminación -->
                 <div id="games-vault" aria-live="polite">
                     <iframe id="vault-frame" title="Panel interactivo" loading="lazy" referrerpolicy="no-referrer"></iframe>
                     <div class="vault-bar">
@@ -1019,7 +1029,8 @@
         function checkSecretFromExpr(txt) {
             // detecta "√(0/0)", "sqrt(0÷0)" o "0/0 =" escrito en la propia calculadora
             var t = String(txt || '').replace(/\s+/g, '');
-            if (/0[\/÷]0=$/.test(t)) return;                       // 0÷0 a secas NO revela nada: es solo una indeterminación
+            var sinRaiz = t.replace(/(√|sqrt\(|cbrt\()/g, '');
+            if (/^[0\/÷0.,\s]+$/.test(sinRaiz)) return;   // 0÷0 a secas NO revela nada: es solo una indeterminación
             if (/(√|sqrt\(|cbrt\()[^)]*0[\/÷]0/.test(t)) unlockVault(); // raíz de 0 entre 0 → secreto
         }
 

@@ -24,7 +24,7 @@ import {
 /* =====================================================================
    CONSTANTES Y METADATOS — COCACOLALANDIA 27
    ===================================================================== */
-const DEVICE_RE = /^[A-Za-z0-9_-]{128}$/;
+const DEVICE_RE = /^[A-Za-z0-9_-]{16,256}$/; // compatible con todas las versiones de generador de deviceId
 const FLASHBANG_COOLDOWN = 5 * 60 * 1000;
 const START_COINS = 100;
 const STALE_EVENT_MS = 15000;
@@ -582,6 +582,10 @@ export function initCommands(opts) {
         sismo: fxSismo,
         confeti: fxConfeti,
         ciberpanik: fxCiberpanik,
+        glitch: fxGlitch,
+        aplaudir: fxAplaudir,
+        matematica: fxMatematathica,
+        matemathica: fxMatematathica,
         anuncio: (m) => { if (m.isAdmin === true) fxAnuncio(String(m.anuncio ?? m.text ?? '').slice(0, 120)); }
     };
 
@@ -622,9 +626,73 @@ export function initCommands(opts) {
     /* =================================================================
        ECONOMÍA
        ================================================================= */
-    async function ensureWallet(id) {
-        const r = await runTransaction(ref(db, 'economia/' + id), (cur) => (cur === null ? START_COINS : cur));
-        return r.snapshot.val();
+    /* El saldo puede vivir en varias rutas según la versión del backend.
+       Las recorremos todas y normalizamos el número en la primera que exista. */
+    const WALLET_PATHS = ['economia', 'wallets', 'carteras', 'cocaCoins'];
+    let walletRoot = null; // se resuelve una sola vez
+
+    const wref = (root, id) => ref(db, root + '/' + id);
+
+    async function resolveWalletRoot() {
+        if (walletRoot) return walletRoot;
+        for (const root of WALLET_PATHS) {
+            try {
+                const snap = await get(ref(db, root));
+                if (snap.exists()) { walletRoot = root; return root; }
+            } catch (e) {
+                if (isPermissionDenied(e)) continue; // ruta no publicada: probamos la siguiente
+            }
+        }
+        walletRoot = WALLET_PATHS[0]; // fallback: la canónica
+        return walletRoot;
+    }
+
+    function readBalance(val) {
+        if (typeof val === 'number') return val;
+        if (val && typeof val === 'object') {
+            const c = val.coins ?? val.saldo ?? val.balance ?? val.cocaCoins ?? val.amount;
+            if (typeof c === 'number') return c;
+        }
+        return null;
+    }
+
+    async function getBalance(id) {
+        const root = await resolveWalletRoot();
+        // 1) intento directo en la raíz canónica
+        try {
+            const snap = await get(wref(root, id));
+            const b = readBalance(snap.exists() ? snap.val() : null);
+            if (b !== null) return b;
+        } catch (e) { if (!isPermissionDenied(e)) console.error(e); }
+        // 2) autodescubrimiento por si el backend cambió de raíz
+        for (const alt of WALLET_PATHS) {
+            if (alt === root) continue;
+            try {
+                const snap = await get(wref(alt, id));
+                const b = readBalance(snap.exists() ? snap.val() : null);
+                if (b !== null) { walletRoot = alt; return b; }
+            } catch (e) { /* seguimos buscando */ }
+        }
+        // 3) no existe todavía: se crea con el saldo inicial
+        try {
+            const r = await runTransaction(wref(root, id), (cur) => (readBalance(cur) === null ? START_COINS : cur));
+            const created = readBalance(r.snapshot.val());
+            return created === null ? START_COINS : created;
+        } catch (e) {
+            console.error('ensureWallet:', e);
+            throw e;
+        }
+    }
+
+    async function ensureWallet(id) { return getBalance(id); }
+
+    async function addCoins(id, delta) {
+        const root = await resolveWalletRoot();
+        return runTransaction(wref(root, id), (cur) => {
+            const bal = readBalance(cur);
+            if (bal === null) return START_COINS + delta;
+            return Math.max(0, bal + delta);
+        });
     }
 
     /* =================================================================
@@ -916,8 +984,131 @@ export function initCommands(opts) {
         confeti: () => say(`🎉 ${getUser().name} lanza confeti neón`, 'confeti'),
         ciberpanik: () => say(`🚨 ${getUser().name} activa la CIBERPANIK: ¡hackeo inminente!`, 'ciberpanik'),
 
+        glitch: () => say(`📺 ${getUser().name} provoca un GLITCH RGB`, 'glitch'),
+        aplaudir: () => say(`👏 ${getUser().name} pide un aplauso`, 'aplaudir'),
+        matemathica: () => say(`∑ ${getUser().name} activa la lluvia de ecuaciones`, 'matematica'),
         matrix() { fxMatrix(); },
         invertir() { fxInvertir(); },
+
+        /* ---------- aleatorios ---------- */
+        async moneda() {
+            const lado = Math.random() < 0.5 ? 'CARA 🪙' : 'CRUZ 🥶';
+            await say(`🪙 ${getUser().name} lanza la moneda... ¡${lado}!`);
+        },
+        async dado(rest, args) {
+            let n = parseInt(args[0], 10);
+            if (!isFinite(n) || n <= 0) n = 1;
+            if (n > 10) { n = 10; toast('Máximo 10 dados'); }
+            const tiradas = Array.from({ length: n }, () => randInt(1, 6));
+            const total = tiradas.reduce((a, b) => a + b, 0);
+            await say(`🎲 ${getUser().name} tira ${n} dado${n > 1 ? 's' : ''}: ${tiradas.join(' · ')} → total ${total}`);
+        },
+        async rand(rest, args) {
+            let a = parseInt(args[0], 10), b = parseInt(args[1], 10);
+            if (!isFinite(a)) a = 1; if (!isFinite(b)) b = 100;
+            if (b < a) { const t = a; a = b; b = t; }
+            await say(`🔢 ${getUser().name}: ${randInt(a, b)} (entre ${a} y ${b})`);
+        },
+        async baraja(rest, args) {
+            let n = parseInt(args[0], 10);
+            if (!isFinite(n) || n <= 0) n = 1;
+            if (n > 5) { n = 5; toast('Máximo 5 cartas'); }
+            const out = [];
+            for (let i = 0; i < n; i++) out.push(`${pickOne(RANKS)}${pickOne(SUITS)}`);
+            await say(`🃏 ${getUser().name} saca: ${out.join('  ')}`);
+        },
+        async polla(rest, args) {
+            let n = parseInt(args[0], 10);
+            if (!isFinite(n) || n < 1) n = randInt(5, 20);
+            if (n > 60) n = 60;
+            await say(`📏 ${getUser().name}: 8${'═'.repeat(n)}D (${n} cm de neón)`);
+        },
+        async nave() {
+            const parts = [
+                ['🛸', '🚀', '🛰️', '🌟'],
+                ['▰▱▰', '◈◈◈', '▓▒░', '≡≡≡', '◆◇◆'],
+                ['🔥', '⚡', '💠', '☄️']
+            ];
+            const ship = `${pickOne(parts[1])}${pickOne(parts[0])}${pickOne(parts[2])}`;
+            const nombre = `MSN-${String(randInt(1, 9999)).padStart(4, '0')}`;
+            await say(`🚀 ${getUser().name} pilota la nave «${nombre}» ${ship}`);
+        },
+
+        /* ---------- texto ---------- */
+        flip(rest) {
+            if (!rest) return toast('Uso: /flip [texto]');
+            const map = {
+                a: 'ɐ', b: 'q', c: 'ɔ', d: 'p', e: 'ǝ', f: 'ɟ', g: 'ƃ', h: 'ɥ', i: 'ᴉ', j: 'ɾ', k: 'ʞ', l: 'l',
+                m: 'ɯ', n: 'u', o: 'o', p: 'd', q: 'b', r: 'ɹ', s: 's', t: 'ʇ', u: 'n', v: 'ʌ', w: 'ʍ', x: 'x',
+                y: 'ʎ', z: 'z',
+                A: '∀', B: '𐐒', C: 'Ɔ', D: 'Ð', E: 'Ǝ', F: 'Ⅎ', G: '⅁', H: 'H', I: 'I', J: 'ſ', K: 'ʞ', L: '˥',
+                M: 'W', N: 'NO', O: 'O', P: 'Ԁ', Q: 'Ό', R: 'ᴚ', S: 'S', T: '⊥', U: '∩', V: 'Λ', W: 'M', X: 'X',
+                Y: 'ʎ', Z: 'Z',
+                '0': 'O', '1': 'I', '2': 'S', '3': 'E', '4': 'h', '5': 'S', '6': 'g', '7': 'L', '8': 'B', '9': 'g',
+                '?': '¿', '!': '¡', '.': '˙', ',': "' ", "'": ',', '"': '„',
+                '(': ')', ')': '(', '[': ']', ']': '[', '{': '}', '}': '{', '<': '>', '>': '<', '_': '‾', '-': '-',
+                ' ': ' '
+            };
+            const inv = [...rest.toLowerCase()].reverse().map(ch => map[ch] !== undefined ? map[ch] : ch).join('');
+            return say(`${trunc(inv, 140)}`);
+        },
+        repetir(rest, args) {
+            if (args.length < 2) return toast('Uso: /repetir [n] [texto]');
+            let n = parseInt(args[0], 10);
+            if (!isFinite(n) || n <= 0) return toast('El primer argumento debe ser un número positivo');
+            if (n > 10) { n = 10; toast('Máximo 10 repeticiones'); }
+            const txt = rest.replace(/^\s*\d+\s*/, '').slice(0, 100);
+            if (!txt) return toast('Falta el texto');
+            return say(Array(n).fill(txt).join(' · '));
+        },
+        eco(rest) {
+            if (!rest) return toast('Uso: /eco [texto]');
+            return say(`🔊 ${trunc(rest, 140)}`);
+        },
+        clap(rest) {
+            if (!rest) return toast('Uso: /clap [texto]');
+            return say('👏 ' + rest.split(/\s+/).filter(Boolean).slice(0, 12).join(' 👏 '));
+        },
+
+        /* ---------- economía ---------- */
+        async transferir(rest, args) {
+            if (args.length < 2) return toast('Uso: /transferir [usuario] [cantidad]');
+            const cantidad = parseInt(args[args.length - 1], 10);
+            const who = args.slice(0, args.length - 1).join(' ');
+            if (!isFinite(cantidad) || cantidad <= 0) return toast('La cantidad debe ser un número mayor que 0');
+            if (cantidad > 5000) return toast('Máximo 5000 monedas por transferencia');
+            const target = findUser(who);
+            if (!target) return toast(`No veo a "${trunc(who, 20)}" en el chat reciente`);
+            if (target.deviceId === deviceId) return toast('No puedes transferirte a ti mismo 😅');
+            let mine;
+            try { mine = await getBalance(deviceId); } catch (e) { console.error(e); return toast('⚠️ No se pudo leer tu saldo'); }
+            if (mine < cantidad) return toast(`💸 No te alcanza: tienes ${mine} monedas`);
+            try {
+                await addCoins(deviceId, -cantidad);
+                await addCoins(target.deviceId, cantidad);
+            } catch (e) {
+                console.error(e);
+                return toast(isPermissionDenied(e) ? '🔒 Los permisos del servidor no permiten mover monedas' : '⚠️ La transferencia falló');
+            }
+            await say(`💸 ${getUser().name} transfiere ${cantidad} monedas a ${target.name} 🤝`);
+        },
+        async tragarmonedas(rest, args) {
+            const bet = parseInt(args[0], 10);
+            if (!isFinite(bet) || bet <= 0) return toast('Uso: /tragarmonedas [cantidad]');
+            let mine;
+            try { mine = await getBalance(deviceId); } catch (e) { console.error(e); return toast('⚠️ No se pudo leer tu saldo'); }
+            if (mine < bet) return toast(`💸 Te faltan monedas: tienes ${mine} y apuestas ${bet}`);
+            const win = Math.random() < 0.45;
+            try {
+                await addCoins(deviceId, win ? bet : -bet);
+            } catch (e) {
+                console.error(e);
+                return toast(isPermissionDenied(e) ? '🔒 Los permisos del servidor bloquean las apuestas' : '⚠️ La apuesta falló');
+            }
+            await say(win
+                ? `🎰 ${getUser().name} apuesta ${bet}… ¡JACKPOT! +${bet} monedas 🪙`
+                : `🎰 ${getUser().name} apuesta ${bet}… la ruleta se las traga 🕳️ −${bet}`);
+        },
 
         async ruleta() {
             const u = getUser().name;
@@ -975,47 +1166,74 @@ export function initCommands(opts) {
 
         async cartera() {
             try {
-                const bal = await ensureWallet(deviceId);
-                toast(`💰 Tu cartera: ${bal} CocaCoins`);
-            } catch (e) { console.error(e); toast('⚠️ No se pudo leer tu cartera'); }
+                const bal = await getBalance(deviceId);
+                toast(`💰 Cartera · ${bar(Math.min(100, bal / 2))} ${bal} monedas`);
+            } catch (e) {
+                console.error(e);
+                toast(isPermissionDenied(e)
+                    ? '🔒 Las carteras están bloqueadas por los permisos del servidor (Realtime Database Rules)'
+                    : '⚠️ No se pudo leer tu cartera');
+            }
         },
+        wallet() { return H.cartera(); },
+        monedas() { return H.cartera(); },
 
-        async robos(rest) {
-            if (!rest) return toast('Uso: /robos [usuario]');
+        async robar(rest) {
+            if (!rest) return toast('Uso: /robar [usuario]');
             const target = findUser(rest);
-            if (!target) return toast(`No veo a "${trunc(rest, 20)}" en el chat reciente`);
+            if (!target) return toast(`No veo a "${trunc(rest, 20)}" en el chat reciente (tiene que haber escrito algo)`);
+            if (!target.deviceId) return toast('Ese usuario no tiene dispositivo identificable');
             if (target.deviceId === deviceId) return toast('No puedes robarte a ti mismo 😅');
             const u = getUser().name;
 
+            let mine, theirs;
             try {
-                await ensureWallet(deviceId);
-                await ensureWallet(target.deviceId);
+                mine = await getBalance(deviceId);
+                theirs = await getBalance(target.deviceId);
             } catch (e) { console.error(e); return toast('⚠️ No se pudo acceder a las carteras'); }
 
+            if (theirs <= 0) return say(`🦹 ${u} intentó robar a ${target.name}, pero no tiene ni una moneda 🕸️`);
+
             if (Math.random() < 0.5) {
+                const root = await resolveWalletRoot();
                 let stolen = 0;
                 let res;
                 try {
-                    res = await runTransaction(ref(db, 'economia/' + target.deviceId), (cur) => {
-                        stolen = 0;
-                        if (typeof cur !== 'number') return cur;
-                        stolen = Math.min(randInt(10, 40), cur);
-                        if (stolen <= 0) return; // sin monedas: abortar
-                        return cur - stolen;
+                    res = await runTransaction(wref(root, target.deviceId), (cur) => {
+                        const bal = readBalance(cur);
+                        if (bal === null || bal <= 0) return;              // aborta
+                        stolen = Math.min(randInt(10, 40), bal);
+                        if (stolen <= 0) return;
+                        return typeof cur === 'number' ? cur - stolen : { coins: bal - stolen };
                     });
                 } catch (e) { console.error(e); return toast('⚠️ El robo ha fallado por la conexión'); }
 
-                if (!res.committed || stolen <= 0) {
-                    return say(`🦹 ${u} intentó robar a ${target.name}, pero no tiene ni una moneda 🕸️`);
+                if (!res || !res.committed || stolen <= 0) {
+                    return say(`🦹 ${u} intentó robar a ${target.name}, pero no tenía nada 🕸️`);
                 }
-                try {
-                    await runTransaction(ref(db, 'economia/' + deviceId), (cur) => (typeof cur === 'number' ? cur + stolen : cur));
-                } catch (e) { console.error(e); }
-                await say(`🦹 ${u} le robó ${stolen} CocaCoins a ${target.name} 💰`);
+                try { await addCoins(deviceId, stolen); } catch (e) { console.error(e); }
+                await say(`🦹 ${u} le robó ${stolen} monedas a ${target.name} 💰`);
             } else {
                 applyMute(30000, 'Ciber-cárcel');
                 await say(`🚔 ${u} intentó robar a ${target.name} y acabó en la ciber-cárcel 30s ⛓️`);
             }
+        },
+        robos(rest) { return H.robar(rest); },
+
+        /* ---------- matemáticas ---------- */
+        calcError: false,
+        async calcula(rest) {
+            if (!rest) return toast('Uso: /calcula [expresión]  ·  ej: /calcula sqrt(144)+2^3');
+            const r = safeEval(rest);
+            if (r === null) return toast('❌ Expresión no válida o indeterminada');
+            const txt = typeof fmt === 'function' ? fmt(r) : String(r);
+            return say(`🧮 ${getUser().name}: ${trunc(rest, 60)} = ${txt}`);
+        },
+        async derivada(rest, args) {
+            const n = parseFloat((args[0] || '').replace(',', '.'));
+            if (!isFinite(n)) return toast('Uso: /derivada [número]');
+            const d = randInt(0, 9);
+            return say(`😏 ${getUser().name} deriva ${n}… y la integral de ${n}x sale ${d}. Nadie entendió nada.`);
         },
 
         ppt: (rest) => challenge('ppt', rest),
@@ -1025,6 +1243,49 @@ export function initCommands(opts) {
             if (!rest) return toast('Uso: /anuncio [texto]');
             const txt = rest.slice(0, 120);
             await say('📢 ' + txt, 'anuncio', { anuncio: txt });
+        },
+
+        async limpiar() {
+            const snap = await get(ref(db, 'messages')).catch((e) => { console.error(e); return null; });
+            if (!snap || !snap.exists()) return toast('El chat ya está vacío');
+            const keys = [];
+            snap.forEach(c => keys.push(c.key));
+            let borrados = 0;
+            for (const k of keys) {
+                try { await remove(ref(db, 'messages/' + k)); borrados++; }
+                catch (e) { console.error(e); break; }
+            }
+            toast(`🧹 ${borrados} mensajes eliminados`);
+            await say(`🧹 ${getUser().name} ha vaciado el chat`, 'limpiar');
+        },
+
+        async ban(rest) {
+            if (!rest) return toast('Uso: /ban [usuario]');
+            const target = findUser(rest);
+            if (!target) return toast(`No veo a "${trunc(rest, 20)}" en el chat reciente`);
+            if (target.deviceId === deviceId) return toast('No puedes banearte a ti mismo');
+            try {
+                await set(ref(db, 'banned_devices/' + target.deviceId), { banned: true, time: serverTimestamp(), por: getUser().name });
+                await say(`🔒 ${getUser().name} ha baneado a ${target.name}`, 'ban');
+                toast(`🔒 ${target.name} baneado`);
+            } catch (e) {
+                console.error(e);
+                toast(isPermissionDenied(e) ? '🔒 Sin permisos para banear' : '⚠️ No se pudo completar el baneo');
+            }
+        },
+
+        async unban(rest) {
+            if (!rest) return toast('Uso: /unban [deviceId]');
+            const id = rest.trim().split(/\s+/)[0];
+            if (!DEVICE_RE.test(id)) return toast('Ese ID de dispositivo no es válido');
+            try {
+                await remove(ref(db, 'banned_devices/' + id));
+                await say(`✅ ${getUser().name} ha levantado el baneo de un dispositivo`, 'unban');
+                toast('✅ Baneo levantado');
+            } catch (e) {
+                console.error(e);
+                toast(isPermissionDenied(e) ? '🔒 Sin permisos para desbanear' : '⚠️ No se pudo levantar el baneo');
+            }
         },
 
         nuke() {

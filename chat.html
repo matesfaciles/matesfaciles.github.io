@@ -5,8 +5,8 @@
     <script src="/global-head.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=no">
-    <title>Chat Oficial · Cocacolalandia 27</title>
-    <meta name="description" content="Chat oficial en tiempo real de Cocacolalandia 27: comandos, minijuegos (piedra-papel-tijera, tres en raya), CocaCoins y efectos gamer. +14, RGPD.">
+    <title>Comunidad · Matesfaciles 27</title>
+    <meta name="description" content="Chat comunitario en tiempo real de Matesfaciles 27: comandos, minijuegos (piedra-papel-tijera, tres en raya), monedas virtuales y efectos gamer. +14, RGPD.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -334,7 +334,44 @@
             box-shadow: 0 0 20px #ff3333 !important;
             animation: slideUpToast 0.4s ease forwards !important;
         }
-    </style>
+
+        /* ===================== ESTILO GLASSMORPHISM GAMER 27 ===================== */
+        body { background: radial-gradient(1200px 600px at 50% -10%, rgba(0,230,255,.08), transparent 60%),
+               radial-gradient(900px 500px at 90% 110%, rgba(0,255,195,.06), transparent 60%), #05060a; }
+        #app { border-left-color: rgba(0,230,255,.12); border-right-color: rgba(0,230,255,.12);
+               background: rgba(5,6,10,.6); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+        header { background: linear-gradient(180deg, rgba(10,14,22,.92), rgba(10,14,22,.75));
+                 border-bottom: 1px solid rgba(0,230,255,.25); box-shadow: 0 8px 26px rgba(0,0,0,.5), 0 1px 0 rgba(0,230,255,.12); position: sticky; top: 0; z-index: 50; }
+        .modal { background: linear-gradient(160deg, rgba(13,17,27,.96), rgba(8,12,20,.96));
+                 border: 1px solid rgba(0,230,255,.45); box-shadow: 0 0 40px rgba(0,230,255,.25), inset 0 1px 0 rgba(255,255,255,.06);
+                 backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 34px 28px; font-family: var(--font); }
+        .modal h2, .modal h3 { letter-spacing: -.02em; color: var(--text); }
+        .modal p { font-family: var(--font-body); color: #9fb3c8; line-height: 1.6; }
+        button.send-v { background: linear-gradient(135deg, #00e6ff, #00ffc3); color: #03181c; border: none;
+                 border-radius: 12px; font-weight: 700; letter-spacing: .02em; padding: 12px 22px;
+                 box-shadow: 0 4px 18px rgba(0,230,255,.35); transition: transform .18s ease, box-shadow .18s ease; }
+        button.send-v:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(0,230,255,.5); }
+        #login-btn, #logout-btn { border-radius: 12px; box-shadow: 0 4px 14px rgba(0,230,255,.28); letter-spacing:.03em; }
+        #my-name { font-weight: 700; letter-spacing: -.01em; }
+        #chat-box { background: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.1)); scrollbar-width: thin; scrollbar-color: rgba(0,230,255,.4) transparent; }
+        #chat-box::-webkit-scrollbar { width: 8px; } #chat-box::-webkit-scrollbar-thumb { background: rgba(0,230,255,.35); border-radius: 8px; }
+        .msg-body { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+                 border: 1px solid rgba(0,230,255,.14); border-bottom-left-radius: 4px; padding: 12px 14px;
+                 border-radius: 14px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); font-family: var(--font-body); }
+        .msg-user { font-family: var(--font); color: var(--accent); text-shadow: 0 0 10px rgba(0,230,255,.35); }
+        .input-wrap { background: linear-gradient(180deg, rgba(10,14,22,.7), rgba(10,14,22,.95));
+                 border-top: 1px solid rgba(0,230,255,.25); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        input[type="text"] { background: rgba(3,6,12,.85); border: 1px solid rgba(0,230,255,.3); border-radius: 12px;
+                 transition: border-color .2s ease, box-shadow .2s ease; }
+        input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,230,255,.15), 0 0 18px rgba(0,230,255,.18); }
+        .toast-msg { font-family: var(--font-body); border-radius: 12px; background: rgba(8,12,20,.95);
+                 border: 1px solid rgba(0,230,255,.35); border-left: 4px solid var(--accent2); box-shadow: 0 10px 30px rgba(0,0,0,.6), 0 0 16px rgba(0,230,255,.25); }
+        @media (max-width: 640px) {
+            #chat-box { height: calc(100vh - 210px); }
+            .input-wrap { padding: 14px; }
+            header { padding: 12px; }
+        }
+        </style>
 </head>
 
 <body>
@@ -343,7 +380,7 @@
         <div class="modal">
             <i class="fa-solid fa-user-shield" style="font-size: 3rem; color: var(--accent2); margin-bottom: 15px;"></i>
             <h2>ACCESO +14 AÑOS</h2>
-            <p>Confirma que tienes al menos 14 años para entrar al chat oficial de Cocacolalandia 27.</p>
+            <p>Confirma que tienes al menos 14 años para entrar al chat de la comunidad Matesfaciles 27.</p>
             <button class="send-v" onclick="confirmAge()">SÍ, TENGO +14</button>
         </div>
     </div>
