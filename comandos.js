@@ -121,6 +121,63 @@ const pickOne = (arr) => arr[rand(arr.length)];
 const trunc = (s, n) => String(s).length > n ? String(s).slice(0, n - 1) + '…' : String(s);
 const bar = (p) => { const f = Math.round(p / 10); return '█'.repeat(f) + '░'.repeat(10 - f); };
 
+/* Evaluador aritmético seguro para /calcula (sin eval, sin acceso a DOM ni globals) */
+function chatEval(src) {
+    try {
+        let s = String(src).toLowerCase()
+            .replace(/,/g, '.')
+            .replace(/√/g, 'sqrt')
+            .replace(/\^/g, '^')
+            .replace(/π/g, 'pi').replace(/e\b/g, 'E');
+        // valida caracteres permitidos
+        if (!/^[0-9+\-*/^%().,\s a-zA-Z]*$/.test(s)) return null;
+        // funciones y constantes soportadas
+        const FN = { sqrt: Math.sqrt, abs: Math.abs, sin: Math.sin, cos: Math.cos, tan: Math.tan, ln: Math.log, log: Math.log10, log2: Math.log2, exp: Math.exp, floor: Math.floor, ceil: Math.ceil, round: Math.round, pow: Math.pow, min: Math.min, max: Math.max };
+        s = s.replace(/\bpi\b/g, 'PI').replace(/\bE\b/g, 'EUL');
+        // tokenizar y parser recursivo descendente
+        let toks = [];
+        const re = /(\d+\.?\d*(?:[eE][+-]?\d+)?)|([+\-*/^%(),])|([A-Za-z_]+)/g;
+        let m;
+        while ((m = re.exec(s))) toks.push(m[1] !== undefined ? { t: 'n', v: parseFloat(m[1]) } : (m[2] ? { t: 'o', v: m[2] } : { t: 'f', v: m[3] }));
+        let i = 0;
+        const peek = () => toks[i];
+        const eat = (v) => toks[i] && ((toks[i].t === 'o' && toks[i].v === v) || (toks[i].t === 'f' && toks[i].v === v)) ? toks[i++] : null;
+        function expr() { let v = term(); while (peek() && peek().t === 'o' && (peek().v === '+' || peek().v === '-')) { const op = toks[i++].v; const r = term(); v = op === '+' ? v + r : v - r; } return v; }
+        function term() { let v = unary(); while (peek() && peek().t === 'o' && (peek().v === '*' || peek().v === '/' || peek().v === '%')) { const op = toks[i++].v; const r = unary(); if (op === '*') v *= r; else if (op === '/') v /= r; else v %= r; } return v; }
+        function unary() { if (peek() && peek().t === 'o' && peek().v === '-') { i++; return -unary(); } if (peek() && peek().t === 'o' && peek().v === '+') { i++; } return power(); }
+        function power() { let b = atom(); if (peek() && peek().t === 'o' && peek().v === '^') { i++; const e = unary(); return Math.pow(b, e); } return b; }
+        function atom() {
+            const tk = peek();
+            if (!tk) throw new Error('fin');
+            if (tk.t === 'n') { i++; return tk.v; }
+            if (tk.t === 'f') {
+                const name = tk.v.toLowerCase();
+                if (name === 'pi') { i++; return Math.PI; }
+                if (name === 'eul') { i++; return Math.E; }
+                const fn = FN[name];
+                if (!fn) throw new Error('func ' + name);
+                i++;
+                if (!eat('(')) throw new Error('parentesis');
+                const args = [expr()];
+                while (peek() && peek().t === 'o' && peek().v === ',') { i++; args.push(expr()); }
+                if (!eat(')')) throw new Error('parentesis cierre');
+                return fn(...args);
+            }
+            if (tk.t === 'o' && tk.v === '(') { i++; const v = expr(); if (!eat(')')) throw new Error('cierre'); return v; }
+            throw new Error('token');
+        }
+        const val = expr();
+        if (i !== toks.length) throw new Error('resto');
+        return typeof val === 'number' ? val : null;
+    } catch (e) { return null; }
+}
+
+function chatFmt(n) {
+    if (!isFinite(n)) return String(n);
+    if (Number.isInteger(n) && Math.abs(n) < 1e15) return n.toLocaleString('es-ES');
+    return parseFloat(n.toPrecision(10)).toString();
+}
+
 function tokenize(s) {
     const out = [];
     const re = /"([^"]+)"|(\S+)/g;
@@ -1221,12 +1278,11 @@ export function initCommands(opts) {
         robos(rest) { return H.robar(rest); },
 
         /* ---------- matemáticas ---------- */
-        calcError: false,
         async calcula(rest) {
             if (!rest) return toast('Uso: /calcula [expresión]  ·  ej: /calcula sqrt(144)+2^3');
-            const r = safeEval(rest);
-            if (r === null) return toast('❌ Expresión no válida o indeterminada');
-            const txt = typeof fmt === 'function' ? fmt(r) : String(r);
+            const r = chatEval(rest);
+            if (r === null || !isFinite(r)) return toast('❌ Expresión no válida o indeterminada');
+            const txt = chatFmt(r);
             return say(`🧮 ${getUser().name}: ${trunc(rest, 60)} = ${txt}`);
         },
         async derivada(rest, args) {
