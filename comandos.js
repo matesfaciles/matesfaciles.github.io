@@ -1,5 +1,5 @@
 /* =====================================================================
-   comandos.js — Sistema de comandos para el Chat Oficial de Cocacolalandia 27
+   comandos.js — Sistema de comandos para el Chat Oficial de Matesfaciles 27
    ---------------------------------------------------------------------
    Módulo independiente (ES module). NO toca el HTML principal: todo el
    DOM, CSS y listeners se inyectan desde aquí.

@@ -13,7 +13,7 @@
     if (window.__cccCoreLoaded) return;
     window.__cccCoreLoaded = true;
 
-    var VERSION = 'Cocacolalandia 27';
+    var VERSION = 'Matesfaciles 27';
     var GA_ID = 'G-KFVQX643H7';           // Measurement ID de Google Analytics 4
     var GTM_ID = 'GTM-KFVQX643H7';        // Contenedor de Google Tag Manager
     var CONSENT_KEY = 'cc27_consent_v1';

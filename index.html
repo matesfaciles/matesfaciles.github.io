@@ -866,8 +866,49 @@
             var GUARD = '\u0001';
             s = s.replace(/\bpi\b/gi, GUARD + 'PI' + GUARD);
             s = s.replace(/(^|[^a-zA-Z])e(?![a-zA-Z])/g, '$1' + GUARD + 'E' + GUARD);
+            // 0b) √x / ⁿ√x : la raíz aplica SOLO al término siguiente — número, constante o grupo entre
+            // paréntesis (agrupación balanceada). Así √9+16 = 19 y √(9+16) = 5. Los paréntesis abiertos
+            // sueltos (tecla √ sin cerrar) los equilibra safeEval al final. También x² → x**(2).
+            var SUPM = { '\u2070':'0','\u00b9':'1','\u00b2':'2','\u00b3':'3','\u2074':'4','\u2075':'5','\u2076':'6','\u2077':'7','\u2078':'8','\u2079':'9' };
+            function readTerm(str, from) {                    // lee número | identificador | grupo (…)
+                while (from < str.length && /\s/.test(str.charAt(from))) from++;
+                if (str.charAt(from) === '(') {
+                    var d = 0, k = from;
+                    for (; k < str.length; k++) {
+                        if (str.charAt(k) === '(') d++;
+                        else if (str.charAt(k) === ')') { d--; if (d === 0) { k++; break; } }
+                    }
+                    return [str.slice(from, k), k];
+                }
+                var m = /^[0-9]*\.?[0-9]+|^[A-Za-z\u03c0]+/.exec(str.slice(from));
+                return m ? [m[0], from + m[0].length] : ['', from];
+            }
+            var outR = '', ri = 0;
+            while (ri < s.length) {
+                var chR = s.charAt(ri);
+                if (chR === '\u221a') {                                        // √ término
+                    var t1 = readTerm(s, ri + 1);
+                    outR += t1[0] ? 'sqrt(' + t1[0] + ')' : 'sqrt(';           // √ suelto: lo cierra el auto-balance
+                    ri = t1[1]; continue;
+                }
+                if (SUPM.hasOwnProperty(chR)) {                                // ⁿ√ término  |  xⁿ suelto
+                    var supStr = '', js = ri;
+                    while (js < s.length && SUPM.hasOwnProperty(s.charAt(js))) { supStr += SUPM[s.charAt(js)]; js++; }
+                    var peek = js;
+                    while (peek < s.length && /\s/.test(s.charAt(peek))) peek++;
+                    if (s.charAt(peek) === '\u221a') {                         // índice en superíndice + raíz
+                        var t2 = readTerm(s, peek + 1);
+                        if (t2[0]) { outR += '((' + t2[0] + ')**(1/(' + supStr + ')))'; ri = t2[1]; continue; }
+                    }
+                    outR += '**(' + supStr + ')';                              // superíndice suelto → potencia
+                    ri = js; continue;
+                }
+                outR += chR; ri++;
+            }
+            s = outR;
             // 1) funciones (antes de proteger "fact")
-            s = s.replace(/\bsqrt\s*\(/g, 'Math.sqrt(');
+            s = s.replace(/\bsqrt(\s*\()/g, 'Math.sqrt$1');
+            s = s.replace(/\bsqrt\b(?!\s*\()/g, 'sqrt(');   // sqrt9 → sqrt(9 (el auto-balance lo cierra)
             s = s.replace(/\babs\s*\(/g, 'Math.abs(');
             s = s.replace(/\basin\s*\(/g, 'Math.asin(');
             s = s.replace(/\bacos\s*\(/g, 'Math.acos(');
@@ -883,11 +924,10 @@
             s = s.replace(/\(\s*e\s*\)/gi, '(EULER)');
             // 2) símbolos / azúcar sintáctico
             s = s.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
-            s = s.replace(/√\s*\(/g, 'sqrt(');                  // √(…) → sqrt(…)
-            s = s.replace(/√\s*(?=[\d.a-zA-Z(])/g, 'sqrt(');    // √9 → sqrt(9… (el paréntesis se cierra con auto-balance)
-            s = s.replace(/(\d+(?:\.\d+)?)\s*%/g, '($1/100)');
+            s = s.replace(/([0-9]*\.?[0-9]+)\s*%/g, '($1/100)');
             s = s.replace(/\bans\b/gi, '(' + LAST_ANS + ')');
             s = s.replace(/\^/g, '**');              // potencia
+            s = s.replace(/(ve{2}|v)([0-9])(?![0-9A-Za-z])/g, '$1**$2'); // teclas x² y xʸ: "xve2" → x**2
             s = s.replace(/(\d+(?:\.\d+)?)\s*!/g, 'fact($1)'); // factorial
             // 3) multiplicación implícita: 2(3+1), )(, )5
             s = s.replace(/(\d)\s*\(/g, '$1*(');
@@ -899,7 +939,7 @@
             s = s.replace(/fact/g, GUARD + 'fact' + GUARD);
             s = s.replace(/\*\*/g, GUARD + 'P' + GUARD);
             s = s.replace(/,/g, '');                 // comas sobrantes ya convertidas
-            var stripped = s.replace(/\u0001[A-Za-z0-9]*\u0001/g, '');
+            var stripped = s.replace(new RegExp(GUARD + '[A-Za-z0-9]+' + GUARD, 'g'), '');
             if (/[^0-9+\-*/().\s]/.test(stripped)) return null; // intento de código extraño
             // 5) restaurar Math.*, fact, ** y constantes
             return s.replace(new RegExp(GUARD + '([A-Za-z0-9]+)' + GUARD, 'g'), function (m0, t) {
@@ -960,17 +1000,21 @@
 
         function doEquals() {
             if (!exprBuffer) return;
+            // El secreto se comprueba SIEMPRE sobre la expresión escrita, antes de evaluar:
+            // √(0/0) es una indeterminación y su evaluación lanza error, pero el gesto sí revela el panel.
+            var exprEscrita = exprBuffer;
             try {
                 var r = safeEval(exprBuffer);
                 LAST_ANS = r;
-                calcHist.textContent = exprBuffer + ' =';
+                calcHist.textContent = exprEscrita + ' =';
                 exprBuffer = fmt(r);
                 renderCalc(exprBuffer);
-                checkSecretFromExpr(calcHist.textContent);
+                checkSecretFromExpr(exprEscrita);
             } catch (e) {
-                calcHist.textContent = exprBuffer;
+                calcHist.textContent = exprEscrita;
                 renderCalc('⛔ ' + e.message);
                 exprBuffer = '';
+                checkSecretFromExpr(exprEscrita); // aunque haya error (p. ej. división por cero), el truco funciona
             }
         }
 
