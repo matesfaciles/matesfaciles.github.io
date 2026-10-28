@@ -1,5 +1,5 @@
 /**
- * COCACOLALANDIA 27 — CORE SYSTEM v7.0
+ * MATESFACILES 27 (y panel oculto) — CORE SYSTEM v7.0
  * ------------------------------------------------------------------
  * Gestión global: consentimiento de cookies RGPD propio (sin TermsFeed),
  * carga de Google Tag Manager / Analytics SOLO tras aceptar, seguridad
@@ -483,7 +483,7 @@
             '<tr><td>cc_device_id</td><td>Técnica (localStorage + cookie)</td><td>Identidad anónima en el chat y moderación</td><td>5 años</td></tr>' +
             '<tr><td>cc27_consent_v1</td><td>Técnica (localStorage)</td><td>Registro probatorio de tu consentimiento</td><td>180 días</td></tr>' +
             '<tr><td>age_ok_cc</td><td>Técnica (localStorage)</td><td>Verificación de edad +14</td><td>Hasta borrado manual</td></tr>' +
-            '<tr><td>cocacolalandia_popup_v1 · _favorites</td><td>Técnica (localStorage)</td><td>Popup de bienvenida y favoritos de juegos</td><td>Hasta borrado manual</td></tr>' +
+            '<tr><td>_cl_popup_v1 · _cl_favorites</td><td>Técnica (localStorage)</td><td>Popup de bienvenida y favoritos del panel interactivo</td><td>Hasta borrado manual</td></tr>' +
             '<tr><td>_ga · _ga_* · _gid</td><td>Opcional · Analítica</td><td>Solo si aceptas: Google Analytics 4 / Tag Manager</td><td>Hasta 14 meses</td></tr>' +
             '</tbody></table></div>' +
 
@@ -558,32 +558,35 @@
     });
 
     /* ============================================================
-       4. FOOTER GLASSMORPHISM GAMER
+       4. FOOTER GLASSMORPHISM GAMER (se oculta en la home: el easter egg debe seguir invisible)
        ============================================================ */
     function injectFooter() {
         if (document.querySelector('.academic-footer') || !document.body) return;
         var year = new Date().getFullYear();
         var footer = document.createElement('footer');
         footer.className = 'academic-footer';
+        // En Matesfaciles (index) el footer NO puede delatar el secreto: se oculta salvo que el panel esté desbloqueado
+        var isHome = /^\/(index\.html)?$/i.test(location.pathname);
+        if (isHome) footer.style.display = 'none';
         footer.innerHTML = `
             <div class="footer-grid">
                 <div class="footer-col">
-                    <p class="footer-brand">🥤 COCACOLA<span class="accent">LANDIA</span> <span class="accent">27</span></p>
-                    <p class="footer-note">Nueva era glassmorphism gamer: negro profundo, neón cian y matemáticas para todos los cursos. Aprende, calcula, chatea… y si te quedas bloqueado, doble Escape.</p>
+                    <p class="footer-brand">√ MATES<span class="accent">FACILES</span> <span class="accent">27</span></p>
+                    <p class="footer-note">Matemáticas para todos los cursos, explicadas de verdad: teoría clara, calculadoras interactivas y glosario completo de símbolos. Negro profundo, neón cian y optimizado para el móvil.</p>
                     <div class="footer-social">
                         <a href="https://whatsapp.com/channel/0029Vb6QYRC6buMLgJKnJm3h" target="_blank" rel="noopener noreferrer" aria-label="Canal de WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
                         <a href="/" aria-label="Inicio"><i class="fa-solid fa-house"></i></a>
-                        <a href="/juegos" aria-label="Juegos"><i class="fa-solid fa-gamepad"></i></a>
-                        <a href="/chat" aria-label="Chat"><i class="fa-solid fa-comment-dots"></i></a>
+                        <a href="/chat" aria-label="Comunidad"><i class="fa-solid fa-comment-dots"></i></a>
                     </div>
                 </div>
                 <div class="footer-col">
                     <h4><i class="fa-solid fa-compass"></i> Navegación</h4>
                     <a href="/">Matemáticas</a>
-                    <a href="/juegos">Juegos Arcade</a>
-                    <a href="/chat">Chat Oficial +14</a>
+                    <a href="/#bloque-calculadora">Calculadora científica</a>
+                    <a href="/chat">Comunidad +14</a>
                     <a href="/#bloque-numeros">Números y Álgebra</a>
                     <a href="/#bloque-geometria">Geometría y Funciones</a>
+                    <a href="/#bloque-simbolos">Glosario de símbolos</a>
                 </div>
                 <div class="footer-col">
                     <h4><i class="fa-solid fa-scale-balanced"></i> Área Legal</h4>
@@ -595,11 +598,18 @@
                 </div>
             </div>
             <div class="legal-box">
-                <strong>Cláusula de exención de responsabilidad:</strong> Cocacolalandia 27 es una plataforma educativa de libre acceso. Algunos recursos, calculadoras interactivas o juegos alojados en secciones externas pueden redirigir a herramientas de terceros; al ejecutarlos abandonas la jurisdicción de esta web y quedan fuera de nuestra Política de Privacidad. El uso del procesador matemático y de los módulos de juego implica la aceptación de estas condiciones. Material sujeto a la Ley de Propiedad Intelectual para uso puramente académico.
+                <strong>Cláusula de exención de responsabilidad:</strong> Matesfaciles 27 es una plataforma educativa de libre acceso. Algunos recursos y calculadoras interactivas pueden usar herramientas de terceros; al ejecutarlos quedan fuera del alcance de nuestra Política de Privacidad. El uso del procesador matemático implica la aceptación de estas condiciones. Material sujeto a la Ley de Propiedad Intelectual para uso puramente académico.
             </div>
-            <p class="footer-copy">Hecho con <span class="accent">◆</span> para estudiantes — <span class="accent">COCACOLALANDIA 27</span> · CORE v7.0 · © ${year} · Cumplimiento RGPD / LOPDGDD / LSSI</p>
+            <p class="footer-copy">Hecho con <span class="accent">◆</span> para estudiantes — <span class="accent">MATESFACILES 27</span> · CORE v7.0 · © ${year} · Cumplimiento RGPD / LOPDGDD / LSSI</p>
         `;
         document.body.appendChild(footer);
+        // La home revela el footer solo cuando el secreto √(0/0) se activa (clase en <body>)
+        if (isHome) {
+            var reveal = function () {
+                if (document.body.classList.contains('vault-open')) footer.style.display = '';
+            };
+            new MutationObserver(reveal).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        }
     }
 
     /* ============================================================

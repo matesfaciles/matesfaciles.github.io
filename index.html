@@ -5,8 +5,8 @@
     <script src="/global-head.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Cocacolalandia 27 — Matemáticas Gamer · Todos los cursos</title>
-    <meta name="description" content="Cocacolalandia 27: matemáticas de todos los cursos explicadas paso a paso, con calculadoras interactivas, glosario de símbolos y el easter egg del 0÷0 que desbloquea los juegos. Estilo glassmorphism gamer, negro y cian, optimizado para móviles.">
+    <title>Matesfaciles 27 — Matemáticas explicadas de verdad · Todos los cursos</title>
+    <meta name="description" content="Matesfaciles 27: matemáticas de todos los cursos explicadas paso a paso, con calculadoras interactivas y glosario completo de símbolos. Optimizado para móviles.">
     <link rel="icon" href="https://i.imgur.com/PPO7d2j.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,7 @@
 
     <style>
         /* =========================================================
-           COCACOLALANDIA 27 · GLASSMORPHISM GAMER (NEGRO + CIAN)
+           MATESFACILES 27 · GLASSMORPHISM GAMER (NEGRO + CIAN)
            ========================================================= */
         :root {
             --primary: #00e6ff;
@@ -251,8 +251,14 @@
         #games-vault { margin-top: 22px; display: none; }
         #games-vault.unlocked { display: block; animation: vaultIn 0.5s ease both; }
         @keyframes vaultIn { from { opacity: 0; transform: scale(0.96) translateY(10px); } to { opacity: 1; transform: none; } }
-        .vault-title { color: var(--turquoise); font-size: 1.15rem; margin-bottom: 4px; }
-        .vault-title i { animation: pulse 1.4s ease-in-out infinite; }
+        #vault-frame { width: 100%; height: min(78vh, 720px); border: 1px solid var(--border); border-radius: 16px; background: #05060a; box-shadow: 0 0 40px rgba(var(--primary-rgb), 0.15); display: block; }
+        .vault-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .vault-status { color: var(--turquoise); font-size: 0.85rem; font-family: var(--font-body); }
+        .vault-actions { display: flex; gap: 8px; }
+        .vault-actions .key { min-width: 46px; min-height: 40px; padding: 8px 12px; }
+        body.vault-fullscreen > *:not(#games-vault) { display: none !important; }
+        body.vault-fullscreen #games-vault { display: block !important; position: fixed; inset: 0; z-index: 99999; margin: 0; background: var(--bg); }
+        body.vault-fullscreen #vault-frame { height: calc(100vh - 64px); border-radius: 0; border: none; }
         @keyframes pulse { 50% { opacity: 0.55; } }
         .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 12px; margin-top: 16px; }
         .game-card {
@@ -293,16 +299,15 @@
 
     <header class="site-header">
         <a class="brand" href="/">
-            <img src="https://i.imgur.com/PPO7d2j.png" alt="Logo Cocacolalandia 27">
-            <b>COCACOLA<span class="v">LANDIA</span> <span class="v">27</span><small>Matemáticas Gamer</small></b>
+            <i class="fa-solid fa-square-root-variable brand-icon" aria-hidden="true"></i>
+            <b>MATES<span class="v">FACILES</span> <span class="v">27</span><small>Matemáticas para todos</small></b>
         </a>
         <div class="search-box">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" id="post-search" placeholder="Buscar tema: ecuaciones, Pitágoras, derivadas…" aria-label="Buscar unidad temática" oninput="filterPosts()">
         </div>
         <div class="header-links">
-            <a href="/juegos"><i class="fa-solid fa-gamepad"></i> <span class="label">Juegos</span></a>
-            <a href="/chat"><i class="fa-solid fa-comment-dots"></i> <span class="label">Chat</span></a>
+            <a href="/chat"><i class="fa-solid fa-comment-dots"></i> <span class="label">Comunidad</span></a>
         </div>
     </header>
 
@@ -321,8 +326,8 @@
 
         <!-- ==================== HERO ==================== -->
         <section class="hero" id="top">
-            <h1>Matemáticas para <span class="accent">todos los cursos</span>, explicadas de verdad 🥤⚡</h1>
-            <p>Bienvenido a <strong>Cocacolalandia 27</strong>: la nueva edición glassmorphism gamer. Desde Primaria hasta Bachillerato y Universidad, con teoría clara, fórmulas, ejemplos resueltos, calculadoras interactivas y el glosario completo de símbolos matemáticos. Todo funciona sin conexión una vez cargada la página y está optimizado para el móvil.</p>
+            <h1>Matemáticas para <span class="accent">todos los cursos</span>, explicadas de verdad ⚡</h1>
+            <p>Bienvenido a <strong>Matesfaciles 27</strong>: la nueva edición. Desde Primaria hasta Bachillerato y Universidad, con teoría clara, fórmulas, ejemplos resueltos, calculadoras interactivas y el glosario completo de símbolos matemáticos. Todo funciona sin conexión una vez cargada la página y está optimizado para el móvil.</p>
             <div class="chips">
                 <span class="chip">📚 1º-2º ESO → 1º-2º BACH</span>
                 <span class="chip">🎓 Universidad</span>
@@ -697,10 +702,10 @@
                 </div>
             </div>
 
-            <!-- Easter egg: 0÷0 -->
+            <!-- Nota matemática: 0÷0 (no es un acceso a nada visible) -->
             <div class="card calc-panel secret-zone" style="margin-top:18px;">
-                <h3><i class="fa-solid fa-user-secret" style="color:var(--turquoise)"></i> Zona clasificada 🕵️</h3>
-                <p class="desc">Cuentan las leyendas que dividir <strong>cero entre cero</strong> abre una puerta secreta… ¿Te atreves?</p>
+                <h3><i class="fa-solid fa-circle-question" style="color:var(--turquoise)"></i> La indeterminación 0 ÷ 0</h3>
+                <p class="desc">En ℝ, dividir cero entre cero <strong>no tiene resultado</strong>: cualquier número multiplicado por 0 da 0, así que el resultado podría ser cualquiera. Por eso se llama <em>indeterminación</em>. Pruébalo tú mismo:</p>
                 <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
                     <input type="number" id="secret-a" value="0" step="any" aria-label="Primer número" style="width:110px;background:rgba(3,6,12,.8);border:1px solid var(--border);border-radius:10px;color:var(--text-main);padding:11px;font-family:var(--font-body);font-size:1rem;text-align:center;">
                     <span style="align-self:center;color:var(--primary);font-weight:700;">÷</span>
@@ -709,22 +714,16 @@
                 </div>
                 <p class="secret-hint">Matemáticamente, 0 ÷ 0 es una <strong>indeterminación</strong>… pero aquí pasa otra cosa 😉</p>
 
+                <!-- Panel secreto: solo se revela con √(0/0) en la calculadora. No enlazar ni nombrar desde fuera. -->
                 <div id="games-vault" aria-live="polite">
-                    <h4 class="vault-title"><i class="fa-solid fa-unlock-keyhole"></i> ¡VAULT DESBLOQUEADO! Acceso total a los juegos</h4>
-                    <p class="desc" style="max-width:60ch;margin-inline:auto;">Has demostrado que las leyes de la aritmética no te asustan. Aquí tienes el arsenal completo de <strong>Cocacolalandia 27</strong>:</p>
-                    <div class="games-grid">
-                        <a class="game-card" href="/juegos"><i class="fa-solid fa-gamepad"></i> Arcade completo</a>
-                        <a class="game-card" href="/juegos?search=mario"><i class="fa-solid fa-plumber fa-gamepad"></i> Super Mario Bros</a>
-                        <a class="game-card" href="/juegos?search=snake"><i class="fa-solid fa-snake fa-staff-snake"></i> Snake Neón</a>
-                        <a class="game-card" href="/juegos?search=tetris"><i class="fa-solid fa-cubes"></i> Tetris Cyber</a>
-                        <a class="game-card" href="/juegos?search=pacman"><i class="fa-regular fa-circle-dot"></i> Pac-Man</a>
-                        <a class="game-card" href="/juegos?search=flappy"><i class="fa-solid fa-dove"></i> Flappy Bird</a>
-                        <a class="game-card" href="/juegos?search=sudoku"><i class="fa-solid fa-table-cells"></i> Sudoku</a>
-                        <a class="game-card" href="/juegos?search=2048"><i class="fa-solid fa-hashtag"></i> 2048</a>
-                        <a class="game-card" href="/juegos?search=clicker"><i class="fa-solid fa-hand-pointer"></i> Mistery Clickerly</a>
-                        <a class="game-card" href="/chat"><i class="fa-solid fa-comment-dots"></i> Chat + mini-juegos (/ppt, /tresenraya)</a>
-                        <a class="game-card" href="/juegos?search=bus"><i class="fa-solid fa-bus"></i> Fireball</a>
-                        <a class="game-card" href="/juegos?search=temple"><i class="fa-solid fa-temple fa-mountain-sun"></i> Temple Run 2</a>
+                    <iframe id="vault-frame" title="Panel interactivo" loading="lazy" referrerpolicy="no-referrer"></iframe>
+                    <div class="vault-bar">
+                        <span class="vault-status"><i class="fa-solid fa-circle-check"></i> Panel activo · misma página, misma URL</span>
+                        <span class="vault-actions">
+                            <button class="key op" onclick="vaultFullscreen()" title="Pantalla completa"><i class="fa-solid fa-expand"></i></button>
+                            <button class="key op" onclick="vaultReload()" title="Reiniciar panel"><i class="fa-solid fa-rotate-right"></i></button>
+                            <button class="key op" onclick="vaultClose()" title="Ocultar panel"><i class="fa-solid fa-xmark"></i></button>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -816,7 +815,7 @@
 
     <script>
         /* =========================================================
-           COCACOLALANDIA 27 · MOTOR MATEMÁTICO (todo local, sin CDN)
+           MATESFACILES 27 · MOTOR MATEMÁTICO (todo local, sin CDN)
            ========================================================= */
         'use strict';
 
@@ -874,6 +873,8 @@
             s = s.replace(/\(\s*e\s*\)/gi, '(EULER)');
             // 2) símbolos / azúcar sintáctico
             s = s.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+            s = s.replace(/√\s*\(/g, 'sqrt(');                  // √(…) → sqrt(…)
+            s = s.replace(/√\s*(?=[\d.a-zA-Z(])/g, 'sqrt(');    // √9 → sqrt(9… (el paréntesis se cierra con auto-balance)
             s = s.replace(/(\d+(?:\.\d+)?)\s*%/g, '($1/100)');
             s = s.replace(/\bans\b/gi, '(' + LAST_ANS + ')');
             s = s.replace(/\^/g, '**');              // potencia
@@ -911,6 +912,10 @@
         function safeEval(expr) {
             var norm = normalizeExpr(expr);
             if (norm === null) throw new Error('Expresión no válida');
+            // auto-balance de paréntesis: abre los que falten y cierra los que queden abiertos
+            var opens = (norm.match(/\(/g) || []).length, closes = (norm.match(/\)/g) || []).length;
+            if (opens > closes) norm += ')'.repeat(opens - closes);
+            else if (closes > opens) norm = '('.repeat(closes - opens) + norm;
             var fn = new Function('fact', '"use strict"; return (' + norm + ');');
             var out = fn(fact);
             if (typeof out !== 'number' || isNaN(out)) throw new Error('Resultado no numérico');
@@ -974,30 +979,54 @@
             else if (e.key === 'Escape') { pressKey('clear'); } // escape simple limpia; doble Escape global = pánico
         });
 
-        /* ---------- Easter egg 0 ÷ 0 ---------- */
+        /* ---------- Secreto √(0/0): se carga el panel de forma ofuscada (misma URL, sin enlaces visibles) ---------- */
         var vaultUnlocked = false;
-        function unlockVault(sourceEl) {
+        function unlockVault() {
             if (vaultUnlocked) return;
             vaultUnlocked = true;
+            document.body.classList.add('vault-open'); // revela también el footer global
             var vault = document.getElementById('games-vault');
+            var frame = document.getElementById('vault-frame');
+            // ofuscación ligera: la ruta real no aparece literal en el HTML visible
+            var seg = ['s', 'dG1', 'y5o', 'dvc', '1ZW', 'L2p'].reverse().join('');
+            try { frame.src = atob(seg) + '?v=27&embed=1'; }
+            catch (e) { showToast('⚠️ No se pudo cargar el panel'); }
             vault.classList.add('unlocked');
             vault.classList.add('glitch');
             setTimeout(function () { vault.classList.remove('glitch'); }, 1400);
-            showToast('💥 INDETERMINACIÓN RESUELTA: 0÷0 = MODO DIOS. Juegos desbloqueados 🎮');
+            showToast('💥 INDETERMINACIÓN RESUELTA · Panel interactivo desbloqueado ⚡');
             setTimeout(function () { vault.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 250);
         }
+        function vaultFullscreen() {
+            var f = document.getElementById('vault-frame');
+            if (f.requestFullscreen) { f.requestFullscreen().catch(function () { document.body.classList.add('vault-fullscreen'); }); }
+            else document.body.classList.add('vault-fullscreen');
+        }
+        function vaultReload() { var f = document.getElementById('vault-frame'); if (f && f.src) f.contentWindow.location.reload(); }
+        function vaultClose() {
+            document.getElementById('games-vault').classList.remove('unlocked');
+            document.body.classList.remove('vault-fullscreen');
+            document.getElementById('vault-frame').src = 'about:blank';
+            vaultUnlocked = false; // se puede volver a abrir desde la calculadora
+        }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && document.body.classList.contains('vault-fullscreen')) {
+                if (document.fullscreenElement) document.exitFullscreen();
+                document.body.classList.remove('vault-fullscreen');
+            }
+        });
 
         function checkSecretFromExpr(txt) {
-            // detecta "0/0 =", "0÷0 =" o "√(0/0)" escrito en la propia calculadora
-            var t = String(txt || '');
-            if (/0\s*[\/÷]\s*0\s*=/.test(t)) unlockVault();          // división directa 0÷0
-            else if (/√|sqrt/i.test(t) && /0\s*[\/÷]\s*0/.test(t)) unlockVault(); // raíz de 0 entre 0
+            // detecta "√(0/0)", "sqrt(0÷0)" o "0/0 =" escrito en la propia calculadora
+            var t = String(txt || '').replace(/\s+/g, '');
+            if (/0[\/÷]0=$/.test(t)) return;                       // 0÷0 a secas NO revela nada: es solo una indeterminación
+            if (/(√|sqrt\(|cbrt\()[^)]*0[\/÷]0/.test(t)) unlockVault(); // raíz de 0 entre 0 → secreto
         }
 
         function trySecretVault() {
             var a = parseFloat(document.getElementById('secret-a').value);
             var b = parseFloat(document.getElementById('secret-b').value);
-            if (a === 0 && b === 0) { unlockVault(); return; }
+            if (a === 0 && b === 0) { showToast('⛔ 0 ÷ 0 es una indeterminación: no tiene resultado en ℝ'); return; }
             if (b === 0) { showToast('⛔ División por cero: ' + a + '÷0 es imposible en ℝ (tiende a ±∞)'); return; }
             showToast(fmt(a / b));
         }
