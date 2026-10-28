@@ -1,5 +1,5 @@
 /* =====================================================================
-   comandos.js — Sistema de comandos para el Chat Oficial de Cocacolalandia 26
+   comandos.js — Sistema de comandos para el Chat Oficial de Cocacolalandia 27
    ---------------------------------------------------------------------
    Módulo independiente (ES module). NO toca el HTML principal: todo el
    DOM, CSS y listeners se inyectan desde aquí.
@@ -17,12 +17,12 @@
    ===================================================================== */
 
 import {
-    ref, push, get, update, remove, onValue, runTransaction,
+    ref, set, push, get, update, remove, onValue, off, runTransaction,
     serverTimestamp, query, orderByChild, equalTo
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 /* =====================================================================
-   CONSTANTES Y METADATOS
+   CONSTANTES Y METADATOS — COCACOLALANDIA 27
    ===================================================================== */
 const DEVICE_RE = /^[A-Za-z0-9_-]{128}$/;
 const FLASHBANG_COOLDOWN = 5 * 60 * 1000;
@@ -30,16 +30,33 @@ const START_COINS = 100;
 const STALE_EVENT_MS = 15000;
 
 export const COMMAND_LIST = [
+    { name: 'help', desc: 'Lista de todos los comandos' },
+    { name: 'comandos', desc: 'Alias de /help' },
     { name: 'flashbang', desc: 'Ciega la pantalla de TODOS 3s · cooldown 5 min' },
     { name: 'sismo', desc: 'Terremoto en todas las pantallas (2s)' },
     { name: 'confeti', desc: 'Lluvia de confeti neón para todos' },
     { name: 'ciberpanik', desc: 'Alerta roja de hackeo para todos' },
+    { name: 'glitch', desc: 'Distorsión RGB gamer en todas las pantallas (2.5s)' },
+    { name: 'aplaudir', desc: '👏 lluvia de palmas para todos' },
+    { name: 'matemathica', desc: 'Ecuaciones flotando por la pantalla (3s)' },
     { name: 'matrix', desc: 'Lluvia de código verde (solo tú, 4s)' },
     { name: 'invertir', desc: 'Invierte los colores de tu UI (alterna)' },
     { name: 'ruleta', desc: 'Ruleta rusa: 1/6 de quedar muteado 1 min' },
     { name: '8ball', args: '[pregunta]', desc: 'La bola mágica responde' },
     { name: 'suerte', desc: 'Tu fortuna de hoy (1-100)' },
     { name: 'bateria', desc: 'Tu ciber-energía actual' },
+    { name: 'moneda', desc: 'Cara o cruz a cara descubierta' },
+    { name: 'dado', args: '[n]', desc: 'Tira uno o varios dados (ej: /dado 3)' },
+    { name: 'rand', args: '[min] [max]', desc: 'Número aleatorio entre dos valores' },
+    { name: 'polla', args: '[longitud]', desc: 'La clásica polla, versión cyber-neón' },
+    { name: 'nave', desc: 'Tu nave espacial generada proceduralmente 🚀' },
+    { name: 'baraja', args: '[n]', desc: 'Cartas de la baraja francesa (ej: /baraja 3)' },
+    { name: 'flip', args: '[texto]', desc: 'Texto invertido y espejado Ɐ' },
+    { name: 'repetir', args: '[n] [texto]', desc: 'Repite un texto n veces (máx. 10)' },
+    { name: 'eco', args: '[texto]', desc: 'Repite tu mensaje como un bot' },
+    { name: 'clap', args: '[texto]', desc: 'Separa cada palabra 👏 con 👏 palmas 👏' },
+    { name: 'calcula', args: '[expresión]', desc: 'Calcula en el chat: /calcula sqrt(144)+2^3' },
+    { name: 'derivada', args: '[número]', desc: '¿Divertido? Deriva un número en público 😏' },
     { name: 'ship', args: '[nombre1] [nombre2]', desc: 'Compatibilidad entre dos personas' },
     { name: 'hackear', args: '[nombre]', desc: 'Hackea el mainframe de un amigo' },
     { name: 'amor', args: '[nombre]', desc: 'Tu compatibilidad romántica con alguien' },
@@ -47,19 +64,28 @@ export const COMMAND_LIST = [
     { name: 'coca', desc: 'Abre una Coca-Cola bien fría' },
     { name: 'refresco', desc: 'Abre un refresco bien fresquito' },
     { name: 'cartera', desc: 'Tu saldo de CocaCoins' },
-    { name: 'robos', args: '[usuario]', desc: '50% robas CocaCoins · 50% ciber-cárcel 30s' },
+    { name: 'robar', args: '[usuario]', desc: '50% robas CocaCoins · 50% ciber-cárcel 30s' },
+    { name: 'robos', args: '[usuario]', desc: 'Alias de /robar' },
+    { name: 'transferir', args: '[usuario] [cantidad]', desc: 'Regala CocaCoins a un amigo' },
+    { name: 'tragarmonedas', args: '[cantidad]', desc: 'Apuesta tus CocaCoins a la ruleta cyber' },
     { name: 'ppt', args: 'retar [nombre]', desc: 'Piedra, Papel o Tijera contra alguien' },
     { name: 'tresenraya', args: 'retar [nombre]', desc: 'Tres en Raya contra alguien' },
+    { name: 'reto', args: '[ppt|tresenraya] [nombre]', desc: 'Retos con nombre largo (ej: /reto tres en raya Ana)' },
     { name: 'anuncio', args: '[texto]', desc: 'Anuncio destacado para todos', admin: true },
+    { name: 'ban', args: '[usuario]', desc: 'Banear dispositivo de un usuario', admin: true },
+    { name: 'unban', args: '[deviceId]', desc: 'Levantar un baneo', admin: true },
+    { name: 'limpiar', desc: 'Vacía el chat completo', admin: true },
     { name: 'nuke', desc: 'Explosión nuclear y limpia tu chat visual', admin: true }
 ];
 
-const LOCAL_COOLDOWNS = { sismo: 15000, confeti: 10000, ciberpanik: 30000 };
+const LOCAL_COOLDOWNS = { sismo: 15000, confeti: 10000, ciberpanik: 30000, glitch: 12000, aplaudir: 10000, matemathica: 15000 };
 
 const GAME_NAMES = { ppt: 'Piedra, Papel o Tijera', tresenraya: 'Tres en Raya' };
 const MOVES = { piedra: '✊', papel: '✋', tijera: '✌️' };
 const BEATS = { piedra: 'tijera', papel: 'piedra', tijera: 'papel' };
 const LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+const SUITS = ['♠', '♥', '♦', '♣'];
+const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
 const BALL_ANSWERS = [
     'Sí, rotundamente. ✅', 'Los circuitos dicen que sí. 🔮', 'Todo apunta a que sí. 👍', 'Sin duda alguna. 💯',
@@ -159,6 +185,16 @@ const CSS = `
 
 .cmd-flash{position:fixed;inset:0;background:#fff;z-index:99998;pointer-events:none;animation:cmdFlash 3s ease-out forwards}
 @keyframes cmdFlash{0%,12%{opacity:1}100%{opacity:0}}
+
+.cmd-glitchfx{position:fixed;inset:0;z-index:99994;pointer-events:none;overflow:hidden;mix-blend-mode:screen}
+.cmd-glitchfx::before,.cmd-glitchfx::after{content:"";position:absolute;inset:-15%;background:repeating-linear-gradient(0deg,rgba(0,230,255,.16) 0 2px,transparent 2px 7px);animation:cmdGl 2.5s steps(18) forwards}
+.cmd-glitchfx::after{background:repeating-linear-gradient(90deg,rgba(0,255,195,.13) 0 3px,transparent 3px 9px);animation-duration:1.7s}
+@keyframes cmdGl{0%{transform:translateX(-3%)}20%{transform:translateX(4%) skewX(4deg)}40%{transform:translateX(-6%)}60%{transform:translateX(3%) skewX(-3deg)}80%{transform:translateX(-2%)}100%{transform:translateX(0);opacity:0}}
+.cmd-aplaus{position:fixed;inset:0;z-index:99993;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:clamp(3rem,14vw,8rem);animation:cmdAp .9s ease-out forwards;filter:drop-shadow(0 0 24px rgba(0,230,255,.7))}
+@keyframes cmdAp{0%{opacity:0;transform:scale(.4)}25%{opacity:1;transform:scale(1.25)}60%{transform:scale(1)}100%{opacity:0;transform:scale(1.5)}}
+.cmd-matematica{position:fixed;inset:0;z-index:99993;pointer-events:none;overflow:hidden}
+.cmd-matematica span{position:absolute;top:100%;color:#00e6ff;font-family:'Space Grotesk',sans-serif;font-weight:700;text-shadow:0 0 10px rgba(0,230,255,.8);animation:cmdAsc linear forwards}
+@keyframes cmdAsc{to{transform:translateY(-115vh) rotate(12deg);opacity:0}}
 
 .cmd-quake #app{animation:cmdQuake .1s linear infinite}
 @keyframes cmdQuake{0%{transform:translate(0,0) rotate(0)}20%{transform:translate(-9px,5px) rotate(-.6deg)}
@@ -391,6 +427,33 @@ function fxMatrix() {
 function fxInvertir() {
     const on = document.documentElement.classList.toggle('cmd-invert');
     toast(on ? '🌗 Colores invertidos' : '🌓 Colores normales');
+}
+
+function fxGlitch() {
+    const d = el('div', 'cmd-glitchfx');
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 2600);
+}
+
+function fxAplaudir() {
+    const d = el('div', 'cmd-aplaus', '👏');
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 1000);
+}
+
+const MATH_FLOATIES = ['∫eˣdx', '√(0/0)', 'π²', 'Σn²', 'lim x→∞', 'dy/dx', 'eiπ+1=0', '∞', 'Δ', 'θ', '∛8', 'x²+y²=r²'];
+function fxMatematathica() {
+    const d = el('div', 'cmd-matematica');
+    for (let i = 0; i < 14; i++) {
+        const s = el('span', null, pickOne(MATH_FLOATIES));
+        s.style.left = rand(95) + 'vw';
+        s.style.fontSize = (14 + rand(22)) + 'px';
+        s.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+        s.style.animationDelay = (Math.random() * 1.2) + 's';
+        d.appendChild(s);
+    }
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 4500);
 }
 
 function fxAnuncio(text) {

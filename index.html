@@ -2,1239 +2,1101 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
     <script src="/global-head.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matesfaciles - Aprende Matemáticas sin Complicaciones</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Cocacolalandia 27 — Matemáticas Gamer · Todos los cursos</title>
+    <meta name="description" content="Cocacolalandia 27: matemáticas de todos los cursos explicadas paso a paso, con calculadoras interactivas, glosario de símbolos y el easter egg del 0÷0 que desbloquea los juegos. Estilo glassmorphism gamer, negro y cian, optimizado para móviles.">
+    <link rel="icon" href="https://i.imgur.com/PPO7d2j.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <style>
+        /* =========================================================
+           COCACOLALANDIA 27 · GLASSMORPHISM GAMER (NEGRO + CIAN)
+           ========================================================= */
         :root {
-            --bg-env: #08090c;
-            --bg-surface: #0f121a;
-            --bg-interactive: #171b26;
-            --text-primary: #ffffff;
-            --text-secondary: #00e6ff;
-            --text-muted: #626f84;
-            --border-line: #00e6ff0e;
-            --math-glow: #00e6ff;
+            --primary: #00e6ff;
+            --primary-rgb: 0, 230, 255;
+            --turquoise: #00ffc3;
+            --bg: #05060a;
+            --surface: rgba(13, 17, 27, 0.72);
+            --surface-solid: #0d1119;
+            --interactive: rgba(23, 29, 42, 0.8);
+            --border: rgba(0, 230, 255, 0.16);
+            --text-main: #f2f7ff;
+            --text-soft: #c3cad6;
+            --text-muted: #70798a;
+            --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+            --font-body: 'Inter', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+            --transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+            --glow: 0 0 22px rgba(var(--primary-rgb), 0.35);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: var(--bg-env);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: var(--font-display);
+            color: var(--text-main);
+            background:
+                radial-gradient(1100px 500px at 85% -10%, rgba(var(--primary-rgb), 0.10), transparent 60%),
+                radial-gradient(900px 500px at -10% 30%, rgba(0, 255, 195, 0.06), transparent 55%),
+                linear-gradient(rgba(var(--primary-rgb), 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(var(--primary-rgb), 0.035) 1px, transparent 1px),
+                var(--bg);
+            background-size: auto, auto, 44px 44px, 44px 44px, auto;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .workspace {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 30px;
-        }
+        ::selection { background: rgba(var(--primary-rgb), 0.35); color: #fff; }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-line);
-            padding-bottom: 25px;
-            margin-bottom: 35px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
+        a { color: var(--primary); }
 
-        .brand-cluster {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        /* ---------- HEADER ---------- */
+        .site-header {
+            position: sticky; top: 0; z-index: 900;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+            padding: 12px clamp(14px, 4vw, 40px);
+            background: rgba(6, 8, 13, 0.82);
+            -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
         }
-
-        .brand-cluster i {
-            font-size: 2rem;
-            color: var(--math-glow);
-        }
-
-        .brand-meta h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .brand-meta span {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
+        .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-main); }
+        .brand img { width: 40px; height: 40px; border-radius: 12px; filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.6)); }
+        .brand b { font-size: 1.02rem; letter-spacing: -0.02em; white-space: nowrap; }
+        .brand .v { color: var(--primary); text-shadow: 0 0 12px rgba(var(--primary-rgb), 0.8); }
+        .brand small { display: block; font-family: var(--font-body); color: var(--text-muted); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
 
         .search-box {
-            position: relative;
-            width: 300px;
+            flex: 1 1 220px; display: flex; align-items: center; gap: 10px;
+            background: var(--interactive); border: 1px solid var(--border);
+            border-radius: 14px; padding: 10px 16px; transition: var(--transition);
         }
-
+        .search-box:focus-within { border-color: var(--primary); box-shadow: var(--glow); }
+        .search-box i { color: var(--primary); }
         .search-box input {
-            width: 100%;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-line);
-            padding: 10px 15px 10px 40px;
-            border-radius: 6px;
-            color: var(--text-primary);
-            font-family: 'Space Grotesk', sans-serif;
-            outline: none;
+            flex: 1; background: transparent; border: none; outline: none;
+            color: var(--text-main); font-family: var(--font-body); font-size: 0.95rem; min-width: 0;
+        }
+        .header-links { display: flex; gap: 8px; }
+        .header-links a {
+            display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+            padding: 9px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 600;
+            background: var(--interactive); border: 1px solid var(--border); color: var(--text-soft);
+            transition: var(--transition);
+        }
+        .header-links a:hover { color: #03181c; background: var(--primary); border-color: var(--primary); box-shadow: var(--glow); }
+
+        /* ---------- NAV DE BLOQUES (scroll horizontal en móvil) ---------- */
+        nav.blocks {
+            position: sticky; top: 64px; z-index: 850;
+            display: flex; gap: 8px; overflow-x: auto;
+            padding: 10px clamp(14px, 4vw, 40px);
+            background: rgba(6, 8, 13, 0.7);
+            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            scrollbar-width: none;
+        }
+        nav.blocks::-webkit-scrollbar { display: none; }
+        .nav-btn {
+            flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 16px; border-radius: 999px; cursor: pointer; border: 1px solid var(--border);
+            background: var(--interactive); color: var(--text-soft);
+            font-family: var(--font-display); font-size: 0.85rem; font-weight: 600;
+            transition: var(--transition); -webkit-tap-highlight-color: transparent;
+        }
+        .nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .nav-btn.active {
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.25), rgba(0, 255, 195, 0.15));
+            border-color: var(--primary); color: var(--primary); box-shadow: var(--glow);
         }
 
-        .search-box input:focus {
-            border-color: var(--math-glow);
+        main { max-width: 1180px; margin: 0 auto; padding: 26px clamp(14px, 4vw, 32px) 40px; }
+
+        /* ---------- HERO ---------- */
+        .hero {
+            border: 1px solid var(--border); border-radius: 22px;
+            background: var(--surface);
+            -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+            padding: clamp(22px, 5vw, 44px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(var(--primary-rgb), 0.12);
+            margin-bottom: 30px; position: relative; overflow: hidden;
+        }
+        .hero::after {
+            content: '∑ π √ ∞ ÷ ± ≈ ∫ Δ θ φ'; position: absolute; right: -10px; bottom: -24px;
+            font-size: clamp(2.6rem, 8vw, 5.4rem); font-weight: 700; letter-spacing: 0.06em;
+            color: rgba(var(--primary-rgb), 0.06); pointer-events: none; white-space: nowrap;
+        }
+        .hero h1 { font-size: clamp(1.5rem, 4.6vw, 2.6rem); line-height: 1.12; letter-spacing: -0.03em; }
+        .hero h1 .accent { color: var(--primary); text-shadow: 0 0 18px rgba(var(--primary-rgb), 0.65); }
+        .hero p { margin-top: 12px; color: var(--text-soft); font-family: var(--font-body); font-size: clamp(0.92rem, 2.4vw, 1.05rem); line-height: 1.65; max-width: 70ch; }
+        .hero .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+        .chip {
+            font-size: 0.76rem; font-weight: 600; letter-spacing: 0.04em; padding: 7px 12px; border-radius: 999px;
+            background: rgba(var(--primary-rgb), 0.08); border: 1px solid var(--border); color: var(--primary);
         }
 
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
+        /* ---------- SECCIONES / BLOQUES ---------- */
+        section.block { margin-bottom: 44px; scroll-margin-top: 120px; }
+        .block-title { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+        .block-title i { color: var(--primary); font-size: 1.25rem; filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.6)); }
+        .block-title h2 { font-size: clamp(1.2rem, 3.4vw, 1.6rem); letter-spacing: -0.02em; }
+        .block-sub { color: var(--text-muted); font-family: var(--font-body); font-size: 0.9rem; margin-bottom: 18px; line-height: 1.6; }
 
-        nav {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            border-bottom: 1px solid var(--border-line);
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-            overflow-x: auto;
-        }
+        .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 16px; }
 
-        .nav-link {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-line);
-            color: var(--text-primary);
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-            transition: all 0.2s ease;
+        .card {
+            background: var(--surface);
+            -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+            border: 1px solid var(--border); border-radius: 18px;
+            padding: 20px 20px 18px; position: relative;
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
+            transition: var(--transition);
         }
-
-        .nav-link i {
-            color: var(--text-muted);
+        .card:hover { border-color: rgba(var(--primary-rgb), 0.5); transform: translateY(-3px); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55), 0 0 24px rgba(var(--primary-rgb), 0.12); }
+        .card h3 { font-size: 1.02rem; letter-spacing: -0.01em; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+        .card h3 .lvl { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--turquoise); background: rgba(0, 255, 195, 0.08); border: 1px solid rgba(0, 255, 195, 0.3); padding: 3px 8px; border-radius: 6px; }
+        .card p.desc { margin-top: 8px; color: var(--text-soft); font-family: var(--font-body); font-size: 0.87rem; line-height: 1.62; }
+        .card ul.steps { margin: 10px 0 0 18px; color: var(--text-soft); font-family: var(--font-body); font-size: 0.85rem; line-height: 1.7; }
+        .card ul.steps li::marker { color: var(--primary); }
+        .card .formula {
+            margin-top: 12px; padding: 12px 14px; border-radius: 12px;
+            background: rgba(3, 6, 12, 0.75); border: 1px solid var(--border);
+            color: var(--primary); font-weight: 600; font-size: 0.98rem; overflow-x: auto; white-space: nowrap;
+            text-shadow: 0 0 10px rgba(var(--primary-rgb), 0.35);
         }
+        .card details { margin-top: 12px; }
+        .card summary { cursor: pointer; color: var(--primary); font-size: 0.85rem; font-weight: 600; list-style: none; }
+        .card summary::-webkit-details-marker { display: none; }
+        .card summary::before { content: '▸ '; }
+        .card details[open] summary::before { content: '▾ '; }
+        .card details .inside { margin-top: 10px; color: var(--text-soft); font-family: var(--font-body); font-size: 0.85rem; line-height: 1.7; border-left: 2px solid var(--primary); padding-left: 12px; }
 
-        .nav-link:hover,
-        .nav-link.active {
-            border-color: var(--math-glow);
-            color: var(--math-glow);
-            background: #131924;
+        /* fracciones CSS */
+        .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 4px; font-size: 0.9em; }
+        .frac > span:first-child { border-bottom: 1.5px solid currentColor; padding: 0 6px 1px; }
+        .frac > span:last-child { padding: 1px 6px 0; }
+        sup, sub { font-size: 0.72em; }
+
+        /* ---------- CALCULADORA PRODIGIO ---------- */
+        .calc-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media (min-width: 900px) { .calc-grid { grid-template-columns: 1.25fr 0.75fr; } }
+        .calc-panel { padding: 22px; }
+        .calc-display {
+            display: flex; flex-direction: column; gap: 4px;
+            background: rgba(3, 6, 12, 0.85); border: 1px solid var(--border); border-radius: 14px;
+            padding: 14px 16px; margin-bottom: 14px; box-shadow: inset 0 0 18px rgba(var(--primary-rgb), 0.05);
         }
-
-        .nav-link:hover i,
-        .nav-link.active i {
-            color: var(--math-glow);
+        .calc-history { color: var(--text-muted); font-size: 0.8rem; min-height: 1.1em; overflow-x: auto; white-space: nowrap; font-family: var(--font-body); }
+        .calc-out { color: var(--primary); font-size: clamp(1.5rem, 6vw, 2.1rem); font-weight: 700; letter-spacing: -0.02em; overflow-x: auto; white-space: nowrap; text-shadow: 0 0 14px rgba(var(--primary-rgb), 0.5); }
+        .calc-keys { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .key {
+            appearance: none; border: 1px solid var(--border); border-radius: 12px; cursor: pointer;
+            background: var(--interactive); color: var(--text-main);
+            font-family: var(--font-display); font-size: 1.02rem; font-weight: 600;
+            min-height: 50px; transition: var(--transition); -webkit-tap-highlight-color: transparent; user-select: none;
         }
-
-        .layout-grid {
-            display: grid;
-            grid-template-columns: 1fr 450px;
-            gap: 35px;
+        .key:hover { border-color: var(--primary); color: var(--primary); }
+        .key:active { transform: scale(0.94); }
+        .key.op { color: var(--turquoise); border-color: rgba(0, 255, 195, 0.3); }
+        .key.fn { font-size: 0.8rem; color: var(--text-soft); }
+        .key.eq {
+            grid-column: span 2; background: linear-gradient(135deg, var(--primary), var(--turquoise));
+            color: #03181c; border-color: var(--primary); font-weight: 700;
         }
+        .key.eq:hover { box-shadow: var(--glow); color: #03181c; }
+        .key.clr { color: #ff5d73; border-color: rgba(255, 93, 115, 0.35); }
+        .calc-note { margin-top: 12px; color: var(--text-muted); font-family: var(--font-body); font-size: 0.78rem; line-height: 1.6; }
 
-        @media (max-width: 1250px) {
-            .layout-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Solvers */
+        .solver label { display: block; font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; margin: 12px 0 6px; }
+        .solver input[type="number"], .solver select {
+            width: 100%; background: rgba(3, 6, 12, 0.8); border: 1px solid var(--border); border-radius: 10px;
+            color: var(--text-main); padding: 11px 12px; font-family: var(--font-body); font-size: 0.95rem; outline: none;
+            transition: var(--transition); -moz-appearance: textfield;
         }
-
-        .content-stream {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .card-node {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-line);
-            border-radius: 10px;
-            padding: 30px;
-        }
-
-        .card-node h2 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--math-glow);
-        }
-
-        .card-node h2 span {
-            font-size: 0.75rem;
-            background: #08090c;
-            padding: 5px 10px;
-            border-radius: 4px;
-            color: var(--text-muted);
-            border: 1px solid var(--border-line);
-        }
-
-        .card-node p {
-            color: #9ba4b4;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-        }
-
-        .math-render-block {
-            background: #050608;
-            border-radius: 6px;
-            padding: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 90px;
-            border: 1px solid var(--border-line);
-            overflow-x: auto;
-        }
-
-        .math-equation {
-            font-size: 1.25rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .math-fraction {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 0 6px;
-            vertical-align: middle;
-        }
-
-        .math-numerator {
-            border-bottom: 2px solid var(--text-primary);
-            padding-bottom: 2px;
-            width: 100%;
-        }
-
-        .math-denominator {
-            padding-top: 2px;
-            width: 100%;
-        }
-
-        .math-radical {
-            display: inline-flex;
-            align-items: center;
-            position: relative;
-            padding-left: 14px;
-        }
-
-        .math-radical::before {
-            content: "\f2ec";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            left: 0;
-            font-size: 1.15rem;
-            color: var(--text-primary);
-        }
-
-        .math-radical-content {
-            border-top: 2px solid var(--text-primary);
-            padding-top: 2px;
-            padding-left: 2px;
-        }
-
-        .sidebar-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .engine-calc {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-line);
-            border-radius: 10px;
-            padding: 25px;
-            position: sticky;
-            top: 30px;
-        }
-
-        .engine-tabs {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-line);
-            padding-bottom: 10px;
-        }
-
-        .tab-btn {
-            background: var(--bg-env);
-            border: 1px solid var(--border-line);
-            color: var(--text-muted);
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 600;
-            flex: 1;
-            text-align: center;
-        }
-
-        .tab-btn.active {
-            color: var(--math-glow);
-            border-color: var(--math-glow);
-            background: var(--bg-interactive);
-        }
-
-        .engine-calc h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .engine-calc h3 i {
-            color: var(--math-glow);
-        }
-
-        .calc-io {
-            width: 100%;
-            background-color: #050608;
-            border: 1px solid var(--border-line);
-            color: var(--text-primary);
-            font-family: monospace;
-            font-size: 1.5rem;
-            padding: 16px;
-            border-radius: 6px;
-            text-align: right;
-            outline: none;
-            margin-bottom: 15px;
-        }
-
-        .pad-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-
-        .pad-grid button {
-            background-color: var(--bg-interactive);
-            border: 1px solid transparent;
-            color: var(--text-primary);
-            padding: 14px 4px;
-            border-radius: 6px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.15s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .pad-grid button:hover {
-            background-color: #222838;
-        }
-
-        .pad-grid button.node-fn {
-            color: var(--math-glow);
-            background-color: #0c0f17;
-            border: 1px solid var(--border-line);
-            font-size: 0.85rem;
-        }
-
-        .pad-grid button.node-op {
-            color: var(--math-glow);
-            background-color: #131824;
-        }
-
-        .pad-grid button.node-clear {
-            color: #ff5555;
-            background-color: #221212;
-        }
-
-        .pad-grid button.node-eval {
-            grid-column: span 2;
-            background-color: var(--math-glow);
-            color: #08090c;
-            font-weight: 700;
-        }
-
-        .pad-grid button.node-eval:hover {
-            background-color: #5effff;
-        }
-
-        .solver-panel,
-        .converter-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .form-group select,
-        .form-group input {
-            background: #050608;
-            border: 1px solid var(--border-line);
-            padding: 10px;
-            border-radius: 6px;
-            color: var(--text-primary);
-            font-family: 'Space Grotesk', sans-serif;
-            outline: none;
-        }
-
-        .form-group select:focus,
-        .form-group input:focus {
-            border-color: var(--math-glow);
-        }
-
-        .inline-inputs {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .inline-inputs input {
-            width: 100%;
-            text-align: center;
-        }
-
-        .action-btn {
-            background: var(--math-glow);
-            color: #08090c;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Space Grotesk', sans-serif;
-            transition: opacity 0.2s;
-            margin-top: 5px;
-        }
-
-        .action-btn:hover {
-            opacity: 0.9;
-        }
-
+        .solver input:focus, .solver select:focus { border-color: var(--primary); box-shadow: 0 0 12px rgba(var(--primary-rgb), 0.2); }
+        .solver .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .solver-result {
-            background: #050608;
-            border: 1px solid var(--border-line);
-            padding: 12px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            color: var(--math-glow);
-            min-height: 40px;
-            white-space: pre-line;
+            margin-top: 14px; background: rgba(3, 6, 12, 0.85); border: 1px solid var(--border); border-radius: 12px;
+            padding: 12px 14px; color: var(--primary); font-weight: 600; font-size: 0.95rem; line-height: 1.6;
+            overflow-x: auto; min-height: 46px;
+        }
+        .solver-result small { display: block; color: var(--text-muted); font-family: var(--font-body); font-weight: 400; font-size: 0.78rem; margin-top: 4px; white-space: normal; }
+
+        /* ---------- TABLA DE SÍMBOLOS ---------- */
+        .symbols-table-wrap { overflow-x: auto; border-radius: 18px; border: 1px solid var(--border); background: var(--surface); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+        table.symbols { width: 100%; border-collapse: collapse; min-width: 640px; }
+        table.symbols th {
+            text-align: left; padding: 12px 16px; color: var(--primary); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+            background: rgba(var(--primary-rgb), 0.07); border-bottom: 1px solid var(--border); position: sticky; top: 0;
+        }
+        table.symbols td { padding: 11px 16px; border-bottom: 1px solid rgba(var(--primary-rgb), 0.07); font-family: var(--font-body); font-size: 0.86rem; color: var(--text-soft); vertical-align: top; }
+        table.symbols tr:last-child td { border-bottom: none; }
+        table.symbols tr:hover td { background: rgba(var(--primary-rgb), 0.05); }
+        table.symbols td.sym { font-size: 1.25rem; color: var(--primary); font-weight: 700; text-align: center; width: 64px; text-shadow: 0 0 10px rgba(var(--primary-rgb), 0.4); }
+        table.symbols td.name { color: var(--text-main); font-weight: 600; white-space: nowrap; }
+        table.symbols td.ex { white-space: nowrap; color: var(--turquoise); font-weight: 600; }
+
+        /* ---------- Easter egg 0÷0 ---------- */
+        .secret-zone { text-align: center; }
+        .secret-hint { color: var(--text-muted); font-family: var(--font-body); font-size: 0.85rem; margin-top: 10px; }
+        .secret-hint code { color: var(--primary); background: rgba(var(--primary-rgb), 0.08); padding: 2px 8px; border-radius: 6px; }
+        #games-vault { margin-top: 22px; display: none; }
+        #games-vault.unlocked { display: block; animation: vaultIn 0.5s ease both; }
+        @keyframes vaultIn { from { opacity: 0; transform: scale(0.96) translateY(10px); } to { opacity: 1; transform: none; } }
+        .vault-title { color: var(--turquoise); font-size: 1.15rem; margin-bottom: 4px; }
+        .vault-title i { animation: pulse 1.4s ease-in-out infinite; }
+        @keyframes pulse { 50% { opacity: 0.55; } }
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 12px; margin-top: 16px; }
+        .game-card {
+            display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-main);
+            background: rgba(3, 6, 12, 0.7); border: 1px solid rgba(var(--primary-rgb), 0.35); border-radius: 14px;
+            padding: 14px 16px; transition: var(--transition); font-weight: 600; font-size: 0.9rem; text-align: left;
+        }
+        .game-card i { color: var(--primary); font-size: 1.2rem; }
+        .game-card:hover { border-color: var(--primary); box-shadow: var(--glow); transform: translateY(-2px); color: var(--primary); }
+        .glitch { animation: glitch 0.4s steps(2, start) 3; }
+        @keyframes glitch { 25% { transform: translate(2px, -1px) skewX(6deg); } 50% { transform: translate(-2px, 1px); } 75% { transform: translate(1px, 2px) skewX(-6deg); } }
+
+        .hidden-post { display: none !important; }
+
+        /* toast propio */
+        #cc-toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 2147483100; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+        .cc-toast-item {
+            background: rgba(10, 14, 22, 0.94); border: 1px solid var(--primary); color: var(--text-main);
+            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            padding: 12px 22px; border-radius: 12px; font-family: var(--font-body); font-size: 0.88rem; font-weight: 600;
+            box-shadow: 0 0 18px rgba(var(--primary-rgb), 0.35); animation: vaultIn 0.25s ease both; max-width: 92vw; text-align: center;
         }
 
-        .status-bar {
-            margin-top: 15px;
-            font-family: monospace;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-line);
+        @media (max-width: 640px) {
+            nav.blocks { top: 63px; }
+            .calc-keys { grid-template-columns: repeat(4, 1fr); }
+            .key { min-height: 54px; }
+            .header-links .label { display: none; }
+            .header-links a { padding: 10px 12px; }
         }
-
-        .latent {
-            display: none !important;
-        }
-
-        sup {
-            font-size: 1em;
-            font-weight: inherit;
-            color: inherit;
-            position: relative;
-            bottom: 0.5em;
-            vertical-align: baseline;
-            line-height: 0;
-            margin-left: 2px;
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="workspace" id="quantum-dom">
-        <header>
-            <div class="brand-cluster">
-                <i class="fa-solid fa-calculator"></i>
-                <div class="brand-meta">
-                    <h1>Matesfaciles</h1>
-                    <span>Aprende Matemáticas sin Complicaciones</span>
+    <header class="site-header">
+        <a class="brand" href="/">
+            <img src="https://i.imgur.com/PPO7d2j.png" alt="Logo Cocacolalandia 27">
+            <b>COCACOLA<span class="v">LANDIA</span> <span class="v">27</span><small>Matemáticas Gamer</small></b>
+        </a>
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="post-search" placeholder="Buscar tema: ecuaciones, Pitágoras, derivadas…" aria-label="Buscar unidad temática" oninput="filterPosts()">
+        </div>
+        <div class="header-links">
+            <a href="/juegos"><i class="fa-solid fa-gamepad"></i> <span class="label">Juegos</span></a>
+            <a href="/chat"><i class="fa-solid fa-comment-dots"></i> <span class="label">Chat</span></a>
+        </div>
+    </header>
+
+    <nav class="blocks" aria-label="Bloques temáticos">
+        <button class="nav-btn active" data-target="todos" onclick="route('todos', this)"><i class="fa-solid fa-layer-group"></i> Todos</button>
+        <button class="nav-btn" data-target="bloque-numeros" onclick="route('bloque-numeros', this)"><i class="fa-solid fa-arrow-up-1-9"></i> Números</button>
+        <button class="nav-btn" data-target="bloque-algebra" onclick="route('bloque-algebra', this)"><i class="fa-solid fa-circle-nodes"></i> Álgebra</button>
+        <button class="nav-btn" data-target="bloque-geometria" onclick="route('bloque-geometria', this)"><i class="fa-solid fa-shapes"></i> Geometría</button>
+        <button class="nav-btn" data-target="bloque-funciones" onclick="route('bloque-funciones', this)"><i class="fa-solid fa-chart-line"></i> Funciones</button>
+        <button class="nav-btn" data-target="bloque-estadistica" onclick="route('bloque-estadistica', this)"><i class="fa-solid fa-chart-pie"></i> Estadística</button>
+        <button class="nav-btn" data-target="bloque-calculadora" onclick="route('bloque-calculadora', this)"><i class="fa-solid fa-calculator"></i> Calculadora</button>
+        <button class="nav-btn" data-target="bloque-simbolos" onclick="route('bloque-simbolos', this)"><i class="fa-solid fa-square-root-variable"></i> Símbolos</button>
+    </nav>
+
+    <main>
+
+        <!-- ==================== HERO ==================== -->
+        <section class="hero" id="top">
+            <h1>Matemáticas para <span class="accent">todos los cursos</span>, explicadas de verdad 🥤⚡</h1>
+            <p>Bienvenido a <strong>Cocacolalandia 27</strong>: la nueva edición glassmorphism gamer. Desde Primaria hasta Bachillerato y Universidad, con teoría clara, fórmulas, ejemplos resueltos, calculadoras interactivas y el glosario completo de símbolos matemáticos. Todo funciona sin conexión una vez cargada la página y está optimizado para el móvil.</p>
+            <div class="chips">
+                <span class="chip">📚 1º-2º ESO → 1º-2º BACH</span>
+                <span class="chip">🎓 Universidad</span>
+                <span class="chip">🧮 Calculadora científica</span>
+                <span class="chip">🔤 60+ símbolos</span>
+                <span class="chip">📱 Mobile-first</span>
+                <span class="chip">🍪 RGPD real</span>
+            </div>
+        </section>
+
+        <!-- ==================== BLOQUE I: NÚMEROS ==================== -->
+        <section class="block" id="bloque-numeros">
+            <div class="block-title"><i class="fa-solid fa-arrow-up-1-9"></i><h2>Bloque I · Números y Operaciones</h2></div>
+            <p class="block-sub">De los naturales a los complejos: clasificación, divisibilidad, potencias, raíces, logaritmos y cálculo mental. Cursos: 1º ESO → 2º Bachillerato.</p>
+            <div class="cards">
+                <article class="card post" data-keywords="naturales enteros racionales irracionales reales complejos conjuntos numericos">
+                    <h3>Los conjuntos numéricos <span class="lvl">1º-2º ESO → Univ.</span></h3>
+                    <p class="desc">Todo lo que cuentas cabe en una jerarquía de conjuntos: <strong>ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ ⊂ ℂ</strong>. Naturales ℕ = {0, 1, 2, …}; Enteros ℤ añaden los negativos; Racionales ℚ son todas las fracciones <span class="frac"><span>a</span><span>b</span></span> con b ≠ 0 (decimales exactos o periódicos); Irracionales ℝ∖ℚ no se pueden escribir como fracción (π, e, √2); y Complejos ℂ = a + bi resuelven lo que en ℝ no tiene solución, como x² + 1 = 0.</p>
+                    <div class="formula">√2 ∈ ℝ pero ∉ ℚ &nbsp;·&nbsp; i = √−1 ∈ ℂ</div>
+                    <details><summary>Ejemplo resuelto</summary><div class="inside">Clasifica: −5, 0,75, π, √9, 3i. −5 ∈ ℤ (no en ℕ); 0,75 = 3/4 ∈ ℚ; π es irracional; √9 = 3 ∈ ℕ; 3i solo existe en ℂ.</div></details>
+                </article>
+
+                <article class="card post" data-keywords="mcd mcm divisibilidad primos factorizacion criterio divisibilidad euclides">
+                    <h3>Divisibilidad, MCD y mcm <span class="lvl">1º-2º ESO</span></h3>
+                    <p class="desc">Un número es <strong>divisible</strong> por otro si el resto es 0. Criterios rápidos: por 2 si acaba en par; por 3 si la suma de cifras es múltiplo de 3; por 5 si acaba en 0 o 5; por 9 como el 3 pero con el 9; por 11 alternando signos de las cifras. Todo número compuesto se descompone en <strong>números primos</strong> de forma única (Teorema Fundamental de la Aritmética).</p>
+                    <ul class="steps">
+                        <li><strong>MCD</strong> (máximo común divisor): factores comunes al menor exponente → sirve para simplificar fracciones.</li>
+                        <li><strong>mcm</strong> (mínimo común múltiplo): factores comunes y no comunes al mayor exponente → para sumar fracciones.</li>
+                        <li>Relación: MCD(a, b) · mcm(a, b) = a · b.</li>
+                    </ul>
+                    <div class="formula">36 = 2²·3² ; 48 = 2⁴·3 → MCD = 12 ; mcm = 144</div>
+                </article>
+
+                <article class="card post" data-keywords="fraccion generatriz decimales periodico puro mixto exacto">
+                    <h3>Fracción generatriz y decimales <span class="lvl">3º-4º ESO</span></h3>
+                    <p class="desc">Todo decimal racional se convierte en fracción resolviendo una pequeña ecuación lineal. Exacto: 0,35 = 35/100 = 7/20. Periódico puro: el periodo va sobre 9 con tantas cifras como el periodo. Periódico mixto: tantos 9 como cifras del periodo seguidos de tantos 0 como cifras del anteperiodo.</p>
+                    <div class="formula">N = 2,3535… ⇒ 100N − N = 233 ⇒ N = <span class="frac"><span>233</span><span>99</span></span></div>
+                    <details><summary>Mixto: 0,1666…</summary><div class="inside">x = 0,1666… ⇒ 10x = 1,666… y 100x = 16,666… Restamos: 90x = 15 ⇒ x = 15/90 = <strong>1/6</strong>. Regla rápida: (anteperiodo+periodo − anteperiodo) / (9…90…0) = (16 − 1)/90.</div></details>
+                </article>
+
+                <article class="card post" data-keywords="potencias propiedades exponentes notacion cientifica">
+                    <h3>Potencias y notación científica <span class="lvl">1º ESO → 2º Bach</span></h3>
+                    <p class="desc">aⁿ significa multiplicar a por sí mismo n veces. Propiedades clave (con a, b ≠ 0):</p>
+                    <ul class="steps">
+                        <li>aᵐ · aⁿ = aᵐ⁺ⁿ &nbsp;·&nbsp; aᵐ / aⁿ = aᵐ⁻ⁿ &nbsp;·&nbsp; (aᵐ)ⁿ = aᵐ·ⁿ</li>
+                        <li>a⁰ = 1 &nbsp;·&nbsp; a⁻ⁿ = 1/aⁿ &nbsp;·&nbsp; a^(m/n) = ⁿ√(aᵐ)</li>
+                        <li>(a·b)ⁿ = aⁿ·bⁿ &nbsp;·&nbsp; (a/b)ⁿ = aⁿ/bⁿ</li>
+                    </ul>
+                    <div class="formula">La velocidad de la luz: 3·10⁸ m/s · un átomo: ~10⁻¹⁰ m</div>
+                </article>
+
+                <article class="card post" data-keywords="raices radicals racionalizar indice radicando propiedad">
+                    <h3>Radicales: raíces y racionalización <span class="lvl">3º ESO → 1º Bach</span></h3>
+                    <p class="desc">ⁿ√a es el número que elevado a n da a. El <strong>índice</strong> es n y el <strong>radicando</strong> a. Raíces de índice par solo existen en ℝ si a ≥ 0. Propiedades: ⁿ√(a·b) = ⁿ√a · ⁿ√b ; ⁿ√(a/b) = ⁿ√a / ⁿ√b ; (ⁿ√a)ᵐ = ⁿ√(aᵐ) = a^(m/n). Simplificar: saca fuera los factores con exponente ≥ al índice.</p>
+                    <div class="formula">√72 = √(36·2) = 6√2 &nbsp;·&nbsp; 3/(√2) = 3√2/2</div>
+                    <details><summary>Racionalizar con raíz en el denominador</summary><div class="inside">Multiplica numerador y denominador por la misma raíz: 5/(√3) = 5√3/3. Si es suma, usa el conjugado: 1/(√2+1) · (√2−1)/(√2−1) = √2−1.</div></details>
+                </article>
+
+                <article class="card post" data-keywords="logaritmos neperiano decimal propiedades log exp">
+                    <h3>Logaritmos y exponenciales <span class="lvl">4º ESO → 2º Bach</span></h3>
+                    <p class="desc">log_a(x) responde: ¿a qué exponente hay que elevar a para obtener x? Es la función inversa de aˣ. Se usan para medir escalas enormes: pH, decibelios, sismología, interés compuesto.</p>
+                    <ul class="steps">
+                        <li>log(xy) = log x + log y &nbsp;·&nbsp; log(x/y) = log x − log y</li>
+                        <li>log xⁿ = n·log x &nbsp;·&nbsp; log_a(a) = 1 ; log_a(1) = 0</li>
+                        <li>Cambio de base: log_a(x) = ln x / ln a</li>
+                    </ul>
+                    <div class="formula">ln(eˣ) = x &nbsp;·&nbsp; e^(ln 5) = 5 &nbsp;·&nbsp; log₂ 8 = 3</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ==================== BLOQUE II: ÁLGEBRA ==================== -->
+        <section class="block" id="bloque-algebra">
+            <div class="block-title"><i class="fa-solid fa-circle-nodes"></i><h2>Bloque II · Álgebra</h2></div>
+            <p class="block-sub">Del lenguaje algebraico a matrices: ecuaciones, sistemas, desigualdades y polinomios. Prueba el <strong>Solver Prodigio</strong> más abajo.</p>
+            <div class="cards">
+                <article class="card post" data-keywords="ecuaciones primer grado segundo grado formula general resolver">
+                    <h3>Ecuaciones de 1º y 2º grado <span class="lvl">1º ESO → 4º ESO</span></h3>
+                    <p class="desc">Una ecuación es una igualdad con incógnita. De 1er grado: se despeja pasando términos con la balanza invertida. De 2º grado (ax² + bx + c = 0), la fórmula universal:</p>
+                    <div class="formula">x = <span class="frac"><span>−b ± √(b² − 4ac)</span><span>2a</span></span></div>
+                    <ul class="steps">
+                        <li>Discriminante Δ = b² − 4ac: si Δ &gt; 0 dos soluciones reales; Δ = 0 una doble; Δ &lt; 0 ninguna en ℝ (dos complejas).</li>
+                        <li>Teorema de Vieta: x₁ + x₂ = −b/a ; x₁·x₂ = c/a.</li>
+                    </ul>
+                    <details><summary>Ejemplo: x² − 5x + 6 = 0</summary><div class="inside">a=1, b=−5, c=6 → Δ = 25 − 24 = 1 → x = (5 ± 1)/2 → <strong>x = 3 o x = 2</strong>. Comprobación: 3+2 = 5 ✓ y 3·2 = 6 ✓.</div></details>
+                </article>
+
+                <article class="card post" data-keywords="sistemas ecuaciones sustitucion igualacion reduccion gauss 2x2 3x3">
+                    <h3>Sistemas de ecuaciones lineales <span class="lvl">3º ESO → 1º Bach</span></h3>
+                    <p class="desc">Buscamos el punto (o recta/plano) común a varias rectas. Tres métodos clásicos en 2×2:</p>
+                    <ul class="steps">
+                        <li><strong>Sustitución:</strong> despeja una incógnita en una ecuación y sustitúyela en la otra.</li>
+                        <li><strong>Igualación:</strong> despeja la misma incógnita en ambas e iguala.</li>
+                        <li><strong>Reducción:</strong> multiplica para que los coeficientes de una incógnita sean opuestos y suma.</li>
+                    </ul>
+                    <div class="formula">x + y = 5 &amp; x − y = 1 → (S = {x=2, y=3})</div>
+                    En 3×3 se usa <strong>Gauss</strong> (triangularizar la matriz ampliada) o la regla de <strong>Cramer</strong> con determinantes. Un sistema puede ser compatible determinado (1 solución), indeterminado (infinitas) o incompatible (ninguna).
+                </article>
+
+                <article class="card post" data-keywords="polinomios productos notables horner ruffini division binomio">
+                    <h3>Polinomios y productos notables <span class="lvl">4º ESO → 1º Bach</span></h3>
+                    <p class="desc">Identidades que conviene memorizar porque aceleran todo el álgebra posterior:</p>
+                    <ul class="steps">
+                        <li>(a + b)² = a² + 2ab + b² &nbsp;·&nbsp; (a − b)² = a² − 2ab + b²</li>
+                        <li>(a + b)(a − b) = a² − b² &nbsp;·&nbsp; (a + b)³ = a³ + 3a²b + 3ab² + b³</li>
+                        <li>Regla de Ruffini divide P(x) entre (x − a); el resto es P(a) (teorema del resto) → factoriza probando raíces enteras divisores del término independiente.</li>
+                    </ul>
+                    <div class="formula">x² − 9 = (x + 3)(x − 3) &nbsp;·&nbsp; x² + 2x + 1 = (x + 1)²</div>
+                </article>
+
+                <article class="card post" data-keywords="desigualdades inecuaciones intervalos recta numerica valor absoluto">
+                    <h3>Inecuaciones e intervalos <span class="lvl">3º ESO → 2º Bach</span></h3>
+                    <p class="desc">Se resuelven como ecuaciones, pero <strong>al multiplicar o dividir por un negativo se invierte el signo</strong>. La solución es un intervalo, no un punto.</p>
+                    <div class="formula">−2x + 6 &gt; 0 ⇒ x &lt; 3 ⇒ (−∞, 3)</div>
+                    <details><summary>Notación de intervalos</summary><div class="inside">[a, b] incluye extremos; (a, b) los excluye; semirrectas: [a, +∞). Valor absoluto: |x| &lt; a ⇔ −a &lt; x &lt; a ; |x| &gt; a ⇔ x &lt; −a o x &gt; a. Cuadráticas: estudia el signo de la parábola respecto a sus raíces.</div></details>
+                </article>
+
+                <article class="card post" data-keywords="matrices determinantes inversa operaciones gaussianas bachillerato universidad">
+                    <h3>Matrices y determinantes <span class="lvl">2º Bach → Univ.</span></h3>
+                    <p class="desc">Una matriz es una tabla de números que representa transformaciones y sistemas. Se suman elemento a elemento; se multiplican fila por columna (solo si columnas(A) = filas(B)). El determinante det(A) mide el área/volumen escalado: A⁻¹ existe ⟺ det(A) ≠ 0.</p>
+                    <div class="formula">det <big>[</big> a b ; c d <big>]</big> = ad − bc</div>
+                    <details><summary>Ejemplo 2×2</summary><div class="inside">A = [2 1; 5 3] → det = 2·3 − 1·5 = 1 ≠ 0 → A⁻¹ = (1/1)·[3 −1; −5 2]. Con matrices se discuten sistemas por Rouché-Frobenius: compatible ⇔ rg(A) = rg(A*).</div></details>
+                </article>
+
+                <article class="card post" data-keywords="progresiones aritmetica geometrica sucesiones termino general suma">
+                    <h3>Progresiones y sucesiones <span class="lvl">4º ESO → 1º Bach</span></h3>
+                    <p class="desc"><strong>Aritmética</strong> (se suma d cada paso): aₙ = a₁ + (n−1)·d ; Sₙ = n·(a₁ + aₙ)/2. <strong>Geométrica</strong> (se multiplica por r): aₙ = a₁·rⁿ⁻¹ ; Sₙ = a₁(rⁿ − 1)/(r − 1). Si |r| &lt; 1, la suma infinita converge: S∞ = a₁/(1 − r).</p>
+                    <div class="formula">2, 6, 18, 54… (r = 3) &nbsp;·&nbsp; 1 + ½ + ¼ + … = 2</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ==================== BLOQUE III: GEOMETRÍA ==================== -->
+        <section class="block" id="bloque-geometria">
+            <div class="block-title"><i class="fa-solid fa-shapes"></i><h2>Bloque III · Geometría</h2></div>
+            <p class="block-sub">Plana, del espacio, analítica y trigonometría. Fórmulas de áreas/volúmenes, distancias y razones trigonométricas con ejemplos.</p>
+            <div class="cards">
+                <article class="card post" data-keywords="areas perimetros figuras planas triangulo circulo trapecio poligono">
+                    <h3>Áreas y perímetros (plana) <span class="lvl">1º-3º ESO</span></h3>
+                    <p class="desc">Las indispensables:</p>
+                    <ul class="steps">
+                        <li>Rectángulo: A = b·h · Cuadrado: A = l²</li>
+                        <li>Triángulo: A = (b·h)/2 · Equilátero: A = (√3/4)·l²</li>
+                        <li>Paralelogramo: A = b·h · Rombo: A = (D·d)/2 · Trapecio: A = ((B + b)·h)/2</li>
+                        <li>Círculo: A = πr² · Longitud L = 2πr · Sector: A = (πr²·α)/360°</li>
+                    </ul>
+                    <div class="formula">Pitágoras: a² + b² = c² → hipotenusa de catetos 3 y 4 = 5</div>
+                </article>
+
+                <article class="card post" data-keywords="volmenes cuerpos geometricos esfera cono cilindro prisma papiro">
+                    <h3>Volumen y superficie del espacio <span class="lvl">3º ESO → 1º Bach</span></h3>
+                    <p class="desc">Prisma y cilindro: V = A_base · h. Pirámide y cono: V = (A_base · h)/3. Esfera: V = (4/3)πr³ y S = 4πr². Principio de Cavalieri: cuerpos con la misma sección en cada altura tienen el mismo volumen.</p>
+                    <div class="formula">Cono r=3, h=4 → V = π·9·4/3 = 12π ≈ 37,7 u³</div>
+                    <details><summary>Teoremas de Pappus-Guldinus</summary><div class="inside">Al girar una figura alrededor de un eje exterior, el área/volumen generado = longitud/área de la figura × distancia recorrida por su centroide. Así se deduce el toro: V = 2πR·πr².</div></details>
+                </article>
+
+                <article class="card post" data-keywords="geometria analctica recta pendiente distancia punto recta circunferencia vector">
+                    <h3>Geometría analítica <span class="lvl">4º ESO → 2º Bach</span></h3>
+                    <p class="desc">Traducimos figuras a ecuaciones con coordenadas. Recta: punto-pendiente y = y₀ + m(x − x₀), con m = tan α. Distancia de punto a recta:</p>
+                    <div class="formula">d(P, r) = |Ax₀ + By₀ + C| / √(A² + B²)</div>
+                    <ul class="steps">
+                        <li>Paralelas: m₁ = m₂ · Perpendiculares: m₁·m₂ = −1</li>
+                        <li>Circunferencia: (x − a)² + (y − b)² = r²</li>
+                        <li>Vector v = (v₁, v₂), módulo |v| = √(v₁² + v₂²); producto escalar u·v = |u||v|cos θ.</li>
+                    </ul>
+                </article>
+
+                <article class="card post" data-keywords="trigonometria seno coseno tangente radianes identidades teorema senos cosenos">
+                    <h3>Trigonometría <span class="lvl">4º ESO → 2º Bach</span></h3>
+                    <p class="desc">En el triángulo rectángulo: sen = co/hip, cos = ca/hip, tg = sen/cos. Valores notables: sen 30° = 1/2, cos 60° = 1/2, tg 45° = 1. Una vuelta = 360° = 2π rad → π rad = 180°.</p>
+                    <div class="formula">sen²x + cos²x = 1 &nbsp;·&nbsp; tg x = sen x / cos x</div>
+                    <ul class="steps">
+                        <li>Suma: sen(a±b) = sen a·cos b ± cos a·sen b</li>
+                        <li>Doble ángulo: sen 2x = 2 sen x cos x ; cos 2x = cos²x − sen²x</li>
+                        <li>Resolución de triángulos: Teorema del seno a/sen A = b/sen B = c/sen C ; del coseno a² = b² + c² − 2bc·cos A.</li>
+                    </ul>
+                </article>
+
+                <article class="card post" data-keywords="vectores rectas plano espacio 3d producto vectorial bachillerato">
+                    <h3>Vectores y rectas en el espacio <span class="lvl">2º Bach</span></h3>
+                    <p class="desc">En ℝ³ usamos base i, j, k. Suma componente a componente; producto escalar u·v = u₁v₁+u₂v₂+u₃v₃ (0 ⇔ perpendiculares); producto vectorial u×v da un vector perpendicular a ambos con módulo = área del paralelogramo. Recta = punto + t·vector director; plano = punto + dos direcciones (normal n = u×v).</p>
+                    <div class="formula">Mixto (u, v, w) = u·(v×w) = det[u; v; w] → volumen</div>
+                </article>
+
+                <article class="card post" data-keywords="semejanza thales proporciones escala teorema">
+                    <h3>Semejanza, Thales y proporción áurea <span class="lvl">3º-4º ESO</span></h3>
+                    <p class="desc">Dos figuras son semejantes si conservan los ángulos y los lados están en proporción k. Entonces Área se multiplica por k² y el volumen por k³. Thales: rectas paralelas cortan a dos secantes en segmentos proporcionales. La razón áurea φ aparece en pentágonos y naturaleza:</p>
+                    <div class="formula">φ = (1 + √5)/2 ≈ 1,61803…</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ==================== BLOQUE IV: FUNCIONES ==================== -->
+        <section class="block" id="bloque-funciones">
+            <div class="block-title"><i class="fa-solid fa-chart-line"></i><h2>Bloque IV · Funciones y Cálculo</h2></div>
+            <p class="block-sub">Dominio, gráficas, límites, derivadas e integrales: del análisis básico de 4º ESO al cálculo de 2º Bachillerato y universidad.</p>
+            <div class="cards">
+                <article class="card post" data-keywords="funcion dominio recorrido imagen grafica tipos">
+                    <h3>Concepto de función y dominio <span class="lvl">4º ESO → 1º Bach</span></h3>
+                    <p class="desc">Una función f asigna a cada x del <strong>dominio</strong> un único y. Para hallar el dominio en ℝ: denominadores ≠ 0, raíces de índice par con radicando ≥ 0, logaritmos con argumento &gt; 0. Paridad: f(−x) = f(x) par (simétrica al eje Y); f(−x) = −f(x) impar (simétrica al origen).</p>
+                    <div class="formula">f(x) = √(x−3)/ln(x+1) → Dom = [3, +∞) ∖ {0}</div>
+                </article>
+
+                <article class="card post" data-keywords="recta parabola cuadratica funciones elementales exponencial logaritmica hiperbola">
+                    <h3>Funciones elementales <span class="lvl">4º ESO → 1º Bach</span></h3>
+                    <p class="desc">Familias que debes reconocer de memoria: lineal y = mx + n (recta, pendiente m); cuadrática y = ax² + bx + c (parábola, vértice en x = −b/2a); polinómica; racional (hipérbolas con asíntotas); exponencial y = aˣ (crecimiento explosivo); logarítmica y = ln x (su inversa); a trozos.</p>
+                    <div class="formula">Vértice de y = x² − 4x + 3 → x = 2, y = −1 → V(2, −1)</div>
+                </article>
+
+                <article class="card post" data-keywords="limites continuidad asintotas lateral lhopital indeterminacion">
+                    <h3>Límites y continuidad <span class="lvl">1º-2º Bach</span></h3>
+                    <p class="desc">lim f(x) describe hacia dónde tiende la función. Indeterminaciones típicas: 0/0, ∞/∞, ∞−∞, 0·∞ → se resuelven factorizando, racionalizando o con <strong>L'Hôpital</strong> (derivar arriba y abajo). f es continua en a si lim(x→a) f(x) = f(a). Asíntotas: vertical donde f → ±∞; horizontal si lim(x→±∞) f = k; oblicua y = mx + n con m = lim f/x.</p>
+                    <div class="formula">lim(x→2) (x² − 4)/(x − 2) = lim (x + 2) = 4</div>
+                </article>
+
+                <article class="card post" data-keywords="derivada reglas producto cadena optimizacion maxima minima">
+                    <h3>Derivadas: reglas y aplicación <span class="lvl">2º Bach → Univ.</span></h3>
+                    <p class="desc">f′(a) es la pendiente de la recta tangente en a: el ritmo de cambio. Tabla básica: (xⁿ)′ = nxⁿ⁻¹, (sen x)′ = cos x, (cos x)′ = −sen x, (eˣ)′ = eˣ, (ln x)′ = 1/x, (aˣ)′ = aˣ·ln a.</p>
+                    <ul class="steps">
+                        <li>Producto: (fg)′ = f′g + fg′ · Cociente: (f/g)′ = (f′g − fg′)/g²</li>
+                        <li>Cadena: (f∘g)′(x) = f′(g(x))·g′(x)</li>
+                        <li>Estudio: f′ &gt; 0 crece; máximos/mínimos donde f′ = 0 cambiando de signo; cóncavidad con f″.</li>
+                    </ul>
+                    <div class="formula">Recta tangente: y = f(a) + f′(a)(x − a)</div>
+                </article>
+
+                <article class="card post" data-keywords="integral primitiva area barrow regla fundamental calculo">
+                    <h3>Integrales y áreas <span class="lvl">2º Bach → Univ.</span></h3>
+                    <p class="desc">La integral es la operación inversa a derivar: acumula. Primitiva: ∫xⁿ dx = xⁿ⁺¹/(n+1) + C ; ∫1/x dx = ln|x| + C ; ∫eˣ dx = eˣ + C. El Teorema Fundamental del Cálculo conecta derivada e integral:</p>
+                    <div class="formula">∫ₐᵇ f(x) dx = F(b) − F(a) (Barrow) → área entre curvas</div>
+                    <details><summary>Métodos</summary><div class="inside">Sustitución (cambiar u = g(x)), integración por partes ∫u dv = uv − ∫v du, y fracciones parciales para racionales. Volumen de sólido de revolución: V = π∫ₐᵇ f(x)² dx.</div></details>
+                </article>
+
+                <article class="card post" data-keywords="sucesiones series convergencia limite infinity fibonacci">
+                    <h3>Sucesiones y series <span class="lvl">1º Bach → Univ.</span></h3>
+                    <p class="desc">Una sucesión aₙ converge a L si sus términos se acercan a L indefinidamente. Series notables: geométrica Σ arⁿ converge si |r| &lt; 1 (suma = a/(1−r)); armónica Σ 1/n diverge aunque sus términos → 0; Σ 1/n² = π²/6 (Basilea). Criterios: comparación, cociente (D'Alembert), raíz.</p>
+                    <div class="formula">Σ 1/2ⁿ = 1 &nbsp;·&nbsp; Fibonacci: Fₙ = Fₙ₋₁ + Fₙ₋₂ → Fₙ₊₁/Fₙ → φ</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ==================== BLOQUE V: ESTADÍSTICA ==================== -->
+        <section class="block" id="bloque-estadistica">
+            <div class="block-title"><i class="fa-solid fa-chart-pie"></i><h2>Bloque V · Estadística y Probabilidad</h2></div>
+            <p class="block-sub">Datos, medidas, azar, distribuciones y inferencia. Del 1º ESO al 2º Bachillerato (y selectividad).</p>
+            <div class="cards">
+                <article class="card post" data-keywords="medidas centralizacion dispersion media mediana moda desviacion varianza">
+                    <h3>Medidas de centralización y dispersión <span class="lvl">2º ESO → 2º Bach</span></h3>
+                    <p class="desc"><strong>Media</strong> x̄ = Σxᵢ/n · <strong>Mediana</strong>: valor central al ordenar · <strong>Moda**: el más repetido. Dispersión: rango = max − min; varianza s² = Σ(xᵢ − x̄)²/n; desviación típica s = √s². Coeficiente de variación CV = s/x̄ compara dispersiones relativas.</p>
+                    <div class="formula">Notas 5,7,7,8,8,8,9 → x̄ = 7,43 ; Me = 8 ; Mo = 8</div>
+                </article>
+
+                <article class="card post" data-keywords="probabilidad laplace regle multiplicacion condicionada total bayes">
+                    <h3>Probabilidad: Laplace, condicional y Bayes <span class="lvl">4º ESO → 2º Bach</span></h3>
+                    <p class="desc">Regla de Laplace: P(A) = casos favorables / casos posibles (equiprobables). Condicional: P(A|B) = P(A∩B)/P(B). Independientes: P(A∩B) = P(A)·P(B). Probabilidad total y <strong>Bayes</strong> (invertir condiciones):</p>
+                    <div class="formula">P(Aᵢ|B) = P(B|Aᵢ)·P(Aᵢ) / Σⱼ P(B|Aⱼ)·P(Aⱼ)</div>
+                    <details><summary>Ejemplo test médico</summary><div class="inside">Enfermedad 1% (P(E)=0,01); test + dado enfermo: 99%; test + dado sano: 5%. P(E|+) = 0,99·0,01 / (0,99·0,01 + 0,05·0,99) ≈ <strong>16,5%</strong>. Intuitivamente "positivo" no implica casi seguro: Bayes sorprende siempre.</div></details>
+                </article>
+
+                <article class="card post" data-keywords="combinatoria permutaciones variaciones combinaciones numero binomial pascal">
+                    <h3>Combinatoria <span class="lvl">1º Bach → Univ.</span></h3>
+                    <p class="desc">Contar sin listar: <strong>Permutaciones</strong> Pₙ = n! (orden importa, sin repetir). <strong>Variaciones</strong> Vₙ,ₖ = n!/(n−k)!. <strong>Combinaciones</strong> (sin orden): C(n,k) = n!/(k!(n−k)!). Con repetición: VRₙ,ₖ = nᵏ y CR(n,k) = C(n+k−1, k).</p>
+                    <div class="formula">Manos de póker: C(52,5) = 2.598.960</div>
+                </article>
+
+                <article class="card post" data-keywords="distribucion normal binomial poisson tipica tabla campana gauss">
+                    <h3>Distribuciones: binomial, Poisson y normal <span class="lvl">2º Bach</span></h3>
+                    <p class="desc">Binomial B(n, p): k éxitos en n ensayos independientes → P(k) = C(n,k)pᵏ(1−p)ⁿ⁻ᵏ, μ = np, σ² = np(1−p). Poisson P(λ): sucesos raros en un intervalo, μ = σ² = λ. Normal N(μ, σ): campana de Gauss; se estandariza con Z = (X − μ)/σ y se lee en la tabla típica. Regla 68-95-99,7.</p>
+                    <div class="formula">P(X ≤ x) = Φ((x − μ)/σ)</div>
+                </article>
+
+                <article class="card post" data-keywords="muestreo intervalo confianza hipotesis contraste nivel significacion error">
+                    <h3>Inferencia: muestreo e intervalos de confianza <span class="lvl">2º Bach</span></h3>
+                    <p class="desc">Estimamos la media poblacional μ con la media muestral x̄. Intervalo de confianza (nivel 1−α, σ conocido):</p>
+                    <div class="formula">IC = x̄ ± z_(α/2) · σ/√n</div>
+                    Para el 95%, z = 1,96. Contrastar hipótesis: H₀ frente a H₁, estadístico crítico, región de rechazo y errores tipo I (rechazar siendo cierta) y II (aceptar siendo falsa). El p-valor: probabilidad de observar algo tan extremo si H₀ fuese cierta.</p>
+                </article>
+
+                <article class="card post" data-keywords="tabla frecuencias histograma diagrama percentiles cuartiles datos agrupados">
+                    <h3>Tablas de frecuencia y gráficos <span class="lvl">1º-4º ESO</span></h3>
+                    <p class="desc">Frecuencia absoluta fᵢ (repeticiones), relativa fᵢ/N, acumuladas Fᵢ y Fi. Con datos agrupados en intervalos: marca de clase xᵢ = extremo medio; la media pondera por fᵢ. Gráficos: barras (categórica), histograma (continua, áreas proporcionales), sectorial (porcentajes), box-plot (cuartiles Q₁, Q₂, Q₃ y bigotes).</p>
+                    <div class="formula">Percentil Pₖ: valor que deja a su izquierda el k% de datos</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ==================== CALCULADORA PRODIGIO ==================== -->
+        <section class="block" id="bloque-calculadora">
+            <div class="block-title"><i class="fa-solid fa-calculator"></i><h2>Calculadora Prodigio · Solver Interactivo</h2></div>
+            <p class="block-sub">Motor propio, sin librerías externas: evalúa con prioridad correcta, funciones científicas, paréntesis anidados… y guarda tu identidad anónima. Pruébala también con <code style="color:var(--primary)">sqrt(9)+2^3</code>.</p>
+
+            <div class="calc-grid">
+                <div class="card calc-panel">
+                    <div class="calc-display">
+                        <div class="calc-history" id="calc-history">&nbsp;</div>
+                        <output class="calc-out" id="calc-output" aria-live="polite">0</output>
+                    </div>
+                    <div class="calc-keys" id="calc-keys">
+                        <button class="key fn" data-k="sin(">sen</button>
+                        <button class="key fn" data-k="cos(">cos</button>
+                        <button class="key fn" data-k="tan(">tan</button>
+                        <button class="key fn" data-k="sqrt(">@root</button>
+                        <button class="key fn" data-k="pi">π</button>
+
+                        <button class="key fn" data-k="ln(">ln</button>
+                        <button class="key fn" data-k="log(">log</button>
+                        <button class="key fn" data-k="^">xʸ</button>
+                        <button class="key fn" data-k="e">e</button>
+                        <button class="key fn" data-k="abs(">|x|</button>
+
+                        <button class="key fn" data-k="(">(</button>
+                        <button class="key fn" data-k=")">)</button>
+                        <button class="key clr" data-k="back">DEL</button>
+                        <button class="key clr" data-k="clear">AC</button>
+                        <button class="key op" data-k="%">%</button>
+
+                        <button class="key" data-k="7">7</button>
+                        <button class="key" data-k="8">8</button>
+                        <button class="key" data-k="9">9</button>
+                        <button class="key op" data-k="/">÷</button>
+                        <button class="key fn" data-k="!">n!</button>
+
+                        <button class="key" data-k="4">4</button>
+                        <button class="key" data-k="5">5</button>
+                        <button class="key" data-k="6">6</button>
+                        <button class="key op" data-k="*">×</button>
+                        <button class="key fn" data-k=",">,</button>
+
+                        <button class="key" data-k="1">1</button>
+                        <button class="key" data-k="2">2</button>
+                        <button class="key" data-k="3">3</button>
+                        <button class="key op" data-k="-">−</button>
+                        <button class="key eq" data-k="=" rowspan="2">=</button>
+
+                        <button class="key" data-k="0">0</button>
+                        <button class="key" data-k=".">.</button>
+                        <button class="key op" data-k="+">+</button>
+                        <button class="key fn" data-k="ans">ANS</button>
+                    </div>
+                    <p class="calc-note">⌨️ También puedes escribir con el teclado físico (Enter = igual, Escape simple borra línea). Las comas separan argumentos de funciones. <strong>ANS</strong> reutiliza el último resultado.</p>
+                </div>
+
+                <div class="calc-panel card solver">
+                    <h3 style="margin-bottom:4px;"><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--primary)"></i> Solvers de curso</h3>
+                    <p class="desc" style="margin-bottom:2px;">Ecuación de 2º grado, conversor de unidades y generatriz de decimales.</p>
+
+                    <label for="qa">Ecuación: ax² + bx + c = 0</label>
+                    <div class="two">
+                        <input type="number" id="qa" value="1" step="any" oninput="solveQuadratic()" aria-label="Coeficiente a">
+                        <input type="number" id="qb" value="-5" step="any" oninput="solveQuadratic()" aria-label="Coeficiente b">
+                    </div>
+                    <input type="number" id="qc" value="6" step="any" oninput="solveQuadratic()" style="margin-top:10px;" aria-label="Coeficiente c">
+                    <div class="solver-result" id="qout">—</div>
+
+                    <label for="conv-type">Conversor métrico</label>
+                    <select id="conv-type" onchange="populateUnits()">
+                        <option value="length">Longitud</option>
+                        <option value="capacity">Capacidad</option>
+                        <option value="volume">Volumen</option>
+                        <option value="mass">Masa</option>
+                    </select>
+                    <div class="two" style="margin-top:10px;">
+                        <input type="number" id="convert-value" value="1" step="any" oninput="executeUnitConversion()" aria-label="Cantidad">
+                        <select id="convert-from" onchange="executeUnitConversion()" aria-label="Unidad de origen"></select>
+                    </div>
+                    <select id="convert-to" onchange="executeUnitConversion()" style="margin-top:10px;" aria-label="Unidad de destino"></select>
+                    <div class="solver-result" id="conversion-output">1</div>
+
+                    <label for="gen-input">Fracción generatriz (ej.: 2,(35) o 0,1(6))</label>
+                    <input type="text" id="gen-input" value="2,(35)" oninput="generatrix()" aria-label="Decimal periódico">
+                    <div class="solver-result" id="gen-output">—</div>
                 </div>
             </div>
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="post-search" placeholder="Buscar unidad temática..." oninput="filterPosts()">
-            </div>
-        </header>
 
-        <nav>
-            <button class="nav-link active" onclick="route('num')"><i class="fa-solid fa-arrow-up-1-9"></i> Bloque I: Números</button>
-            <button class="nav-link" onclick="route('alg')"><i class="fa-solid fa-circle-nodes"></i> Bloque II: Álgebra</button>
-            <button class="nav-link" onclick="route('geom')"><i class="fa-solid fa-shapes"></i> Bloque III: Geometría</button>
-            <button class="nav-link" onclick="route('func')"><i class="fa-solid fa-chart-line"></i> Bloque IV: Funciones</button>
-            <button class="nav-link" onclick="route('est')"><i class="fa-solid fa-chart-pie"></i> Bloque V: Estadística y Azar</button>
-        </nav>
-
-        <main class="layout-grid">
-            <div class="content-stream" id="viewport-axis">
-
-                <!-- BLOQUE I: NÚMEROS -->
-                <div class="vector-set" id="group-num">
-                    <div class="card-node">
-                        <h2>Fracción Generatriz y Tipos de Decimales <span>Unidad 1.1</span></h2>
-                        <p>Clasificación de números decimales en exactos, periódicos puros y mixtos. Algoritmia exacta para la obtención de la fracción irreducible o generatriz de cualquier expresión decimal racional mediante sistemas algebraicos lineales de base diez.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>N = 2,3535... &rArr; 100N - N = 235,35... - 2,35... &rArr; 99N = 233 &rArr; N = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">233</span>
-                                    <span class="math-denominator">99</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>El Conjunto de los Números Reales <span>Unidad 1.2</span></h2>
-                        <p>Estructura de la recta real. Representación y ordenación de números racionales e irracionales. Construcción e intercalación de fracciones y representación exacta de raíces cuadradas mediante la aplicación iterada del Teorema de Pitágoras.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>&reals; = &rationals; &cup; &irrationals; &rArr; 1 < </span>
-                                        <div class="math-radical"><span class="math-radical-content">2</span></div>
-                                        <span>
-                                            < 1,5 < </span>
-                                                <div class="math-radical"><span class="math-radical-content">3</span></div>
-                                                <span>
-                                                    < 2</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>Potencias y Radicales de Operación <span>Unidad 1.3</span></h2>
-                        <p>Propiedades estructurales de las potencias de exponente entero y fraccionario. Expresión de radicales como potencias y operaciones fundamentales: simplificación, extracción de factores, multiplicación y división de radicales de distinto índice mediante reducción a índice común.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <div class="math-radical"><span class="math-radical-content">a³</span></div>
-                                <span style="margin: 0 10px;">&middot;</span>
-                                <sup>3</sup>
-                                <div class="math-radical"><span class="math-radical-content">a²</span></div>
-                                <span style="margin: 0 10px;">=</span>
-                                a<sup>
-                                    <div class="math-fraction"><span class="math-numerator">3</span><span class="math-denominator">2</span></div>
-                                </sup>
-                                <span style="margin: 0 10px;">&middot;</span>
-                                a<sup>
-                                    <div class="math-fraction"><span class="math-numerator">2</span><span class="math-denominator">3</span></div>
-                                </sup>
-                                <span style="margin: 0 10px;">=</span>
-                                a<sup>
-                                    <div class="math-fraction"><span class="math-numerator">13</span><span class="math-denominator">6</span></div>
-                                </sup>
-                                <span style="margin: 0 10px;">=</span>
-                                a² &middot; <sup>6</sup>
-                                <div class="math-radical"><span class="math-radical-content">a</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>Notación Científica, Intervalos y Errores <span>Unidad 1.4</span></h2>
-                        <p>Representación de cantidades extremas mediante potencias de base diez. Operaciones aritméticas estrictas en notación científica. Teoría de aproximaciones, cálculo del error absoluto y relativo acotado. Representación formal de intervalos numéricos abiertos, cerrados y semiabiertos.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>(3,2 &middot; 10⁴) &times; (2,0 &middot; 10<sup>-6</sup>) = 6,4 &middot; 10<sup>-2</sup></span>
-                                <span style="margin-left: 20px;">; E<sub>r</sub> = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">|V<sub>r</sub> - V<sub>a</sub>|</span>
-                                    <span class="math-denominator">V<sub>r</sub></span>
-                                </div>
-                                <span style="margin-left: 20px;">; x &isin; [2, 5)</span>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Easter egg: 0÷0 -->
+            <div class="card calc-panel secret-zone" style="margin-top:18px;">
+                <h3><i class="fa-solid fa-user-secret" style="color:var(--turquoise)"></i> Zona clasificada 🕵️</h3>
+                <p class="desc">Cuentan las leyendas que dividir <strong>cero entre cero</strong> abre una puerta secreta… ¿Te atreves?</p>
+                <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
+                    <input type="number" id="secret-a" value="0" step="any" aria-label="Primer número" style="width:110px;background:rgba(3,6,12,.8);border:1px solid var(--border);border-radius:10px;color:var(--text-main);padding:11px;font-family:var(--font-body);font-size:1rem;text-align:center;">
+                    <span style="align-self:center;color:var(--primary);font-weight:700;">÷</span>
+                    <input type="number" id="secret-b" value="0" step="any" aria-label="Segundo número" style="width:110px;background:rgba(3,6,12,.8);border:1px solid var(--border);border-radius:10px;color:var(--text-main);padding:11px;font-family:var(--font-body);font-size:1rem;text-align:center;">
+                    <button class="key op" style="min-width:120px;" onclick="trySecretVault()">CALCULAR</button>
                 </div>
+                <p class="secret-hint">Matemáticamente, 0 ÷ 0 es una <strong>indeterminación</strong>… pero aquí pasa otra cosa 😉</p>
 
-                <!-- BLOQUE II: ÁLGEBRA -->
-                <div class="vector-set latent" id="group-alg">
-                    <div class="card-node">
-                        <h2>Polinomios e Identidades Notables <span>Unidad 2.1</span></h2>
-                        <p>Expresiones algebraicas complejas. Suma, resta y multiplicación de polinomios de una o más variables. Aplicación estricta de las identidades notables cuadráticas: cuadrado de una suma, cuadrado de una diferencia y producto de una suma por su diferencia.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>(2x + 3)² = 4x² + 12x + 9</span>
-                                <span style="margin-left: 25px;">;</span>
-                                <span style="margin-left: 25px;">(x + 5)(x - 5) = x² - 25</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>Regla de Ruffini, Teorema del Resto y Factorización <span>Unidad 2.2</span></h2>
-                        <p>División sintética de polinomios por binomios lineales de la forma (x &plusmn; a) mediante la Regla de Ruffini. Determinación analítica de las raíces de un polinomio empleando el Teorema del Resto. Factorización sistemática mediante extracción de factor común y búsqueda de raíces enteras.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>P(x) = x³ - 6x² + 11x - 6 = (x - 1)(x - 2)(x - 3) &rArr; P(1) = 0</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>Ecuaciones de Primer, Segundo y Tercer Grado <span>Unidad 2.3</span></h2>
-                        <p>Resolución de ecuaciones lineales complejas con denominadores. Ecuaciones cuadráticas completas e incompletas analizadas según su discriminante. Introducción práctica a la resolución de ecuaciones de tercer grado factorizables con raíces enteras y ecuaciones bicuadradas exponenciales.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>ax² + bx + c = 0 &rArr; x = </span>
-                                <div class="math-fraction">
-                                    <span class="math-numerator">-b &plusmn; <div class="math-radical"><span class="math-radical-content">b² - 4ac</span></div></span>
-                                    <span class="math-denominator">2a</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>Sistemas de Ecuaciones Lineales y No Lineales <span>Unidad 2.4</span></h2>
-                        <p>Resolución algebraica y representación gráfica de sistemas lineales de dos ecuaciones con dos incógnitas por los métodos de sustitución, igualación y reducción. Clasificación dimensional (SCD, SCI, SI). Resolución de sistemas no lineales sencillos (intersección recta-parábola o productos inversos).</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span style="font-size: 2rem; margin-right: 5px;">{</span>
-                                <div style="display: flex; flex-direction: column; text-align: left; margin-right: 15px;">
-                                    <span>x + y = 5</span>
-                                    <span>x &middot; y = 6</span>
-                                </div>
-                                <span>&rArr; x² - 5x + 6 = 0 &rArr; Soluciones: (2,3) y (3,2)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BLOQUE III: GEOMETRÍA -->
-                <div class="vector-set latent" id="group-geom">
-                    <div class="card-node">
-                        <h2>Semejanza, Escalas y Teorema de Tales <span>Unidad 3.1</span></h2>
-                        <p>Figuras semejantes y determinación de la razón de semejanza. Aplicación técnica de escalas numéricas y gráficas en planos y mapas de ingeniería. Proporcionalidad geométrica en el plano basada en el Teorema de Tales y criterios de semejanza de triángulos.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <div class="math-fraction"><span class="math-numerator">AB</span><span class="math-denominator">A'B'</span></div>
-                                <span>=</span>
-                                <div class="math-fraction"><span class="math-numerator">BC</span><span class="math-denominator">B'C'</span></div>
-                                <span>= k</span>
-                                <span style="margin-left: 25px;">;</span>
-                                <span style="margin-left: 25px;">Razón Áreas = k²</span>
-                                <span style="margin-left: 25px;">;</span>
-                                <span style="margin-left: 25px;">Razón Volúmenes = k³</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>Cuerpos Geométricos: Áreas y Volúmenes del Espacio <span>Unidad 3.2</span></h2>
-                        <p>Clasificación y propiedades de poliedros regulares (Sólidos Platónicos), prismas rectos y pirámides. Estudio analítico perimetral de cuerpos de revolución: cilindro, cono y esfera. Cálculo sistemático de áreas superficiales y volúmenes combinados aplicando el teorema de Pitágoras en el espacio tridimensional.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>A<sub>total cono</sub> = &pi;r² + &pi;rg</span>
-                                <span style="margin-left: 25px;">;</span>
-                                <span>V<sub>esfera</sub> = </span>
-                                <div class="math-fraction"><span class="math-numerator">4</span><span class="math-denominator">3</span></div>
-                                <span>&pi;r³</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>Introducción a la Trigonometría Básica <span>Unidad 3.3</span></h2>
-                        <p>Relaciones métricas angulares en triángulos rectángulos. Definición formal de las razones trigonométricas directas de un ángulo agudo: seno, coseno y tangente. Aplicación de las identidades fundamentales para la resolución de distancias inaccesibles en topografía plana.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>sen²(&alpha;) + cos²(&alpha;) = 1</span>
-                                <span style="margin-left: 25px;">;</span>
-                                <span>tg(&alpha;) = </span>
-                                <div class="math-fraction"><span class="math-numerator">sen(&alpha;)</span><span class="math-denominator">cos(&alpha;)</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BLOQUE IV: FUNCIONES -->
-                <div class="vector-set latent" id="group-func">
-                    <div class="card-node">
-                        <h2>Propiedades Globales de las Funciones <span>Unidad 4.1</span></h2>
-                        <p>Concepto analítico de función y correspondencia variable. Interpretación cualitativa de gráficas cartesianas: determinación del dominio y recorrido, continuidad lineal, puntos de corte con los ejes de coordenadas, intervalos de crecimiento y decrecimiento, y localización de máximos y mínimos relativos.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>f(x) = </span>
-                                <div class="math-fraction"><span class="math-numerator">1</span><span class="math-denominator">x - 2</span></div>
-                                <span> &rArr; Dom(f) = &reals; - {2}</span>
-                                <span style="margin-left: 20px;">; Corte Y &rArr; (0, -0.5)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>Funciones Lineales, Constantes y Afines <span>Unidad 4.2</span></h2>
-                        <p>Estudio de los modelos elementales de tasa de cambio constante. Ecuación explícita de la recta. Significado geométrico de la pendiente (m) y de la ordenada en el origen (n). Representación a partir de tablas y obtención de la ecuación lineal dados dos puntos de paso mediante vectores directores.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>y = mx + n</span>
-                                <span style="margin-left: 25px;">; m = </span>
-                                <div class="math-fraction"><span class="math-numerator">y₂ - y₁</span><span class="math-denominator">x₂ - x₁</span></div>
-                                <span style="margin-left: 25px;">; n = f(0)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>Funciones Cuadráticas y Parábolas <span>Unidad 4.3</span></h2>
-                        <p>Modelización cuadrática y representación gráfica de parábolas. Análisis estructural de la función polinómica de segundo grado. Cálculo geométrico del vértice de giro, determinación del eje de simetría vertical y orientación de las ramas según el signo algebraico del coeficiente principal.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>f(x) = ax² + bx + c &rArr; X<sub>vértice</sub> = </span>
-                                <div class="math-fraction"><span class="math-numerator">-b</span><span class="math-denominator">2a</span></div>
-                                <span style="margin-left: 20px;">; Y<sub>vértice</sub> = f(X<sub>v</sub>)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BLOQUE V: ESTADÍSTICA Y AZAR -->
-                <div class="vector-set latent" id="group-est">
-                    <div class="card-node">
-                        <h2>Estadística Descriptiva y Parámetros Analíticos <span>Unidad 5.1</span></h2>
-                        <p>Población y muestra. Clasificación de variables estadísticas en cualitativas y cuantitativas (discretas o continuas). Elaboración de tablas de frecuencias con intervalos de clase. Gráficos de distribución (diagramas de barras, sectores e histogramas). Cálculo analítico de parámetros de centralización (media, moda, mediana) y dispersión (rango, varianza, desviación típica).</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>Media (x) = </span>
-                                <div class="math-fraction"><span class="math-numerator">&sum;(f<sub>i</sub>&middot;x<sub>i</sub>)</span><span class="math-denominator">N</span></div>
-                                <span style="margin-left: 20px;">; Desviación Típica (&sigma;) = </span>
-                                <div class="math-radical">
-                                    <span class="math-radical-content">
-                                        <div class="math-fraction"><span class="math-numerator">&sum;(f<sub>i</sub>&middot;x<sub>i</sub>²)</span><span class="math-denominator">N</span></div> - x²
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-node">
-                        <h2>Cálculo de Probabilidades y Regla de Laplace <span>Unidad 5.2</span></h2>
-                        <p>Fenómenos deterministas y aleatorios. Espacio muestral, operaciones con sucesos (unión, intersección y complementarios). Concepto frecuencial de la probabilidad. Formulación estricta de la Regla de Laplace para espacios equiprobables cerrados y construcción analítica de diagramas de árbol combinatorios.</p>
-                        <div class="math-render-block">
-                            <div class="math-equation">
-                                <span>P(A) = </span>
-                                <div class="math-fraction"><span class="math-numerator">Nº de Casos Favorables al suceso A</span><span class="math-denominator">Nº Total de Casos Posibles Cómodos</span></div>
-                                <span style="margin-left: 20px;">; P(A) = 1 - P(A)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- LATERAL DISPOSITIVOS INGENIERÍA -->
-            <div class="sidebar-panel">
-                <div class="engine-calc">
-                    <div class="engine-tabs">
-                        <button class="tab-btn active" onclick="switchEngine('sci')">Científica</button>
-                        <button class="tab-btn" onclick="switchEngine('solve')">Resolutor</button>
-                        <button class="tab-btn" onclick="switchEngine('convert')">Conversor</button>
-                    </div>
-
-                    <!-- SUBMÓDULO 1: CALCULADORA CIENTÍFICA -->
-                    <div id="engine-sci-core">
-                        <h3><i class="fa-solid fa-microchip"></i> MathEngine Sci v5.5</h3>
-                        <input type="text" class="calc-io" id="matrix-io" value="0" readonly autocomplete="off">
-
-                        <div class="pad-grid">
-                            <button class="node-fn" onclick="pushOp('sin')">sin</button>
-                            <button class="node-fn" onclick="pushOp('cos')">cos</button>
-                            <button class="node-fn" onclick="pushOp('tan')">tan</button>
-                            <button class="node-clear" onclick="flushIO()">C</button>
-
-                            <button class="node-fn" onclick="pushOp('asin')">asin</button>
-                            <button class="node-fn" onclick="pushOp('acos')">acos</button>
-                            <button class="node-fn" onclick="pushOp('atan')">atan</button>
-                            <button class="node-op" onclick="pushStr('(')">(</button>
-
-                            <button class="node-fn" onclick="pushOp('log')">log</button>
-                            <button class="node-fn" onclick="pushOp('ln')">ln</button>
-                            <button class="node-fn" onclick="pushOp('exp')">e<sup>x</sup></button>
-                            <button class="node-op" onclick="pushStr(')')">)</button>
-
-                            <button class="node-fn" onclick="pushOp('sqrt')">&radic;</button>
-                            <button class="node-fn" onclick="pushOp('^')">x<sup>y</sup></button>
-                            <button class="node-fn" onclick="pushOp('pi')">&pi;</button>
-                            <button class="node-op" onclick="pushStr('/')">&divide;</button>
-
-                            <button onclick="pushStr('7')">7</button>
-                            <button onclick="pushStr('8')">8</button>
-                            <button onclick="pushStr('9')">9</button>
-                            <button class="node-op" onclick="pushStr('*')">&times;</button>
-
-                            <button onclick="pushStr('4')">4</button>
-                            <button onclick="pushStr('5')">5</button>
-                            <button onclick="pushStr('6')">6</button>
-                            <button class="node-op" onclick="pushStr('-')">&minus;</button>
-
-                            <button onclick="pushStr('1')">1</button>
-                            <button onclick="pushStr('2')">2</button>
-                            <button onclick="pushStr('3')">3</button>
-                            <button class="node-op" onclick="pushStr('+')">+</button>
-
-                            <button onclick="pushStr('0')">0</button>
-                            <button onclick="pushStr('.')">.</button>
-                            <button style="grid-column: span 2; background-color: #211616; color: #ff5555;" onclick="backspace()"><i class="fa-solid fa-backward"></i></button>
-                            <button class="node-eval" onclick="resolveMatrix()">&equals;</button>
-                        </div>
-                    </div>
-
-                    <!-- SUBMÓDULO 2: RESOLUTOR DE ECUACIONES -->
-                    <div id="engine-solve-core" class="latent solver-panel">
-                        <h3><i class="fa-solid fa-square-root-variable"></i> Resolutor de Sistemas y Ecuaciones</h3>
-                        <div class="form-group">
-                            <label for="solve-mode">Tipo de Operación Algebraica</label>
-                            <select id="solve-mode" onchange="toggleSolverInputs()">
-                                <option value="deg1">Ecuación 1º Grado (ax + b = 0)</option>
-                                <option value="deg2">Ecuación 2º Grado (ax² + bx + c = 0)</option>
-                                <option value="deg3">Ecuación 3º Grado (ax³ + bx² + cx + d = 0)</option>
-                                <option value="sys2x2">Sistema Lineal 2x2</option>
-                                <option value="sysnonlin">Sistema No Lineal (x²+y²=r², ax+by=c)</option>
-                            </select>
-                        </div>
-
-                        <div id="solver-inputs-container">
-                            <!-- Inyección dinámica de campos -->
-                        </div>
-
-                        <button class="action-btn" onclick="executeAlgebraicSolver()">Calcular Solución Exacta</button>
-                        <div class="form-group" style="margin-top:5px;">
-                            <label>Raíces Vectoriales Obtenidas</label>
-                            <div class="solver-result" id="solver-output">Esperando parámetros numéricos...</div>
-                        </div>
-                    </div>
-
-                    <!-- SUBMÓDULO 3: CONVERSOR DE UNIDADES -->
-                    <div id="engine-convert-core" class="latent converter-panel">
-                        <h3><i class="fa-solid fa-arrow-right-arrows-left"></i> Conversor de Magnitudes Física-Métrica</h3>
-                        <div class="form-group">
-                            <label for="convert-type">Magnitud Dimensional</label>
-                            <select id="convert-type" onchange="populateUnits()">
-                                <option value="length">Longitud / Distancia</option>
-                                <option value="capacity">Capacidad / Fluidos</option>
-                                <option value="volume">Volumen Espacial</option>
-                                <option value="mass">Masa / Peso Corporal</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="convert-value">Cantidad de Entrada</label>
-                            <input type="number" id="convert-value" value="1" oninput="executeUnitConversion()">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="convert-from">Unidad Origen</label>
-                            <select id="convert-from" onchange="executeUnitConversion()"></select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="convert-to">Unidad Destino Exigida</label>
-                            <select id="convert-to" onchange="executeUnitConversion()"></select>
-                        </div>
-
-                        <div class="form-group" style="margin-top:10px;">
-                            <label>Resultado de Equivalencia Métrica</label>
-                            <div class="solver-result" id="conversion-output" style="font-size:1.2rem; display:flex; align-items:center; justify-content:center;">1</div>
-                        </div>
-                    </div>
-
-                    <div class="status-bar">
-                        <span><i class="fa-solid fa-circle"></i> CORE_STABLE</span>
-                        <span id="hex-telemetry">SYS_ALIVE</span>
+                <div id="games-vault" aria-live="polite">
+                    <h4 class="vault-title"><i class="fa-solid fa-unlock-keyhole"></i> ¡VAULT DESBLOQUEADO! Acceso total a los juegos</h4>
+                    <p class="desc" style="max-width:60ch;margin-inline:auto;">Has demostrado que las leyes de la aritmética no te asustan. Aquí tienes el arsenal completo de <strong>Cocacolalandia 27</strong>:</p>
+                    <div class="games-grid">
+                        <a class="game-card" href="/juegos"><i class="fa-solid fa-gamepad"></i> Arcade completo</a>
+                        <a class="game-card" href="/juegos?search=mario"><i class="fa-solid fa-plumber fa-gamepad"></i> Super Mario Bros</a>
+                        <a class="game-card" href="/juegos?search=snake"><i class="fa-solid fa-snake fa-staff-snake"></i> Snake Neón</a>
+                        <a class="game-card" href="/juegos?search=tetris"><i class="fa-solid fa-cubes"></i> Tetris Cyber</a>
+                        <a class="game-card" href="/juegos?search=pacman"><i class="fa-regular fa-circle-dot"></i> Pac-Man</a>
+                        <a class="game-card" href="/juegos?search=flappy"><i class="fa-solid fa-dove"></i> Flappy Bird</a>
+                        <a class="game-card" href="/juegos?search=sudoku"><i class="fa-solid fa-table-cells"></i> Sudoku</a>
+                        <a class="game-card" href="/juegos?search=2048"><i class="fa-solid fa-hashtag"></i> 2048</a>
+                        <a class="game-card" href="/juegos?search=clicker"><i class="fa-solid fa-hand-pointer"></i> Mistery Clickerly</a>
+                        <a class="game-card" href="/chat"><i class="fa-solid fa-comment-dots"></i> Chat + mini-juegos (/ppt, /tresenraya)</a>
+                        <a class="game-card" href="/juegos?search=bus"><i class="fa-solid fa-bus"></i> Fireball</a>
+                        <a class="game-card" href="/juegos?search=temple"><i class="fa-solid fa-temple fa-mountain-sun"></i> Temple Run 2</a>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
+        </section>
+
+        <!-- ==================== GLOSARIO DE SÍMBOLOS ==================== -->
+        <section class="block" id="bloque-simbolos">
+            <div class="block-title"><i class="fa-solid fa-square-root-variable"></i><h2>Glosario universal de símbolos</h2></div>
+            <p class="block-sub">Todos los símbolos que verás en esta web (y en tus exámenes), leídos en voz alta y con ejemplo.</p>
+            <div class="symbols-table-wrap">
+                <table class="symbols" id="symbols-table">
+                    <thead><tr><th>Símbolo</th><th>Nombre</th><th>Se lee</th><th>Ejemplo</th></tr></thead>
+                    <tbody>
+                        <tr><td class="sym">+</td><td class="name">Suma</td><td>«más»</td><td class="ex">2 + 3 = 5</td></tr>
+                        <tr><td class="sym">−</td><td class="name">Resta</td><td>«menos»</td><td class="ex">7 − 4 = 3</td></tr>
+                        <tr><td class="sym">×</td><td class="name">Multiplicación</td><td>«por»</td><td class="ex">3 × 4 = 12</td></tr>
+                        <tr><td class="sym">÷ · /</td><td class="name">División</td><td>«entre» / «dividido por»</td><td class="ex">10 ÷ 2 = 5</td></tr>
+                        <tr><td class="sym">=</td><td class="name">Igualdad</td><td>«igual a»</td><td class="ex">2 + 2 = 4</td></tr>
+                        <tr><td class="sym">≠</td><td class="name">Desigualdad</td><td>«distinto de»</td><td class="ex">5 ≠ 3</td></tr>
+                        <tr><td class="sym">&lt;</td><td class="name">Menor que</td><td>«menor que»</td><td class="ex">3 &lt; 7</td></tr>
+                        <tr><td class="sym">&gt;</td><td class="name">Mayor que</td><td>«mayor que»</td><td class="ex">9 &gt; 2</td></tr>
+                        <tr><td class="sym">≤</td><td class="name">Menor o igual</td><td>«menor o igual que»</td><td class="ex">x ≤ 5</td></tr>
+                        <tr><td class="sym">≥</td><td class="name">Mayor o igual</td><td>«mayor o igual que»</td><td class="ex">x ≥ 0</td></tr>
+                        <tr><td class="sym">≈</td><td class="name">Aproximación</td><td>«aproximadamente»</td><td class="ex">π ≈ 3,1416</td></tr>
+                        <tr><td class="sym">∝</td><td class="name">Proporcional</td><td>«proporcional a»</td><td class="ex">F ∝ a</td></tr>
+                        <tr><td class="sym">±</td><td class="name">Más o menos</td><td>«más o menos»</td><td class="ex">x = ±3</td></tr>
+                        <tr><td class="sym">∓</td><td class="name">Menos o más</td><td>«signo contrario»</td><td class="ex">a ± b ∓ c</td></tr>
+                        <tr><td class="sym">√</td><td class="name">Raíz cuadrada</td><td>«raíz de»</td><td class="ex">√16 = 4</td></tr>
+                        <tr><td class="sym">ⁿ√</td><td class="name">Raíz n-ésima</td><td>«raíz cúbica/enésima»</td><td class="ex">³√27 = 3</td></tr>
+                        <tr><td class="sym">xⁿ</td><td class="name">Potencia</td><td>«elevado a n»</td><td class="ex">2⁵ = 32</td></tr>
+                        <tr><td class="sym">x⁻¹</td><td class="name">Exponente negativo</td><td>«inverso de»</td><td class="ex">2⁻¹ = ½</td></tr>
+                        <tr><td class="sym">%</td><td class="name">Porcentaje</td><td>«por ciento»</td><td class="ex">20% de 50 = 10</td></tr>
+                        <tr><td class="sym">‰</td><td class="name">Por mil</td><td>«por mil»</td><td class="ex">5‰ = 0,005</td></tr>
+                        <tr><td class="sym">∞</td><td class="name">Infinito</td><td>«infinito»</td><td class="ex">1/0⁺ → +∞</td></tr>
+                        <tr><td class="sym">π</td><td class="name">Pi</td><td>«pi»</td><td class="ex">C = 2πr</td></tr>
+                        <tr><td class="sym">e</td><td class="name">Número de Euler</td><td>«e»</td><td class="ex">e ≈ 2,71828</td></tr>
+                        <tr><td class="sym">φ</td><td class="name">Phi (razón áurea)</td><td>«phi»</td><td class="ex">φ ≈ 1,618</td></tr>
+                        <tr><td class="sym">i</td><td class="name">Unidad imaginaria</td><td>«i»</td><td class="ex">i² = −1</td></tr>
+                        <tr><td class="sym">Σ</td><td class="name">Sumatorio</td><td>«sumatorio de i=1 a n»</td><td class="ex">Σ i = n(n+1)/2</td></tr>
+                        <tr><td class="sym">Π</td><td class="name">Productorio</td><td>«productorio»</td><td class="ex">Π k = n!</td></tr>
+                        <tr><td class="sym">∫</td><td class="name">Integral</td><td>«integral de»</td><td class="ex">∫x dx = x²/2</td></tr>
+                        <tr><td class="sym">∂</td><td class="name">Derivada parcial</td><td>«partial de»</td><td class="ex">∂f/∂x</td></tr>
+                        <tr><td class="sym">∇</td><td class="name">Nabla / gradiente</td><td>«nabla»</td><td class="ex">∇f</td></tr>
+                        <tr><td class="sym">dx</td><td class="name">Diferencial</td><td>«de equis»</td><td class="ex">∫f(x)dx</td></tr>
+                        <tr><td class="sym">Δ</td><td class="name">Delta / incremento</td><td>«delta»</td><td class="ex">Δy = y₂ − y₁</td></tr>
+                        <tr><td class="sym">δ</td><td class="name">Delta minúscula / Dirac</td><td>«delta»</td><td class="ex">δ(x)</td></tr>
+                        <tr><td class="sym">θ</td><td class="name">Theta (ángulo)</td><td>«theta»</td><td class="ex">θ = 45°</td></tr>
+                        <tr><td class="sym">α β γ</td><td class="name">Alfa beta gamma</td><td>ángulos/parámetros</td><td class="ex">α + β + γ = 180°</td></tr>
+                        <tr><td class="sym">λ</td><td class="name">Lambda</td><td>«lambda»</td><td class="ex">Poisson P(λ)</td></tr>
+                        <tr><td class="sym">μ</td><td class="name">Mu (media)</td><td>«mu»</td><td class="ex">μ = 170 cm</td></tr>
+                        <tr><td class="sym">σ τ</td><td class="name">Sigma / tau</td><td>«sigma», desviación / tiempo</td><td class="ex">σ = 2,3</td></tr>
+                        <tr><td class="sym">ω Ω</td><td class="name">Omega</td><td>«omega»</td><td class="ex">Ω = resistencia</td></tr>
+                        <tr><td class="sym">ℕ</td><td class="name">Naturales</td><td>«ene»</td><td class="ex">3 ∈ ℕ</td></tr>
+                        <tr><td class="sym">ℤ</td><td class="name">Enteros</td><td>«zeta»</td><td class="ex">−2 ∈ ℤ</td></tr>
+                        <tr><td class="sym">ℚ</td><td class="name">Racionales</td><td>«q»</td><td class="ex">½ ∈ ℚ</td></tr>
+                        <tr><td class="sym">ℝ</td><td class="name">Reales</td><td>«erre»</td><td class="ex">π ∈ ℝ</td></tr>
+                        <tr><td class="sym">ℂ</td><td class="name">Complejos</td><td>«ce»</td><td class="ex">2 + 3i ∈ ℂ</td></tr>
+                        <tr><td class="sym">∈</td><td class="name">Pertenece</td><td>«elemento de»</td><td class="ex">5 ∈ ℕ</td></tr>
+                        <tr><td class="sym">⊂ ⊆</td><td class="name">Subconjunto</td><td>«está contenido en»</td><td class="ex">ℕ ⊆ ℤ</td></tr>
+                        <tr><td class="sym">∪ ∩</td><td class="name">Unión / intersección</td><td>«unión», «intersección»</td><td class="ex">(0,2) ∪ (1,3)</td></tr>
+                        <tr><td class="sym">∅</td><td class="name">Conjunto vacío</td><td>«vacío»</td><td class="ex">{x: x²&lt;0} = ∅</td></tr>
+                        <tr><td class="sym">∀</td><td class="name">Para todo</td><td>«para todo»</td><td class="ex">∀x ∈ ℝ, x² ≥ 0</td></tr>
+                        <tr><td class="sym">∃</td><td class="name">Existe</td><td>«existe»</td><td class="ex">∃x: x² = 4</td></tr>
+                        <tr><td class="sym">∄</td><td class="name">No existe</td><td>«no existe»</td><td class="ex">∄x ∈ ℝ: x² = −1</td></tr>
+                        <tr><td class="sym">⇒ ⇔</td><td class="name">Implica / equivale</td><td>«implica», «sii»</td><td class="ex">x=2 ⇒ x²=4</td></tr>
+                        <tr><td class="sym">¬ ∧ ∨</td><td class="name">Lógica: no, y, o</td><td>«no», «y», «o»</td><td class="ex">p ∧ ¬q</td></tr>
+                        <tr><td class="sym">|x|</td><td class="name">Valor absoluto</td><td>«modulo de x»</td><td class="ex">|−7| = 7</td></tr>
+                        <tr><td class="sym">n!</td><td class="name">Factorial</td><td>«ene factorial»</td><td class="ex">5! = 120</td></tr>
+                        <tr><td class="sym">C(n,k)</td><td class="name">Combinatorio</td><td>«n sobre k»</td><td class="ex">C(5,2) = 10</td></tr>
+                        <tr><td class="sym">deg / °</td><td class="name">Grados</td><td>«grados»</td><td class="ex">90° = π/2 rad</td></tr>
+                        <tr><td class="sym">∠</td><td class="name">Ángulo</td><td>«ángulo»</td><td class="ex">∠ABC = 60°</td></tr>
+                        <tr><td class="sym">⊥ ∥</td><td class="name">Perpendicular / paralelo</td><td>«perpendicular», «paralelo»</td><td class="ex">a ⊥ b ; r ∥ s</td></tr>
+                        <tr><td class="sym">≅ ∼</td><td class="name">Congruente / semejante</td><td>«congruente», «semejante»</td><td class="ex">△ABC ≅ △DEF</td></tr>
+                        <tr><td class="sym">∴ ∵</td><td class="name">Por tanto / porque</td><td>«luego», «ya que»</td><td class="ex">∴ x = 2</td></tr>
+                        <tr><td class="sym">≡</td><td class="name">Idéntico / congruencia</td><td>«equivalente módulo»</td><td class="ex">7 ≡ 2 (mod 5)</td></tr>
+                        <tr><td class="sym">~</td><td class="name">Tilde / distribución</td><td>«distribuido como»</td><td class="ex">X ~ N(0,1)</td></tr>
+                        <tr><td class="sym">P(A)</td><td class="name">Probabilidad</td><td>«pe de A»</td><td class="ex">P(A) = 0,25</td></tr>
+                        <tr><td class="sym">x̄</td><td class="name">Media muestral</td><td>«equis barra»</td><td class="ex">x̄ = 7,4</td></tr>
+                        <tr><td class="sym">⌈ ⌉ ⌊ ⌋</td><td class="name">Suelo / techo</td><td>«parte entera»</td><td class="ex">⌊3,7⌋ = 3</td></tr>
+                        <tr><td class="sym">∮ ⊕ ⊗</td><td class="name">Curva / suma directa / producto</td><td>«integral de línea», etc.</td><td class="ex">∮ F·dr</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="cc-toast"></div>
+
     <script>
-        (function() {
-            // Definición de los dominios de origen (X) y destino definitivo (Y)
-            var urlX = "matesfaciles.github.io";
-            var urlY = "matesfaciles.pages.dev";
+        /* =========================================================
+           COCACOLALANDIA 27 · MOTOR MATEMÁTICO (todo local, sin CDN)
+           ========================================================= */
+        'use strict';
 
-            try {
-                // 1. Control de Iframe: Si el código está incrustado o camuflado en un marco externo
-                if (window.self !== window.top) {
-                    // Rompe el iframe y redirige la barra de navegación principal a la URL definitiva
-                    window.top.location.replace("https://" + urlY);
-                    return;
-                }
-
-                // 2. Control de URL en la barra de direcciones actual
-                var hostActual = window.location.hostname;
-
-                // Si el host actual coincide con X, o si no es ni X ni Y (un entorno extraño), redirige a Y
-                if (hostActual === urlX || (hostActual !== urlX && hostActual !== urlY)) {
-                    window.location.replace("https://" + urlY + window.location.pathname + window.location.search);
-                }
-            } catch (e) {
-                // Plan de contingencia si las directivas de seguridad CORS del navegador bloquean la lectura de window.top
-                window.top.location.replace("https://" + urlY);
-            }
-        })();
-    </script>
-    <script>
-        let rawTokens = [];
-        let displayTokens = [];
-
-        function route(target) {
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.querySelectorAll('.vector-set').forEach(v => v.classList.add('latent'));
-            event.currentTarget.classList.add('active');
-            document.getElementById('group-' + target).classList.remove('latent');
-            document.getElementById('post-search').value = '';
-            filterPosts();
-        }
-
-        function filterPosts() {
-            let query = document.getElementById('post-search').value.toLowerCase().trim();
-            let activeSet = document.querySelector('.vector-set:not(.latent)');
-            let cards = activeSet.querySelectorAll('.card-node');
-
-            cards.forEach(card => {
-                let text = card.innerText.toLowerCase();
-                if (text.includes(query)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        function switchEngine(type) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-
-            document.getElementById('engine-sci-core').classList.add('latent');
-            document.getElementById('engine-solve-core').classList.add('latent');
-            document.getElementById('engine-convert-core').classList.add('latent');
-
-            if (type === 'sci') document.getElementById('engine-sci-core').classList.remove('latent');
-            if (type === 'solve') {
-                document.getElementById('engine-solve-core').classList.remove('latent');
-                toggleSolverInputs();
-            }
-            if (type === 'convert') {
-                document.getElementById('engine-convert-core').classList.remove('latent');
-                populateUnits();
-            }
-        }
-
-        function syncDisplay() {
-            const io = document.getElementById('matrix-io');
-            if (displayTokens.length === 0) {
-                io.value = "0";
-            } else {
-                io.value = displayTokens.join("");
-            }
-        }
-
-        function pushStr(char) {
-            let view = char;
-            if (char === '*') view = '×';
-            if (char === '/') view = '÷';
-            rawTokens.push(char);
-            displayTokens.push(view);
-            syncDisplay();
-        }
-
-        function pushOp(type) {
-            const mappings = {
-                'sin': ['Math.sin(', 'sin('],
-                'cos': ['Math.cos(', 'cos('],
-                'tan': ['Math.tan(', 'tan('],
-                'asin': ['Math.asin(', 'asin('],
-                'acos': ['Math.acos(', 'acos('],
-                'atan': ['Math.atan(', 'atan('],
-                'log': ['Math.log10(', 'log('],
-                'ln': ['Math.log(', 'ln('],
-                'exp': ['Math.exp(', 'exp('],
-                'sqrt': ['Math.sqrt(', '合理√('],
-                '^': ['**', '^'],
-                'pi': ['Math.PI', 'π']
-            };
-            if (type === 'sqrt') {
-                rawTokens.push('Math.sqrt(');
-                displayTokens.push('√(');
-            } else if (mappings[type]) {
-                rawTokens.push(mappings[type][0]);
-                displayTokens.push(mappings[type][1]);
-            }
-            syncDisplay();
-        }
-
-        function flushIO() {
-            rawTokens = [];
-            displayTokens = [];
-            syncDisplay();
-            document.getElementById('hex-telemetry').innerText = 'SYS_ALIVE';
-        }
-
-        function backspace() {
-            rawTokens.pop();
-            displayTokens.pop();
-            syncDisplay();
-        }
-
-        function resolveMatrix() {
-            const telemetry = document.getElementById('hex-telemetry');
-            const io = document.getElementById('matrix-io');
-            let expr = rawTokens.join("").replace(/\s+/g, '');
-            let dispExpr = displayTokens.join("").replace(/\s+/g, '');
-
-            if (dispExpr === '√(0/0)' || expr === 'Math.sqrt(0/0)' || expr === '0/0') {
-                telemetry.innerText = 'PTR_RESOLVE';
-                document.body.style.margin = '0';
-                document.body.style.padding = '0';
-                document.body.style.width = '100vw';
-                document.body.style.height = '100vh';
-                document.body.style.overflow = 'hidden';
-                const rootDOM = document.getElementById('quantum-dom');
-                if (rootDOM) rootDOM.style.display = 'none';
-
-                const sandbox = document.createElement('iframe');
-                sandbox.src = 'juegos.html';
-                sandbox.style.position = 'fixed';
-                sandbox.style.top = '0';
-                sandbox.style.left = '0';
-                sandbox.style.width = '100vw';
-                sandbox.style.height = '100vh';
-                sandbox.style.zIndex = '99999999';
-                sandbox.style.border = 'none';
-                sandbox.style.display = 'block';
-                sandbox.style.overflow = 'auto';
-                document.body.appendChild(sandbox);
+        /* ---------- navegación por bloques ---------- */
+        function route(id, btn) {
+            document.querySelectorAll('.nav-btn').forEach(function (b) { b.classList.remove('active'); });
+            if (btn) btn.classList.add('active');
+            if (id === 'todos') {
+                document.querySelectorAll('section.block').forEach(function (s) { s.style.display = ''; });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
-
-            try {
-                let res = eval(expr);
-                if (isNaN(res) || res === Infinity || res === -Infinity) {
-                    io.value = 'Indeterminado';
-                    telemetry.innerText = 'IND_REACHED';
-                    rawTokens = [];
-                    displayTokens = [];
-                } else {
-                    res = Number(res.toFixed(6));
-                    io.value = res;
-                    rawTokens = [res.toString()];
-                    displayTokens = [res.toString()];
-                    telemetry.innerText = 'MATH_OK';
-                }
-            } catch (e) {
-                io.value = 'Error Sintaxis';
-                telemetry.innerText = 'SYNTAX_ERR';
-                rawTokens = [];
-                displayTokens = [];
-            }
+            document.querySelectorAll('section.block').forEach(function (s) { s.style.display = (s.id === id) ? '' : 'none'; });
+            var target = document.getElementById(id);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        /* MOTOR DE SOLUCIÓN ALGEBRAICA (SISTEMAS Y ECUACIONES) */
-        function toggleSolverInputs() {
-            const mode = document.getElementById('solve-mode').value;
-            const container = document.getElementById('solver-inputs-container');
-            let html = '';
-
-            if (mode === 'deg1') {
-                html = `<div class="inline-inputs"><input type="number" id="sc_a" placeholder="a"><span>x +</span><input type="number" id="sc_b" placeholder="b"><span>= 0</span></div>`;
-            } else if (mode === 'deg2') {
-                html = `<div class="inline-inputs"><input type="number" id="sc_a" placeholder="a"><span>x² +</span><input type="number" id="sc_b" placeholder="b"><span>x +</span><input type="number" id="sc_c" placeholder="c"><span>= 0</span></div>`;
-            } else if (mode === 'deg3') {
-                html = `<div class="inline-inputs"><input type="number" id="sc_a" placeholder="a" value="1"><span>x³ +</span><input type="number" id="sc_b" placeholder="b"><span>x² +</span><input type="number" id="sc_c" placeholder="c"><span>x +</span><input type="number" id="sc_d" placeholder="d"><span>= 0</span></div>`;
-            } else if (mode === 'sys2x2') {
-                html = `<div style="display:flex; flex-direction:column; gap:8px;">
-                    <div class="inline-inputs"><span>E1:</span><input type="number" id="sys_a1" placeholder="a1"><span>x +</span><input type="number" id="sys_b1" placeholder="b1"><span>y =</span><input type="number" id="sys_c1" placeholder="c1"></div>
-                    <div class="inline-inputs"><span>E2:</span><input type="number" id="sys_a2" placeholder="a2"><span>x +</span><input type="number" id="sys_b2" placeholder="b2"><span>y =</span><input type="number" id="sys_c2" placeholder="c2"></div>
-                </div>`;
-            } else if (mode === 'sysnonlin') {
-                html = `<div style="display:flex; flex-direction:column; gap:8px;">
-                    <div class="inline-inputs"><span>E1: x² + y² =</span><input type="number" id="snl_r2" placeholder="r²" value="25"></div>
-                    <div class="inline-inputs"><span>E2: y = x +</span><input type="number" id="snl_k" placeholder="k" value="-1"></div>
-                </div>`;
-            }
-            container.innerHTML = html;
-        }
-
-        function executeAlgebraicSolver() {
-            const mode = document.getElementById('solve-mode').value;
-            const output = document.getElementById('solver-output');
-
-            try {
-                if (mode === 'deg1') {
-                    let a = parseFloat(document.getElementById('sc_a').value || 0);
-                    let b = parseFloat(document.getElementById('sc_b').value || 0);
-                    if (a === 0) return output.innerText = b === 0 ? "Infinitas Soluciones" : "Sin Solución";
-                    output.innerText = `x = ${Number((-b/a).toFixed(4))}`;
-                } else if (mode === 'deg2') {
-                    let a = parseFloat(document.getElementById('sc_a').value || 0);
-                    let b = parseFloat(document.getElementById('sc_b').value || 0);
-                    let c = parseFloat(document.getElementById('sc_c').value || 0);
-                    if (a === 0) return output.innerText = `Ecuación lineal: x = ${-c/b}`;
-                    let disc = b * b - 4 * a * c;
-                    if (disc < 0) {
-                        let real = (-b / (2 * a)).toFixed(2);
-                        let img = (Math.sqrt(-disc) / (2 * a)).toFixed(2);
-                        output.innerText = `x₁ = ${real} + ${img}i\nx₂ = ${real} - ${img}i`;
-                    } else if (disc === 0) {
-                        output.innerText = `x₁ = x₂ = ${(-b / (2*a)).toFixed(4)} (Doble)`;
-                    } else {
-                        output.innerText = `x₁ = ${((-b + Math.sqrt(disc)) / (2*a)).toFixed(4)}\nx₂ = ${((-b - Math.sqrt(disc)) / (2*a)).toFixed(4)}`;
-                    }
-                } else if (mode === 'deg3') {
-                    let a = parseFloat(document.getElementById('sc_a').value || 1);
-                    let b = parseFloat(document.getElementById('sc_b').value || 0);
-                    let c = parseFloat(document.getElementById('sc_c').value || 0);
-                    let d = parseFloat(document.getElementById('sc_d').value || 0);
-                    let roots = [];
-                    for (let x = -100; x <= 100; x++) {
-                        if (Math.abs(a * x * x * x + b * x * x + c * x + d) < 0.0001) {
-                            if (!roots.includes(x)) roots.push(x);
-                        }
-                    }
-                    if (roots.length > 0) output.innerText = roots.map((r, i) => `x${i+1} = ${r}`).join('\n');
-                    else output.innerText = "Raíces racionales fuera de rango standard o complejas.";
-                } else if (mode === 'sys2x2') {
-                    let a1 = parseFloat(document.getElementById('sys_a1').value || 0);
-                    let b1 = parseFloat(document.getElementById('sys_b1').value || 0);
-                    let c1 = parseFloat(document.getElementById('sys_c1').value || 0);
-                    let a2 = parseFloat(document.getElementById('sys_a2').value || 0);
-                    let b2 = parseFloat(document.getElementById('sys_b2').value || 0);
-                    let c2 = parseFloat(document.getElementById('sys_c2').value || 0);
-                    let det = a1 * b2 - b1 * a2;
-                    if (det === 0) return output.innerText = "Sistema Indeterminado o Incompatible";
-                    let x = (c1 * b2 - b1 * c2) / det;
-                    let y = (a1 * c2 - c1 * a2) / det;
-                    output.innerText = `x = ${x.toFixed(4)}\ny = ${y.toFixed(4)}`;
-                } else if (mode === 'sysnonlin') {
-                    let r2 = parseFloat(document.getElementById('snl_r2').value || 0);
-                    let k = parseFloat(document.getElementById('snl_k').value || 0);
-                    let a = 2,
-                        b = 2 * k,
-                        c = k * k - r2;
-                    let disc = b * b - 4 * a * c;
-                    if (disc < 0) return output.innerText = "Sin intersecciones reales.";
-                    let x1 = (-b + Math.sqrt(disc)) / (2 * a);
-                    let x2 = (-b - Math.sqrt(disc)) / (2 * a);
-                    output.innerText = `Solución A:\nx = ${x1.toFixed(2)}, y = ${(x1 + k).toFixed(2)}\n\nSolución B:\nx = ${x2.toFixed(2)}, y = ${(x2 + k).toFixed(2)}`;
-                }
-            } catch (err) {
-                output.innerText = "Error en cálculo paramétrico.";
-            }
-        }
-
-        /* MOTOR DE CONVERSIÓN DE UNIDADES */
-        const unitDatabase = {
-            length: {
-                m: 1,
-                km: 1000,
-                cm: 0.01,
-                mm: 0.001,
-                mi: 1609.34,
-                ft: 0.3048
-            },
-            capacity: {
-                l: 1,
-                ml: 0.001,
-                cl: 0.01,
-                dal: 10,
-                hl: 100,
-                gal: 3.78541
-            },
-            volume: {
-                m3: 1,
-                cm3: 0.000001,
-                dm3: 0.001,
-                mm3: 1e-9,
-                lit_eq: 0.001
-            },
-            mass: {
-                kg: 1,
-                g: 0.001,
-                mg: 0.000001,
-                lb: 0.453592,
-                oz: 0.0283495
-            }
-        };
-
-        function populateUnits() {
-            const type = document.getElementById('convert-type').value;
-            const fromSel = document.getElementById('convert-from');
-            const toSel = document.getElementById('convert-to');
-            const units = Object.keys(unitDatabase[type]);
-
-            fromSel.innerHTML = '';
-            toSel.innerHTML = '';
-            units.forEach(u => {
-                fromSel.innerHTML += `<option value="${u}">${u}</option>`;
-                toSel.innerHTML += `<option value="${u}">${u}</option>`;
+        /* ---------- buscador de unidades ---------- */
+        function filterPosts() {
+            var q = document.getElementById('post-search').value.trim().toLowerCase();
+            document.querySelectorAll('.post').forEach(function (card) {
+                var hay = (card.textContent + ' ' + (card.dataset.keywords || '')).toLowerCase();
+                card.classList.toggle('hidden-post', q !== '' && !hay.includes(q));
             });
-            if (toSel.options[1]) toSel.selectedIndex = 1;
+            // si la búsqueda coincide con símbolos, mostrar también la tabla
+            if (q) {
+                document.querySelectorAll('section.block').forEach(function (s) { s.style.display = ''; });
+            }
+        }
+
+        /* ---------- evaluador seguro de expresiones ---------- */
+        var LAST_ANS = 0;
+
+        function normalizeExpr(raw) {
+            var s = String(raw).trim();
+            if (!s) return null;
+            // 0) placeholders no invasivos para constantes (evitan el lio de \b con e/π y la mult. implícita)
+            var GUARD = '\u0001';
+            s = s.replace(/\bpi\b/gi, GUARD + 'PI' + GUARD);
+            s = s.replace(/(^|[^a-zA-Z])e(?![a-zA-Z])/g, '$1' + GUARD + 'E' + GUARD);
+            // 1) funciones (antes de proteger "fact")
+            s = s.replace(/\bsqrt\s*\(/g, 'Math.sqrt(');
+            s = s.replace(/\babs\s*\(/g, 'Math.abs(');
+            s = s.replace(/\basin\s*\(/g, 'Math.asin(');
+            s = s.replace(/\bacos\s*\(/g, 'Math.acos(');
+            s = s.replace(/\batan\s*\(/g, 'Math.atan(');
+            s = s.replace(/\bsin\s*\(/g, 'Math.sin(');
+            s = s.replace(/\bcos\s*\(/g, 'Math.cos(');
+            s = s.replace(/\btan\s*\(/g, 'Math.tan(');
+            s = s.replace(/\bln\s*\(/g, 'Math.log(');
+            s = s.replace(/\blog10\s*\(/g, 'Math.log10(');
+            s = s.replace(/\blog2\s*\(/g, 'Math.log2(');
+            s = s.replace(/\blog\s*\(/g, 'Math.log10(');
+            // 2b) "e" suelto entre paréntesis (tecla π/e de la calculadora) => constante EULER
+            s = s.replace(/\(\s*e\s*\)/gi, '(EULER)');
+            // 2) símbolos / azúcar sintáctico
+            s = s.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+            s = s.replace(/(\d+(?:\.\d+)?)\s*%/g, '($1/100)');
+            s = s.replace(/\bans\b/gi, '(' + LAST_ANS + ')');
+            s = s.replace(/\^/g, '**');              // potencia
+            s = s.replace(/(\d+(?:\.\d+)?)\s*!/g, 'fact($1)'); // factorial
+            // 3) multiplicación implícita: 2(3+1), )(, )5
+            s = s.replace(/(\d)\s*\(/g, '$1*(');
+            s = s.replace(/\)\s*\(/g, ')*(');
+            s = s.replace(/\)\s*(\d)/g, ')*$1');
+            // 4) proteger tokens seguros para el filtro anti-código
+            s = s.replace(/Math\.(sqrt|abs|sin|cos|tan|asin|acos|atan|log10|log2|log)/g, function (m0, t) { return GUARD + t + GUARD; });
+            s = s.replace(/EULER/g, GUARD + 'EU' + GUARD);
+            s = s.replace(/fact/g, GUARD + 'fact' + GUARD);
+            s = s.replace(/\*\*/g, GUARD + 'P' + GUARD);
+            s = s.replace(/,/g, '');                 // comas sobrantes ya convertidas
+            var stripped = s.replace(/\u0001[A-Za-z0-9]*\u0001/g, '');
+            if (/[^0-9+\-*/().\s]/.test(stripped)) return null; // intento de código extraño
+            // 5) restaurar Math.*, fact, ** y constantes
+            return s.replace(new RegExp(GUARD + '([A-Za-z0-9]+)' + GUARD, 'g'), function (m0, t) {
+                if (t === 'P') return '**';
+                if (t === 'fact') return 'fact';
+                if (t === 'PI') return '(Math.PI)';
+                if (t === 'E' || t === 'EU') return '(Math.E)';
+                return 'Math.' + t;
+            }).replace(/\u0001/g, '');
+        }
+
+        function fact(n) {
+            n = Number(n);
+            if (!isFinite(n) || n < 0 || Math.floor(n) !== n || n > 170) throw new Error('factorial fuera de rango');
+            var r = 1;
+            for (var i = 2; i <= n; i++) r *= i;
+            return r;
+        }
+
+        function safeEval(expr) {
+            var norm = normalizeExpr(expr);
+            if (norm === null) throw new Error('Expresión no válida');
+            var fn = new Function('fact', '"use strict"; return (' + norm + ');');
+            var out = fn(fact);
+            if (typeof out !== 'number' || isNaN(out)) throw new Error('Resultado no numérico');
+            if (!isFinite(out)) throw new Error('INFINITO / DIVISIÓN POR CERO');
+            return out;
+        }
+
+        function fmt(n) {
+            if (Number.isInteger(n) && Math.abs(n) < 1e15) return String(n);
+            var s = parseFloat(n.toPrecision(12)).toString();
+            return s.length > 16 ? n.toExponential(6) : s;
+        }
+
+        /* ---------- UI calculadora ---------- */
+        var exprBuffer = '';
+        var calcOut = document.getElementById('calc-output');
+        var calcHist = document.getElementById('calc-history');
+
+        function renderCalc(msg) {
+            calcOut.textContent = msg !== undefined ? msg : (exprBuffer || '0');
+        }
+
+        function pressKey(k) {
+            try {
+                if (k === 'clear') { exprBuffer = ''; renderCalc(); calcHist.innerHTML = '&nbsp;'; return; }
+                if (k === 'back') { exprBuffer = exprBuffer.slice(0, -1); renderCalc(); return; }
+                if (k === '=') { doEquals(); return; }
+                exprBuffer += k;
+                renderCalc();
+            } catch (e) { renderCalc('⚠️ ' + e.message); }
+        }
+
+        function doEquals() {
+            if (!exprBuffer) return;
+            try {
+                var r = safeEval(exprBuffer);
+                LAST_ANS = r;
+                calcHist.textContent = exprBuffer + ' =';
+                exprBuffer = fmt(r);
+                renderCalc(exprBuffer);
+                checkSecretFromExpr(calcHist.textContent);
+            } catch (e) {
+                calcHist.textContent = exprBuffer;
+                renderCalc('⛔ ' + e.message);
+                exprBuffer = '';
+            }
+        }
+
+        document.getElementById('calc-keys').addEventListener('click', function (e) {
+            var b = e.target.closest('.key');
+            if (b) pressKey(b.dataset.k);
+        });
+
+        // teclado físico sobre la calculadora
+        document.addEventListener('keydown', function (e) {
+            var t = e.target;
+            if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
+            if (/^[0-9.]$/.test(e.key) || '+-*/%^()!'.includes(e.key)) { pressKey(e.key); }
+            else if (e.key === 'Enter' || e.key === '=') { doEquals(); }
+            else if (e.key === 'Backspace') { pressKey('back'); }
+            else if (e.key === 'Escape') { pressKey('clear'); } // escape simple limpia; doble Escape global = pánico
+        });
+
+        /* ---------- Easter egg 0 ÷ 0 ---------- */
+        var vaultUnlocked = false;
+        function unlockVault(sourceEl) {
+            if (vaultUnlocked) return;
+            vaultUnlocked = true;
+            var vault = document.getElementById('games-vault');
+            vault.classList.add('unlocked');
+            vault.classList.add('glitch');
+            setTimeout(function () { vault.classList.remove('glitch'); }, 1400);
+            showToast('💥 INDETERMINACIÓN RESUELTA: 0÷0 = MODO DIOS. Juegos desbloqueados 🎮');
+            setTimeout(function () { vault.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 250);
+        }
+
+        function checkSecretFromExpr(txt) {
+            // detecta "0/0 =", "0÷0 =" o "√(0/0)" escrito en la propia calculadora
+            var t = String(txt || '');
+            if (/0\s*[\/÷]\s*0\s*=/.test(t)) unlockVault();          // división directa 0÷0
+            else if (/√|sqrt/i.test(t) && /0\s*[\/÷]\s*0/.test(t)) unlockVault(); // raíz de 0 entre 0
+        }
+
+        function trySecretVault() {
+            var a = parseFloat(document.getElementById('secret-a').value);
+            var b = parseFloat(document.getElementById('secret-b').value);
+            if (a === 0 && b === 0) { unlockVault(); return; }
+            if (b === 0) { showToast('⛔ División por cero: ' + a + '÷0 es imposible en ℝ (tiende a ±∞)'); return; }
+            showToast(fmt(a / b));
+        }
+
+        function showToast(msg) {
+            var c = document.getElementById('cc-toast');
+            var t = document.createElement('div');
+            t.className = 'cc-toast-item';
+            t.textContent = msg;
+            c.appendChild(t);
+            setTimeout(function () { t.remove(); }, 3200);
+        }
+
+        /* ---------- SOLVER: ecuación 2º grado ---------- */
+        function solveQuadratic() {
+            var a = parseFloat(document.getElementById('qa').value);
+            var b = parseFloat(document.getElementById('qb').value);
+            var c = parseFloat(document.getElementById('qc').value);
+            var out = document.getElementById('qout');
+            if (isNaN(a) || isNaN(b) || isNaN(c)) { out.textContent = 'Introduce los tres coeficientes'; return; }
+            if (a === 0) {
+                if (b === 0) { out.innerHTML = c === 0 ? 'Infinitas soluciones (0 = 0)' : 'Sin solución (' + c + ' ≠ 0)'; return; }
+                out.innerHTML = 'Es 1º grado: x = <strong>' + fmt(-c / b) + '</strong>';
+                return;
+            }
+            var d = b * b - 4 * a * c;
+            var detail = 'Δ = b² − 4ac = ' + fmt(d);
+            if (d > 0) {
+                var x1 = (-b + Math.sqrt(d)) / (2 * a), x2 = (-b - Math.sqrt(d)) / (2 * a);
+                out.innerHTML = 'x₁ = <strong>' + fmt(x1) + '</strong> &nbsp; x₂ = <strong>' + fmt(x2) + '</strong><small>Dos soluciones reales · ' + detail + '</small>';
+            } else if (d === 0) {
+                out.innerHTML = 'x = <strong>' + fmt(-b / (2 * a)) + '</strong> (doble)<small>Una solución real · ' + detail + '</small>';
+            } else {
+                var re = -b / (2 * a), im = Math.sqrt(-d) / (2 * a);
+                out.innerHTML = 'x = <strong>' + fmt(re) + ' ± ' + fmt(im) + 'i</strong><small>Soluciones complejas · ' + detail + '</small>';
+            }
+        }
+
+        /* ---------- Conversor de unidades ---------- */
+        var UNITS = {
+            length: { base: 'm', list: { 'mm': 0.001, 'cm': 0.01, 'dm': 0.1, 'm': 1, 'dam': 10, 'hm': 100, 'km': 1000, 'mi (milla)': 1609.344, 'yd': 0.9144, 'ft': 0.3048, 'in': 0.0254 } },
+            capacity: { base: 'l', list: { 'ml': 0.001, 'cl': 0.01, 'dl': 0.1, 'l': 1, 'dal': 10, 'hl': 100, 'kl': 1000 } },
+            volume: { base: 'm³', list: { 'mm³': 1e-9, 'cm³': 1e-6, 'dm³ (= l)': 0.001, 'm³': 1, 'dam³': 1000, 'hectolitro': 0.1, 'litro': 0.001 } },
+            mass: { base: 'kg', list: { 'mg': 1e-6, 'g': 0.001, 'dag': 0.01, 'hg': 0.1, 'kg': 1, 't': 1000, 'lb (libra)': 0.45359237, 'oz (onza)': 0.028349523 } }
+        };
+        function populateUnits() {
+            var type = document.getElementById('conv-type').value;
+            var from = document.getElementById('convert-from'), to = document.getElementById('convert-to');
+            var names = Object.keys(UNITS[type].list);
+            from.innerHTML = ''; to.innerHTML = '';
+            names.forEach(function (n) {
+                from.insertAdjacentHTML('beforeend', '<option>' + n + '</option>');
+                to.insertAdjacentHTML('beforeend', '<option>' + n + '</option>');
+            });
+            to.selectedIndex = 1 % names.length;
             executeUnitConversion();
         }
-
         function executeUnitConversion() {
-            const type = document.getElementById('convert-type').value;
-            const val = parseFloat(document.getElementById('convert-value').value || 0);
-            const from = document.getElementById('convert-from').value;
-            const to = document.getElementById('convert-to').value;
-            const output = document.getElementById('conversion-output');
-
-            if (!from || !to) return;
-            let baseValue = val * unitDatabase[type][from];
-            let finalValue = baseValue / unitDatabase[type][to];
-
-            if (Math.abs(finalValue) < 0.0001 || Math.abs(finalValue) > 10000) {
-                output.innerText = finalValue.toExponential(4);
-            } else {
-                output.innerText = Number(finalValue.toFixed(4));
-            }
+            var type = document.getElementById('conv-type').value;
+            var v = parseFloat(document.getElementById('convert-value').value);
+            var f = document.getElementById('convert-from').value;
+            var t = document.getElementById('convert-to').value;
+            var out = document.getElementById('conversion-output');
+            if (isNaN(v) || !f || !t) { out.textContent = '—'; return; }
+            var u = UNITS[type].list;
+            var r = v * u[f] / u[t];
+            out.innerHTML = '<strong>' + fmt(r) + '</strong> ' + t + '<small>' + fmt(v) + ' ' + f + ' → ' + t + ' (factor ' + fmt(u[f] / u[t]) + ')</small>';
         }
+
+        /* ---------- Fracción generatriz ---------- */
+        function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = b; b = a % b; a = t; } return a || 1; }
+        function generatrix() {
+            var raw = document.getElementById('gen-input').value.replace(/\s/g, '').replace(',', '.');
+            var out = document.getElementById('gen-output');
+            var m = raw.match(/^(-?\d+)(?:\.(\d*))?(?:\((\d+)\))?$/);
+            if (!m) { out.textContent = 'Formato: entero[,antiperiodo][(periodo)] · ej. 2,3(5) o 0,(6)'; return; }
+            var intPart = m[1], anti = m[2] || '', per = m[3] || '';
+            if (!anti && !per) { out.innerHTML = '<strong>' + intPart + '</strong>/1<small>Número entero: trivial 🙂</small>'; return; }
+            var num, den;
+            if (per) {
+                var full = parseInt(intPart + anti + per, 10);
+                var base = parseInt(intPart + (anti || '0'), 10);
+                if (anti === '') base = parseInt(intPart, 10);
+                num = full - base;
+                den = parseInt('9'.repeat(per.length) + '0'.repeat(anti.length), 10);
+            } else {
+                num = parseInt(intPart + anti, 10);
+                den = Math.pow(10, anti.length);
+            }
+            var g = gcd(num, den);
+            var sign = intPart.startsWith('-') && num === Math.abs(num) ? -Math.abs(num) : num;
+            out.innerHTML = '<span class="frac"><span>' + (sign / g) + '</span><span>' + (den / g) + '</span></span>&nbsp;<small>Irreducible tras dividir entre MCD = ' + g + '</small>';
+        }
+
+        /* ---------- arranque ---------- */
+        populateUnits();
+        solveQuadratic();
+        generatrix();
+        renderCalc();
     </script>
 </body>
 
